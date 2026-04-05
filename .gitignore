@@ -1,0 +1,10 @@
+Ignore transcript data to keep the repository lean
+
+transcripts/
+*.txt
+
+Ignore Python cache
+
+pycache/
+*.py[cod]
+*$py.class
