@@ -1,0 +1,20 @@
+{
+  "channels": [
+    {
+      "name": "AI News & Strategy Daily | Nate B Jones",
+      "url": "https://www.youtube.com/@NateBJones/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    }
+  ],
+  "groups": [
+    "ai-and-claude-code",
+    "bitcoin-and-economic-news"
+  ],
+  "display_names": {
+    "ai-and-claude-code": "AI & Claude Code",
+    "bitcoin-and-economic-news": "Bitcoin and Economic News"
+  },
+  "notes": "Add channels here. Each entry needs name, url, group, active fields."
+}

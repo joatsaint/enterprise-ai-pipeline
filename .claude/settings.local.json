@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python download.py \"https://www.youtube.com/live/snyCdO3EE34\")",
+      "Bash(python download.py \"https://youtu.be/beBzgzFfZZ0?si=eb_SDNQn6ypNgDpS\")",
+      "Bash(python download.py \"https://youtu.be/y21IJHSpQnM?si=0J3Z6QDzR6jkCzmp\")",
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python -m pytest tests/test_phase1.py -v)",
+      "Bash(python download.py https://youtu.be/ZX_DEbZDUTI)",
+      "Bash(python -m pytest tests/ -v)",
+      "Bash(python -m src.main list-channels)",
+      "Bash(python -m src.main add-channel)",
+      "Bash(python -m src.main channel \"AI News & Strategy Daily | Nate B Jones\")"
+    ]
+  }
+}

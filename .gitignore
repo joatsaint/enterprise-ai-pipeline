@@ -1,10 +1,17 @@
-Ignore transcript data to keep the repository lean
-
+# Transcript data — keep repo lean
 transcripts/
 *.txt
 
-Ignore Python cache
-
-pycache/
+# Python cache
+__pycache__/
 *.py[cod]
 *$py.class
+
+# Environment / secrets
+.env
+
+# Logs — runtime data, not source
+logs/
+
+# pytest cache
+.pytest_cache/
