@@ -3,4 +3,5 @@ requests
 python-slugify
 yt-dlp
 google-api-python-client
+anthropic
 pytest

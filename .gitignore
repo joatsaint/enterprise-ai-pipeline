@@ -13,5 +13,10 @@ __pycache__/
 # Logs — runtime data, not source
 logs/
 
+# Knowledge base — generated data, not source
+knowledge_base/index.json
+knowledge_base/reports/*.md
+knowledge_base/digests/*.md
+
 # pytest cache
 .pytest_cache/
