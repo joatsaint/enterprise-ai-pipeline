@@ -86,28 +86,46 @@ def add_channel():
     active_input = input("Active? (Y/n): ").strip().lower()
     active = active_input != "n"
 
-    data["channels"].append({
+    max_videos_input = input(
+        "Max videos to download (leave blank to use default from .env): "
+    ).strip()
+    max_videos = int(max_videos_input) if max_videos_input.isdigit() else None
+
+    entry = {
         "name": name,
         "url": url,
         "group": group,
         "active": active,
         "notes": "",
-    })
+    }
+    if max_videos is not None:
+        entry["max_videos"] = max_videos
+
+    data["channels"].append(entry)
     save_channels(data)
     print(f"[OK] Added '{name}' to group '{group}'.")
 
 
 def list_channels():
-    """Print all registered channels."""
+    """Print all registered channels with max_videos status."""
     data = load_channels()
     channels = data.get("channels", [])
+    default_max = int(os.getenv("MAX_VIDEOS_DEFAULT", "20"))
+
     if not channels:
         print("No channels registered. Use 'add-channel' to add one.")
         return
 
-    print(f"\n{'Name':<30} {'Group':<28} {'Active'}")
-    print("-" * 65)
-    for ch in channels:
+    for i, ch in enumerate(channels, 1):
         active_str = "yes" if ch.get("active", True) else "no"
-        print(f"{ch['name']:<30} {ch.get('group',''):<28} {active_str}")
-    print()
+        if "max_videos" in ch:
+            max_str = f"{ch['max_videos']} (custom)"
+        else:
+            max_str = f"{default_max} (default)"
+
+        print(f"[{i}] {ch['name']}")
+        print(f"    URL: {ch.get('url', '')}")
+        print(f"    Group: {ch.get('group', '')}")
+        print(f"    Max videos: {max_str}")
+        print(f"    Active: {active_str}")
+        print()

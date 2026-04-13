@@ -1,9 +1,66 @@
+import os
 import re
 import requests
 from urllib.parse import urlparse, parse_qs
 
 from youtube_transcript_api import YouTubeTranscriptApi, NoTranscriptFound, TranscriptsDisabled
 
+
+# ---------------------------------------------------------------------------
+# Proxy-aware API factory
+# ---------------------------------------------------------------------------
+
+_proxy_status_printed = False
+
+
+def get_ytt_api():
+    """
+    Returns a YouTubeTranscriptApi instance.
+    Uses Webshare rotating residential proxies if credentials are set in .env.
+    Falls back to direct connection if no proxy credentials found.
+    Proxy status is printed once per session only.
+    """
+    global _proxy_status_printed
+
+    proxy_username = os.getenv("WEBSHARE_PROXY_USERNAME", "").strip()
+    proxy_password = os.getenv("WEBSHARE_PROXY_PASSWORD", "").strip()
+
+    if proxy_username and proxy_password:
+        if not _proxy_status_printed:
+            print("[PROXY] Using Webshare rotating residential proxies.")
+            _proxy_status_printed = True
+        from youtube_transcript_api.proxies import WebshareProxyConfig
+        return YouTubeTranscriptApi(
+            proxy_config=WebshareProxyConfig(
+                proxy_username=proxy_username,
+                proxy_password=proxy_password,
+            )
+        )
+    else:
+        if not _proxy_status_printed:
+            print("[PROXY] No proxy configured — using direct connection.")
+            _proxy_status_printed = True
+        return YouTubeTranscriptApi()
+
+
+def _load_env():
+    """Load .env file into os.environ if present."""
+    env_path = ".env"
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, _, value = line.partition("=")
+                    os.environ.setdefault(key.strip(), value.strip())
+
+
+_load_env()
+
+
+# ---------------------------------------------------------------------------
+# URL utilities
+# ---------------------------------------------------------------------------
 
 def extract_video_id(url):
     parsed = urlparse(url)
@@ -20,6 +77,10 @@ def extract_video_id(url):
             return parsed.path.split("/live/")[1].split("/")[0]
     raise ValueError(f"Could not extract video ID from URL: {url}")
 
+
+# ---------------------------------------------------------------------------
+# Metadata
+# ---------------------------------------------------------------------------
 
 def get_video_metadata(video_id):
     """Fetch title, channel name, and published date from YouTube page."""
@@ -46,6 +107,10 @@ def get_video_metadata(video_id):
     return metadata
 
 
+# ---------------------------------------------------------------------------
+# Transcript cleaning
+# ---------------------------------------------------------------------------
+
 def clean_transcript(snippets):
     """
     Clean transcript text applying all token optimization steps in order:
@@ -64,13 +129,10 @@ def clean_transcript(snippets):
     raw = re.sub(r'\[?\d{1,2}:\d{2}(?::\d{2})?\]?', '', raw)
 
     # Step 2 — Strip filler words
-    # Clear fillers: um, uh (always filler)
     raw = re.sub(r'\bum+\b', '', raw, flags=re.IGNORECASE)
     raw = re.sub(r'\buh+\b', '', raw, flags=re.IGNORECASE)
-    # Comma-surrounded fillers: ", like," and ", you know,"
     raw = re.sub(r',\s*like\s*,', ',', raw, flags=re.IGNORECASE)
     raw = re.sub(r',\s*you know\s*,', ',', raw, flags=re.IGNORECASE)
-    # Trailing fillers before comma: "like," and "you know,"
     raw = re.sub(r'\b(like|you know)\s*,', ',', raw, flags=re.IGNORECASE)
 
     # Step 3 — Remove auto-caption tags
@@ -108,7 +170,11 @@ def clean_transcript(snippets):
     return raw, word_count_before, word_count_after
 
 
+# ---------------------------------------------------------------------------
+# Fetch
+# ---------------------------------------------------------------------------
+
 def fetch_transcript(video_id):
-    """Fetch raw transcript snippets. Raises on failure."""
-    api = YouTubeTranscriptApi()
+    """Fetch raw transcript snippets via proxy-aware API. Raises on failure."""
+    api = get_ytt_api()
     return api.fetch(video_id, languages=["en"])
