@@ -4,6 +4,10 @@ Channel batch downloader.
 Uses yt-dlp to enumerate a channel's video list, then runs the full
 orchestrator pipeline on each video. Supports incremental (default) and
 force-full modes with mandatory randomized rate limiting.
+
+Environment variables (read from .env):
+  MAX_VIDEOS_DEFAULT         Max videos per channel run (default 20)
+  MIN_VIDEO_DURATION_SECONDS Minimum video duration to include (default 300s / 5 min)
 """
 import json
 import os
@@ -17,10 +21,10 @@ import time
 # Video list retrieval
 # ---------------------------------------------------------------------------
 
-def get_video_ids_from_channel(channel_url, limit=50):
+def get_video_entries_from_channel(channel_url, limit=50):
     """
-    Use yt-dlp to get up to `limit` video IDs from a channel's video tab.
-    Returns list of video_id strings.
+    Use yt-dlp to get up to `limit` video entries from a channel's video tab.
+    Returns list of entry dicts (each has 'id' and optionally 'duration').
     Raises RuntimeError on yt-dlp failure.
     """
     result = subprocess.run(
@@ -43,10 +47,15 @@ def get_video_ids_from_channel(channel_url, limit=50):
     except json.JSONDecodeError as e:
         raise RuntimeError(f"yt-dlp returned invalid JSON: {e}")
 
-    entries = data.get("entries") or []
-    video_ids = [e["id"] for e in entries if e and e.get("id")]
-    print(f"[INFO] yt-dlp retrieved {len(video_ids)} video(s) from channel.")
-    return video_ids
+    entries = [e for e in (data.get("entries") or []) if e and e.get("id")]
+    print(f"[INFO] yt-dlp retrieved {len(entries)} video(s) from channel.")
+    return entries
+
+
+def get_video_ids_from_channel(channel_url, limit=50):
+    """Compatibility wrapper — returns list of video_id strings."""
+    entries = get_video_entries_from_channel(channel_url, limit)
+    return [e["id"] for e in entries]
 
 
 # ---------------------------------------------------------------------------
@@ -68,15 +77,35 @@ def run_channel(channel_name_or_url, force_full=False, pre_suggestion=None):
 
     _ensure_dirs()
 
+    # ----------------------------------------------------------------
+    # Cloud environment warning
+    # ----------------------------------------------------------------
+    if "CLAUDE" in os.environ or not sys.stdin.isatty():
+        print(
+            "[WARNING] Possible cloud environment detected. YouTube may block "
+            "transcript requests from cloud IPs. If downloads fail with IP "
+            "block errors, run this command from your local terminal instead."
+        )
+
+    # ----------------------------------------------------------------
+    # Load limits from environment
+    # ----------------------------------------------------------------
+    max_videos_default = int(os.getenv("MAX_VIDEOS_DEFAULT", "20"))
+    min_duration = int(os.getenv("MIN_VIDEO_DURATION_SECONDS", "300"))
+
+    # ----------------------------------------------------------------
     # Resolve channel info
+    # ----------------------------------------------------------------
     channel_info = find_channel(channel_name_or_url)
     if channel_info:
         channel_url = channel_info["url"]
         resolved_suggestion = pre_suggestion or channel_info.get("group")
+        max_videos = channel_info.get("max_videos", max_videos_default)
         print(f"[INFO] Channel: {channel_info['name']} ({channel_url})")
     else:
         channel_url = channel_name_or_url
         resolved_suggestion = pre_suggestion
+        max_videos = max_videos_default
         print(f"[INFO] Channel URL: {channel_url}")
 
     # Validate channel URL format
@@ -84,18 +113,44 @@ def run_channel(channel_name_or_url, force_full=False, pre_suggestion=None):
         print(f"[ERROR] Not a valid URL: '{channel_url}'. Register the channel with add-channel first.")
         return
 
-    # Get video list
+    # ----------------------------------------------------------------
+    # Get video entries (fetch enough to apply limits after filtering)
+    # ----------------------------------------------------------------
+    fetch_limit = max(max_videos * 3, 50)  # fetch extra to survive duration filter
     try:
-        video_ids = get_video_ids_from_channel(channel_url)
+        entries = get_video_entries_from_channel(channel_url, limit=fetch_limit)
     except RuntimeError as e:
         print(f"[ERROR] Failed to get video list: {e}")
         return
 
-    if not video_ids:
+    if not entries:
         print("[INFO] No videos found for this channel.")
         return
 
+    # ----------------------------------------------------------------
+    # Apply video count limit (most recent first — yt-dlp default order)
+    # ----------------------------------------------------------------
+    entries = entries[:max_videos]
+    print(f"[INFO] Limiting to {max_videos} most recent video(s) (channel setting).")
+
+    # ----------------------------------------------------------------
+    # Apply minimum duration filter
+    # ----------------------------------------------------------------
+    before_count = len(entries)
+    entries = [e for e in entries if e.get("duration", 0) >= min_duration]
+    filtered_count = before_count - len(entries)
+    if filtered_count > 0:
+        print(f"[INFO] Skipped {filtered_count} video(s) under {min_duration // 60} minutes.")
+
+    if not entries:
+        print("[INFO] No videos remain after duration filter.")
+        return
+
+    video_ids = [e["id"] for e in entries]
+
+    # ----------------------------------------------------------------
     # Filter for incremental mode
+    # ----------------------------------------------------------------
     if not force_full:
         try:
             log = _read_json(DOWNLOAD_LOG)
@@ -113,7 +168,9 @@ def run_channel(channel_name_or_url, force_full=False, pre_suggestion=None):
         print("[INFO] Nothing new to download. Run with --force-full to re-download all.")
         return
 
+    # ----------------------------------------------------------------
     # Hard cap: prompt user before exceeding 200 downloads
+    # ----------------------------------------------------------------
     if len(video_ids) > 200:
         try:
             resp = input(
