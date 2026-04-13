@@ -11,6 +11,23 @@ from datetime import date
 
 
 # ---------------------------------------------------------------------------
+# Load .env into os.environ at module import time
+# ---------------------------------------------------------------------------
+
+def _load_env():
+    env_path = ".env"
+    if os.path.exists(env_path):
+        with open(env_path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, _, value = line.partition("=")
+                    os.environ.setdefault(key.strip(), value.strip())
+
+_load_env()
+
+
+# ---------------------------------------------------------------------------
 # Session-level quota flag
 # ---------------------------------------------------------------------------
 
@@ -28,31 +45,38 @@ def reset_quota_flag():
 # ---------------------------------------------------------------------------
 
 def _load_api_key():
-    """Load YOUTUBE_API_KEY from .env file or environment."""
-    env_path = ".env"
-    if os.path.exists(env_path):
-        with open(env_path, "r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("YOUTUBE_API_KEY=") and not line.startswith("#"):
-                    return line.split("=", 1)[1].strip()
-    return os.environ.get("YOUTUBE_API_KEY", "")
+    """Load YOUTUBE_API_KEY from os.environ (populated from .env at import time)."""
+    return os.environ.get("YOUTUBE_API_KEY", "").strip()
 
 
 def _make_api_request(video_id, api_key):
     """
-    Execute the YouTube Data API commentThreads.list call.
+    Execute the YouTube Data API commentThreads.list call via direct HTTP.
+    Uses requests instead of googleapiclient to avoid the discovery schema
+    prefetch that can fail in certain network environments.
     Isolated into its own function so tests can patch it cleanly.
     """
-    from googleapiclient.discovery import build
-    youtube = build("youtube", "v3", developerKey=api_key)
-    return youtube.commentThreads().list(
-        part="snippet",
-        videoId=video_id,
-        order="relevance",
-        maxResults=100,
-        textFormat="plainText",
-    ).execute()
+    import requests
+
+    url = "https://www.googleapis.com/youtube/v3/commentThreads"
+    params = {
+        "part": "snippet",
+        "videoId": video_id,
+        "order": "relevance",
+        "maxResults": 100,
+        "textFormat": "plainText",
+        "key": api_key,
+    }
+    resp = requests.get(url, params=params, timeout=10)
+
+    # Attach status to the response so error handling can inspect it
+    if not resp.ok:
+        err = Exception(f"HTTP {resp.status_code}: {resp.text[:300]}")
+        err.resp = type("R", (), {"status": resp.status_code})()
+        err.content = resp.content
+        raise err
+
+    return resp.json()
 
 
 def _slugify(title, max_len=60):

@@ -132,6 +132,11 @@ def test_channel_skips_already_downloaded():
 
     existing_id = "existing11a"
     new_id = "newvideo11b"
+    # Entries need duration >= MIN_VIDEO_DURATION_SECONDS (300) to survive filter
+    fake_entries = [
+        {"id": existing_id, "duration": 600},
+        {"id": new_id, "duration": 600},
+    ]
 
     fake_log = {
         "downloads": [{"video_id": existing_id}],
@@ -149,10 +154,9 @@ def test_channel_skips_already_downloaded():
 
             with (
                 patch(
-                    "src.downloader.channel.get_video_ids_from_channel",
-                    return_value=[existing_id, new_id],
+                    "src.downloader.channel.get_video_entries_from_channel",
+                    return_value=fake_entries,
                 ),
-                patch("src.downloader.channel.run_channel.__module__"),  # no-op
                 patch("src.orchestrator.run") as mock_run,
                 patch("src.channels.registry.find_channel", return_value=None),
             ):
@@ -179,6 +183,10 @@ def test_channel_force_full_downloads_all():
 
     existing_id = "existing11a"
     new_id = "newvideo11b"
+    fake_entries = [
+        {"id": existing_id, "duration": 600},
+        {"id": new_id, "duration": 600},
+    ]
 
     fake_log = {
         "downloads": [{"video_id": existing_id}],
@@ -196,8 +204,8 @@ def test_channel_force_full_downloads_all():
 
             with (
                 patch(
-                    "src.downloader.channel.get_video_ids_from_channel",
-                    return_value=[existing_id, new_id],
+                    "src.downloader.channel.get_video_entries_from_channel",
+                    return_value=fake_entries,
                 ),
                 patch("src.orchestrator.run") as mock_run,
                 patch("src.channels.registry.find_channel", return_value=None),
@@ -223,7 +231,10 @@ def test_channel_force_full_downloads_all():
 def test_channel_uses_randomized_pause():
     from src.downloader import channel as channel_mod
 
-    video_ids = ["video1111a1", "video2222b2"]
+    fake_entries = [
+        {"id": "video1111a1", "duration": 600},
+        {"id": "video2222b2", "duration": 600},
+    ]
     captured_uniform_args = []
 
     def fake_uniform(lo, hi):
@@ -242,8 +253,8 @@ def test_channel_uses_randomized_pause():
 
             with (
                 patch(
-                    "src.downloader.channel.get_video_ids_from_channel",
-                    return_value=video_ids,
+                    "src.downloader.channel.get_video_entries_from_channel",
+                    return_value=fake_entries,
                 ),
                 patch("src.orchestrator.run"),
                 patch("src.channels.registry.find_channel", return_value=None),
@@ -364,6 +375,7 @@ def test_add_channel_writes_to_registry():
                 "https://www.youtube.com/@test",  # url
                 "1",                            # group → ai-and-claude-code
                 "y",                            # active
+                "",                             # max_videos → blank = use default
             ])
             with patch("builtins.input", side_effect=lambda _: next(inputs)):
                 add_channel()
