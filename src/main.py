@@ -8,6 +8,11 @@ Usage:
   python -m src.main group ai-and-claude-code   # all channels in a group
   python -m src.main add-channel                # register a new channel
   python -m src.main list-channels              # show registered channels
+  python -m src.main index                      # build/rebuild knowledge base index
+  python -m src.main analyze --group <name>     # run pain point analysis on a group
+  python -m src.main analyze --all              # run pain point analysis on all groups
+  python -m src.main ask "your question"        # Q&A against knowledge base
+  python -m src.main ask --group <name> "q"    # Q&A limited to a group
 """
 import sys
 
@@ -72,6 +77,53 @@ def main():
     if cmd == "list-channels":
         from src.channels.registry import list_channels
         list_channels()
+        return
+
+    # ----------------------------------------------------------------
+    # index — build/rebuild the knowledge base index
+    # ----------------------------------------------------------------
+    if cmd == "index":
+        from src.knowledge_base.indexer import build_index
+        build_index()
+        return
+
+    # ----------------------------------------------------------------
+    # analyze — run pain point extraction
+    # ----------------------------------------------------------------
+    if cmd == "analyze":
+        from src.analyzer.pain_point_extractor import run_extractor
+        if "--all" in args:
+            run_extractor(group=None)
+        elif "--group" in args:
+            idx = args.index("--group")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main analyze --group <group-name>")
+                sys.exit(1)
+            run_extractor(group=args[idx + 1])
+        else:
+            print("Usage: python -m src.main analyze --group <name> | --all")
+            sys.exit(1)
+        return
+
+    # ----------------------------------------------------------------
+    # ask — Q&A against knowledge base
+    # ----------------------------------------------------------------
+    if cmd == "ask":
+        from src.knowledge_base.query import run_query
+        group = None
+        remaining = args[1:]
+        if "--group" in remaining:
+            idx = remaining.index("--group")
+            if idx + 1 >= len(remaining):
+                print("Usage: python -m src.main ask [--group <name>] \"question\"")
+                sys.exit(1)
+            group = remaining[idx + 1]
+            remaining = [a for j, a in enumerate(remaining) if j != idx and j != idx + 1]
+        if not remaining:
+            print("Usage: python -m src.main ask [--group <name>] \"your question\"")
+            sys.exit(1)
+        question = " ".join(remaining)
+        run_query(question, group=group)
         return
 
     print(f"Unknown command: '{cmd}'")
