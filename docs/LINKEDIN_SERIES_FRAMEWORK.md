@@ -428,6 +428,69 @@ Article 1 publishes. Do not start publishing without a 3-article buffer.
 
 ---
 
+
+---
+
+## Title Generation Process (Use This Every Time)
+
+Never use the raw question from the pain point report as a title. Raw questions
+inform — strong titles pull attention. Follow this process for every article
+and every PDF.
+
+### Step 1 — Extract the raw question from the pain point report
+Example: "Which skills will remain valuable as AI advances?"
+
+### Step 2 — Identify the emotional driver
+Choose one: **Fear** | **Urgency** | **Wasted Effort** | **Missed Opportunity**
+
+The strongest titles for your audience combine wasted effort + urgency.
+IT professionals hate wasting time on the wrong thing more than almost anything else.
+
+### Step 3 — Generate 10 high-curiosity titles
+Tell Claude: *"Generate 10 high-curiosity titles for this topic. Focus on fear,
+urgency, or wasted effort. Avoid generic wording. Make each title feel like it
+solves a specific personal problem."*
+
+### Step 4 — Score and select
+Pick the title that scores highest on all three:
+- Could a director stop scrolling for this? (attention test)
+- Does it name a specific pain, not a generic topic? (specificity test)
+- Does it promise a concrete outcome? (value test)
+
+### Transformation Examples
+
+**Raw question:** "Which skills will remain valuable as AI advances?"
+
+| Type | Title |
+|---|---|
+| ❌ Weak | "Future-Proof Skills for AI" |
+| ✅ Fear | "Most IT Skills Will Be Obsolete Soon — Here's What to Learn Instead" |
+| ✅ Wasted effort | "Stop Learning the Wrong AI Skills (Most People Are Wasting Their Time)" |
+| ✅ Urgency + specificity | "The AI Skills That Will Still Pay in 3 Years — And the Ones That Won't" |
+| ✅ Personal + direct | "If You're in IT, Read This Before You Learn Another AI Tool" |
+
+One informs. The other pulls attention. Always choose the one that pulls.
+
+### Title Rules for LinkedIn (different from YouTube)
+- Up to 50+ characters — the 23-character mobile rule does NOT apply here
+- Lead with the pain or the cost, not the solution
+- Numbers work well: "7 Skills", "3 Years", "142 Days"
+- Questions work when they name a fear the reader already has
+- Never use: "The Future of", "Leveraging", "Harnessing", "Journey"
+- Never use the word "Journey" — use "path", "pivot", or "transition"
+
+### Apply this process to PDF titles too
+The same transformation works for PDF lead magnet titles. Your first PDF:
+
+| Type | Title |
+|---|---|
+| ❌ Weak | "AI Skills for Career Advancement" |
+| ✅ Strong | "The AI Skills That Won't Be Replaced: 7 Capabilities Worth Building Right Now (Backed by Data)" |
+| ✅ Stronger | "Stop Learning the Wrong AI Skills — Here Are the 7 That Actually Pay" |
+| ✅ Most direct | "If You're Pivoting Into AI, Read This Before You Take Another Course" |
+
+---
+
 ## Article Writing Process (Per Article)
 
 1. Open SKILLS_LOG.md — find the relevant skill entry, use the resume
