@@ -1,8 +1,8 @@
 # MASTER_PLAN.md — AI Transcript Business
 ## Unified Roadmap: Transcript Downloader + PDF Business + Automation
 
-**Version: 1.1** — Created April 2026. Owner: Randy.
-**Last Updated:** Session 4 — Comment fetching added, randomized rate limiting, YouTube API key required for Stage 2+.
+**Version: 1.3** — Created April 2026. Owner: Randy.
+**Last Updated:** Session 5 — End of day update: 8 channels, 159 transcripts, pain point analysis complete, PDF topic confirmed.
 
 ---
 
@@ -55,7 +55,7 @@ Complete each stage before moving to the next. No skipping.
 
 ### STAGE 1 — Complete the Research Engine Foundation
 **Type:** Technical (Claude Code)
-**Status:** IN PROGRESS
+**Status:** ✅ COMPLETE — 17/17 tests passing
 **Unlocks:** Everything downstream
 
 **What to build:**
@@ -72,7 +72,7 @@ see the run summary. Token reduction reported. No crashes.
 
 ### STAGE 2 — Batch Channel Download
 **Type:** Technical (Claude Code)
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE — 27/27 tests passing, Webshare proxy active
 **Unlocks:** Stage 3 (need bulk transcripts for pain point analysis)
 
 **What to build:**
@@ -110,7 +110,7 @@ see the run summary. Token reduction reported. No crashes.
 
 ### STAGE 3 — Pain Point Extraction Module
 **Type:** Technical (Claude Code) + Business crossover
-**Status:** NOT STARTED
+**Status:** ✅ COMPLETE — 39/39 tests passing, first report generated
 **Unlocks:** Stage 4 (PDF content comes from this output)
 
 **What to build:**
@@ -145,7 +145,7 @@ sourced from both transcript content and audience comments.
 
 ### STAGE 4 — First PDF Lead Magnet + Landing Page
 **Type:** Business
-**Status:** NOT STARTED
+**Status:** 🔄 NEXT — ready to start
 **Unlocks:** Stage 5 (need something to drive traffic to)
 
 **What to do:**
@@ -237,6 +237,14 @@ Keep it under 10 pages. Actionable beats comprehensive every time.
 **This stage runs in parallel with Stage 6 traffic work.**
 It is not a blocker — it makes future content production faster.
 
+**Code quality tasks to complete in this stage:**
+- Add professional docstrings and inline comments to all src/ modules
+  (explains why each section exists, not just what it does)
+- Add startup environment variable validation function — fail fast with
+  clear error if required keys are missing at launch
+- General code refactoring for efficiency (defer until after first sale)
+- These are Claude Code tasks — scaffold via docs/ prompt files
+
 ---
 
 ### STAGE 8 — Semi-Automation Layer
@@ -259,6 +267,85 @@ Full automation gets accounts banned. Start semi-automated.
 - Pinterest pin creation from PDF guide content
 - Email sequence extensions triggered by subscriber behavior
 - Pain point extraction running automatically on new transcripts
+
+**Platform scraping research required BEFORE building (API terms changed):**
+- Reddit: Changed API terms 2023 — paid API now required above low thresholds.
+  Research current r/learnmachinelearning, r/artificial, r/cscareerquestions
+  access options. RSS feed fallback may be the only free approach.
+- Quora: Official API discontinued. Scraping violates ToS. Use Quora Partner
+  Program or monitor via Google Alerts for Quora question URLs instead.
+- Facebook Groups: No public API for group content. Read-only scraping
+  feasible only for public groups. Private groups not accessible.
+  Assess feasibility separately before building.
+- YouTube comments: ✅ Already built — comment_fetcher.py handles this.
+- LinkedIn: No scraping API. Manual monitoring only — automate only posting.
+- Pinterest: Official API available — lowest risk platform to automate.
+- Twitter/X: Paid API only since 2023. RSS workarounds exist but unreliable.
+
+**Recommended build order for scraping:**
+1. Pinterest (official API, low risk) — automate pin creation first
+2. Reddit RSS feeds (public subreddits only, no auth required)
+3. Google Alerts → email → parse (catches Quora + news + blogs)
+4. Evaluate paid Reddit API if ROI justifies cost
+
+---
+
+
+---
+
+## Immediate Next Actions (Outside Claude Code)
+
+These are your next moves in priority order. Do not skip to #2 before completing #1.
+
+**1. ✅ COMPLETE — Channels registered and pain point analysis done**
+
+**Registered channels (8 total):**
+- ✅ AI News & Strategy Daily | Nate B Jones — 20 transcripts, 0 comments
+- ✅ Matt Wolfe — 19 transcripts, 19 comments
+- ✅ Jeff Su — 20 transcripts, ~20 comments
+- ✅ Learn with Lukas — 20 transcripts, ~20 comments
+- ✅ Tina Huang — 20 transcripts, ~20 comments
+- ✅ Tech With Tim — 20 transcripts, ~20 comments
+- ✅ Technical Program Management Hub — 18 transcripts, 3 comments
+- ✅ AI Explained — 20 transcripts, 20 comments
+
+**Library total:** 159 files across 3 groups
+**Pain point reports generated:** 3 (improving with each run)
+**Final report:** knowledge_base/reports/pain_points_2026-04-13_ai-and-claude-code.md
+— 50 transcripts + 29 comment files analyzed
+
+**2. ✅ COMPLETE — Pain point extractor re-run with comments included**
+Final report: pain_points_2026-04-13_ai-and-claude-code.md
+50 transcripts + 29 comment files. PDF topic confirmed from data.
+
+**3. 🔄 NEXT — Write your first PDF lead magnet**
+
+**Confirmed PDF topic from pain point data:**
+*"The AI Skills That Won't Be Replaced: 7 Capabilities Worth Building Right Now (Backed by Data)"*
+
+This directly addresses:
+- Pain point #3: Difficulty determining which AI skills will remain valuable (4 videos)
+- Pain point #5: Lack of understanding about which roles become obsolete (4 videos)
+- Question #4: How to identify skills that remain valuable as AI advances (3 videos)
+- Desired outcome #3: Clear understanding of AI skills for career advancement (3 videos)
+- Your differentiator: "Backed by data" — you analyzed 50 videos + 29 comment files
+
+Format: 5-8 pages, actionable checklist or roadmap. Use transcript research as
+source material. Next session: build full PDF outline in this chat.
+
+**GitHub status:** github.com/joatsaint/youtube-downloader (private)
+Latest commit: 8 channels, 159 transcripts, pain point analysis reports
+All staged and pushed ✅
+
+**4. Write LinkedIn Article 1 this week**
+You now have everything you need:
+- A working AI pipeline (proof of capability)
+- Market research data from 20 real transcripts (proof of methodology)
+- A documented journey from manual copy-paste to automated extraction (the story)
+- 39 passing tests and a GitHub repo (proof of execution)
+
+Article 1 is the cornerstone piece — see LINKEDIN_SERIES_FRAMEWORK.md in docs\.
+90 minutes. Write it this week. Everything else in the series links back to it.
 
 ---
 
@@ -328,9 +415,10 @@ These need answers before the relevant stage starts:
 - **Stage 4:** Mailchimp free tier limits — how many contacts and
   emails per month before paid tier required?
 
-- **Stage 8:** Which platforms have the most reliable read-only
-  scraping APIs for questions? (Quora API status, Reddit API changes
-  post-2023, alternatives)
+- **Stage 8:** Platform API research completed in session — see Stage 8
+  notes above. Reddit and Quora have significant restrictions post-2023.
+  Pinterest official API is the lowest-risk first target.
+  Build order: Pinterest → Reddit RSS → Google Alerts → evaluate paid options.
 
 ---
 

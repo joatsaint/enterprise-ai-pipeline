@@ -6,6 +6,63 @@
       "group": "ai-and-claude-code",
       "active": true,
       "notes": ""
+    },
+    {
+      "name": "Matt Wolfe",
+      "url": "https://www.youtube.com/@mreflow/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "",
+      "max_videos": 20
+    },
+    {
+      "name": "Jeff Su",
+      "url": "https://www.youtube.com/@JeffSu/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "Learn with Lukas",
+      "url": "https://www.youtube.com/@learnwithlukas/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "Tina Huang",
+      "url": "https://www.youtube.com/@TinaHuang1/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "Tech With Tim",
+      "url": "https://www.youtube.com/@TechWithTim/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "Technical Program Management Hub",
+      "url": "https://www.youtube.com/@programstrategyhq/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "AI Explained",
+      "url": "https://www.youtube.com/@aiexplained-official/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
+    },
+    {
+      "name": "Jack Roberts",
+      "url": "https://www.youtube.com/@Itssssss_Jack/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": ""
     }
   ],
   "groups": [
