@@ -111,7 +111,7 @@ DATA:
     try:
         response = client.messages.create(
             model=model,
-            max_tokens=2000,
+            max_tokens=4000,
             system="You are a market research analyst. Aggregate and rank pain point data. Return ONLY valid JSON. No prose.",
             messages=[{"role": "user", "content": content}],
         )
