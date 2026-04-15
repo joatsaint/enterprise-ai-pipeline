@@ -28,8 +28,8 @@ Future: Community / Skool ($50/month)
 
 ---
 
-## STAGE 1 — Build the Assets (Do First, Publish Nothing Yet)
-### Status: IN PROGRESS — Carousel COMPLETE, PDF and landing page remaining
+## STAGE 1 — Build the Assets
+### Status: ✅ COMPLETE — April 15 2026
 
 ---
 
@@ -68,7 +68,7 @@ Follow for weekly AI skills breakdowns.
 ---
 
 ### STEP 1 — Expand the Carousel into a Full Lead Magnet PDF
-**Status:** 🔄 IN PROGRESS — PDF structure defined, content to be written next session
+**Status:** ✅ COMPLETE — April 15 2026
 **Priority:** Highest — nothing else works without this
 **Time estimate:** 2–3 hours
 
@@ -129,7 +129,10 @@ Page 8 — Your 90-Day AI Skills Roadmap
 ---
 
 ### STEP 2 — Build the Landing Page
-**Status:** ⬜ NOT STARTED
+**Status:** ✅ COMPLETE — April 15 2026
+Mailchimp Lead Generation — Wild Country template
+Headline: "Stop Learning the Wrong AI Skills"
+Redirects to PDF download on opt-in
 **Priority:** High — needed before posting anything
 **Time estimate:** 1–2 hours
 **Tool:** Mailchimp (free tier, you already know it) or Carrd.co ($19/year — cleaner)
@@ -154,7 +157,7 @@ Page 8 — Your 90-Day AI Skills Roadmap
 ---
 
 ### STEP 3 — Set Up Email Welcome Sequence (3 emails)
-**Status:** ⬜ NOT STARTED
+**Status:** 🔄 IN PROGRESS — Email 1 wired to PDF delivery, Emails 2-3 pending
 **Priority:** High — set up before first opt-in arrives
 **Tool:** Mailchimp free tier (up to 500 contacts, 1,000 emails/month free)
 
@@ -179,12 +182,12 @@ Subject: "The 90-day plan I'm using to make this pivot"
 ---
 
 ## STAGE 2 — Publish the Carousel on LinkedIn
-**Status:** ⬜ NOT STARTED (complete Stage 1 first)
+**Status:** ✅ COMPLETE — Posted April 15 2026
 
 ---
 
 ### STEP 4 — Optimize Carousel for LinkedIn Upload
-**Status:** ⬜ NOT STARTED
+**Status:** ✅ COMPLETE
 
 **Format requirements:**
 - Export carousel HTML as PDF via Chrome (Ctrl+P → Save as PDF → enable Background graphics)
@@ -203,7 +206,9 @@ Subject: "The 90-day plan I'm using to make this pivot"
 ---
 
 ### STEP 5 — Post the Carousel
-**Status:** ⬜ NOT STARTED
+**Status:** ✅ COMPLETE — Posted April 15 2026
+CTA: "The AI Skills That Won't Be Replaced — Grab it in first comment"
+Landing page URL posted as first comment immediately after
 
 **Optimal posting schedule (based on 2025–2026 LinkedIn data):**
 
@@ -402,7 +407,7 @@ Upgrade sequence when ready:
 
 | Week | Content | Format | Day/Time | Status |
 |---|---|---|---|---|
-| Week 1 | IT Skills Carousel #1 | Document PDF | Tue/Wed 9 AM Central | ✅ CAROUSEL BUILT — EXPORT AND POST |
+| Week 1 | IT Skills Carousel #1 | Document PDF | April 15 2026 | ✅ POSTED |
 | Week 2 | Text: teaser for carousel #2 | Text post | Wed 9 AM Central | ⬜ NOT STARTED |
 | Week 3 | Carousel #2 (Claude Code gotchas) | Document PDF | Tue 9 AM Central | ⬜ NOT STARTED |
 | Week 4 | Text: pain point from data | Text post | Wed 9 AM Central | ⬜ NOT STARTED |
