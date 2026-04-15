@@ -25,8 +25,8 @@ $50-100/month: Skool Community (Stage 8+ target)
 
 ## IDEA 001 — Email Nurture Series (Carousel Slide Deep Dives)
 
-**Status:** Partially built — Email 1 (lead magnet) exists
-**Build after:** First opt-in confirmed and welcome sequence tested
+**Status:** 🔄 IN PROGRESS — Email 1 live and delivering PDF, Emails 2-3 pending
+**Build after:** First opt-in confirmed (landing page live as of April 15 2026)
 
 **Concept:**
 Each of the 10 carousel slides becomes a standalone deeper PDF delivered
