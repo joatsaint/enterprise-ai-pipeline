@@ -433,6 +433,80 @@ These need answers before the relevant stage starts:
 
 ---
 
+
+---
+
+## The Manager Framework — Weekly Operating System
+
+**Time budget:** 3 hours per week, allocated as follows:
+
+| Hour | Day | Task |
+|---|---|---|
+| Hour 1 | Mon/Tue | Create — write and publish one LinkedIn post |
+| Hour 2 | Mon/Tue | Engage — replies, one Quora answer, one Facebook group post |
+| Hour 3 | Thu/Fri | Build — rotate through email sequence, paid PDF, YouTube video |
+
+**Weekly review (Sunday, 15 minutes):**
+Check three numbers only:
+- LinkedIn post impressions
+- Mailchimp opt-ins total
+- Gumroad sales total
+
+**Standing rules:**
+1. One platform mastered before adding another — LinkedIn first
+2. Content creation before content optimization
+3. New ideas written to PRODUCT_IDEAS.md, ignored for 30 days
+4. Paid PDF ships before any new free content is built
+5. Personal outreach to every carousel engager — fastest path to first sale
+
+**Platform priority:**
+- Primary: LinkedIn (all original content)
+- Support: Quora (one answer per week, set and forget SEO)
+- Repurpose only: Facebook, YouTube community tab
+- Do NOT start yet: TikTok, Instagram, Pinterest, Twitter/X
+
+---
+
+## 90-Day Execution Checklist
+
+### Weeks 1-4 — Foundation
+- ✅ Carousel posted on LinkedIn (April 15 2026)
+- ✅ Landing page live on Mailchimp
+- ✅ PDF lead magnet delivering
+- ⬜ Email 2 written — deeper dive on AI Orchestration skill
+- ⬜ Email 3 written — soft pitch to paid PDF
+- ⬜ First Quora answer posted
+- ⬜ First Facebook group post
+- ⬜ Week 2 LinkedIn post published
+- ⬜ Personal outreach to carousel engagers
+
+### Weeks 5-8 — First Paid Product
+- ⬜ Paid PDF topic confirmed from pain point report rank #2
+- ⬜ Gumroad account set up (free)
+- ⬜ Paid PDF outline built in Claude Code
+- ⬜ Paid PDF written and uploaded to Gumroad
+- ⬜ Email 3 updated with Gumroad link
+- ⬜ LinkedIn post announcing paid PDF
+
+### Weeks 9-12 — First Sale Push
+- ⬜ 3 Quora answers live and driving traffic
+- ⬜ LinkedIn carousel #2 posted
+- ⬜ First YouTube video uploaded (carousel repurposed via CapCut Pro)
+- ⬜ Personal outreach to 10 warm LinkedIn connections
+- ⬜ FIRST PAID SALE — stop and celebrate
+
+---
+
+## What Not To Build Until After First Paid Sale
+
+- Faceless YouTube channel (separate business, different audience)
+- TikTok, Instagram Reels, Pinterest, Twitter/X accounts
+- UltraPlan for Claude Code (scaffold prompts already cover this)
+- Resume crossmatch prompt tool (PRODUCT_IDEAS.md Idea 002)
+- Executive AI integration framework (PRODUCT_IDEAS.md Idea 003)
+- Multi-platform posting automation
+- Paid advertising of any kind
+
 ## What's NOT In Scope (until Stage 6 is complete)
 
 - Multi-model routing (Haiku vs Sonnet vs Opus per task)
