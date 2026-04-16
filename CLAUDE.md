@@ -10,6 +10,7 @@ indexed into a searchable knowledge base, and analyzed by Claude to produce
 paid PDF guides, free lead magnets, and daily research digests.
 
 See MASTER_PLAN.md for the full business pipeline and stage roadmap.
+See PROJECT_CONTEXT.md for ICP, offer definition, value proposition, and growth strategy.
 
 Project path: C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader
 
