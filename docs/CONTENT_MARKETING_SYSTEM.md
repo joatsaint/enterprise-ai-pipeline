@@ -530,3 +530,69 @@ From pain point report — ready to use:
 *Version 1.0 — April 2026*
 *Next update: After Step 1 (PDF lead magnet) is complete*
 *This document lives in your project docs\ folder alongside LINKEDIN_SERIES_FRAMEWORK.md*
+
+---
+
+## Video and Content Title Bank
+### Master Formula Rankings (from 66 videos across 3 channels — April 2026)
+
+**Formula ranking by average views:**
+1. No Coding barrier removal — 276,750 avg
+2. FREE in title — 230,444 avg
+3. Winners vs Losers — 209,500 avg
+4. Starts with number — 180,142 avg
+5. Threat/Kill/Replace — 178,571 avg
+6. Feels Illegal/Insane — 161,750 avg (use "Overlooked" for IT audience)
+7. Tutorial/Course — 159,545 avg
+8. I Asked/How I personal frame — 118,200 avg
+9. 2026 in title — 113,750 avg (fading — retire after Q2 2026)
+10. Beginner — 96,600 avg — AVOID
+
+**Super formula (combines top 3):**
+[Number] [FREE/Overlooked] Ways [IT Professionals] [Outcome] Without [Their Fear]
+I [Did Personal Experiment] With [Tool] — Here's What It Found About [Their Situation]
+
+### Top 10 Video Ideas (ranked by predicted performance)
+
+1. "I Asked Claude to Audit My IT Career — Here's What It Said" ← MAKE FIRST
+2. "How to Land an AI Role With IT Experience (No CS Degree Required)"
+3. "7 AI Skills That Will Separate Hired IT Professionals From Passed-Over Ones in 2026"
+4. "27 FREE Ways IT Professionals Are Getting AI Jobs Right Now"
+5. "Did AI Just Make Your IT Certifications Worthless?"
+6. "I Analyzed 2,900 Comments From IT Professionals — Here's Their Biggest Fear"
+7. "12 Claude Code Skills IT Professionals Can Learn This Weekend (No Coding Background)"
+8. "The 8 AI Skills IT Professionals MUST Have to Stay Employed in 2026"
+9. "How I Turned 25 Years of IT Experience Into an AI Portfolio in 30 Days"
+10. "FREE AI Certification Path for IT Professionals (The One That Actually Gets You Hired)"
+
+### LinkedIn Post Title Adaptations (same formulas, platform-native)
+
+1. "I asked Claude to audit my IT career. Here's what it said." (no quotes, lowercase hook)
+2. "Most IT professionals are learning the wrong AI skills. Here's what the data says."
+3. "7 AI skills separating hired IT professionals from passed-over ones right now"
+4. "Did AI just make your IT certifications worthless? I analyzed 50 videos to find out."
+5. "Your IT experience is worth more in the AI era than anyone is telling you"
+
+### Email Subject Line Bank (Cardone-adapted)
+
+Fear 1 — Obsolescence:
+- "Your IT skills have an expiration date — here's what replaces them"
+- "275,000 AI jobs open. Most IT professionals don't qualify. Here's the gap."
+- "Did AI just make your certifications worthless?"
+
+Fear 2 — Imposter syndrome:
+- "You are not falling behind on AI. You were never told where to start."
+- "Why IT professionals think they're unqualified for AI roles (they're wrong)"
+- "The CS degree requirement is a myth. Here's what employers actually want."
+
+Fear 3 — Wasted effort:
+- "Every week spent learning the wrong AI skills is a week someone else gets the job"
+- "Stop learning AI tools. Start building AI systems. Here's the difference."
+- "Why your AI certifications aren't getting you interviews (and what will)"
+
+Fear 4 — Missed window:
+- "The AI professionals getting hired right now started 6 months ago. Here's how to catch up."
+- "The IT-to-AI pivot window is open. Here's how long it stays open."
+- "I analyzed 2,900 comments. The fear everyone has but nobody admits."
+
+---
