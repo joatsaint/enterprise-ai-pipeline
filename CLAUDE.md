@@ -16,6 +16,7 @@ Project path: C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Clau
 
 Claude is the primary architect and code generator.
 The human operator (Randy) reviews, approves, and deploys.
+Before writing any code, state assumptions explicitly and ask Randy for confirmation if anything is ambiguous.
 
 ---
 
