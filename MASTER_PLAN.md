@@ -254,6 +254,55 @@ It is not a blocker — it makes future content production faster.
 - General code refactoring for efficiency (defer until after first sale)
 - These are Claude Code tasks — scaffold via docs/ prompt files
 
+
+**Recursive OS Integration (Stage 7 addition):**
+
+Add three folders to project root based on Recursive Operating System framework:
+
+knowledge/              ← persistent context improving every session
+  consultants/          ← Sabrina, Greg, theMITmonk transcripts as queryable personas
+  audience/             ← pain point reports (move from knowledge_base/reports/)
+  me/                   ← voice.md, brand rules, personal preferences
+skills/                 ← scaffold prompts renamed and formalized
+  extract-pain-points.md
+  generate-titles.md
+  write-linkedin-post.md
+  atomize-content.md
+  draft-email.md
+projects/               ← content_drafts/ renamed
+
+Session end hook: Save new learnings to knowledge/ before closing Claude Code.
+Skill chaining target: Pain-Extractor → Title-Generator → Script-Writer → Publisher
+
+CREATE NOW (15 minutes, no code):
+knowledge/me/voice.md — Randy's voice patterns and brand rules
+Claude Code references this every session for consistent content output.
+
+**New analyzer modules to add in this stage:**
+
+src/analyzer/title_pattern_analyzer.py
+- Extracts video titles from existing transcript markdown headers
+- Adds view count field to channel download (YouTube Data API v3 already integrated)
+- Sends titles + view counts to Claude for pattern analysis
+- Identifies title formulas, hook structures, topic selection patterns
+- Output: knowledge_base/reports/title_patterns_YYYY-MM-DD.md
+
+src/analyzer/script_generator.py
+- Takes pain point topic from existing report
+- Takes title pattern report as context
+- Generates complete video script matching proven hook structures
+- Outputs: hook line, full script, thumbnail concept, image prompt
+- Saves to: content_drafts/scripts/YYYY-MM-DD_topic-name.md
+- One script session produces content for all 7 atomized platform versions
+
+**Manual version available NOW (no code needed):**
+1. List 20 video titles from Matt Wolfe or Jack Roberts transcript folder
+2. Paste into Claude chat — ask for title pattern analysis
+3. Ask Claude to generate 10 video ideas using patterns
+4. Ask Claude to write full script for best idea
+5. Script becomes YouTube video + LinkedIn post + email + website article
+See CONTENT_ATOMIZATION_RULES.md for platform-specific distribution rules
+
 ---
 
 ### STAGE 8 — Semi-Automation Layer
