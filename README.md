@@ -2,7 +2,7 @@
 
 > **Automated intelligence pipeline** that scrapes YouTube transcripts and audience comments at scale, extracts market intelligence using Claude AI, and generates actionable research reports — without human intervention.
 
-[![Tests](https://img.shields.io/badge/tests-39%2F39%20passing-brightgreen)](tests/)
+[![Tests](https://github.com/joatsaint/youtube-downloader/actions/workflows/test-suite.yml/badge.svg)](https://github.com/joatsaint/youtube-downloader/actions)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)
 [![Claude](https://img.shields.io/badge/AI-Claude%20Haiku-orange)](https://anthropic.com)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
