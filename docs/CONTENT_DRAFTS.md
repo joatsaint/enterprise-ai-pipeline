@@ -2,7 +2,7 @@
 ## Ready-to-Publish Content — AI Skills Series
 
 **Owner:** Randy Skiles
-**Last updated:** April 17 2026
+**Last updated:** April 27 2026
 **Rule:** Move each piece to PUBLISHED section after posting. Never delete.
 
 ---
@@ -13,7 +13,7 @@
 
 ### POST 1 — LinkedIn Feed Post
 **Topic:** AI Orchestration
-**Status:** ⬜ READY — post Tuesday April 22 at 7-9 AM CST
+**Status:** ✅ PUBLISHED — April 27 2026 | First comment with landing page link posted
 **Platform:** LinkedIn main feed
 **Hook score:** High — addresses #1 pain point from 50-video analysis
 
@@ -75,7 +75,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ### POST 2 — LinkedIn Feed Post
 **Topic:** You Are Not Behind — Career Audit Shame Relief
-**Status:** ⬜ READY — post Wednesday April 23 at 7-9 AM CST
+**Status:** ⬜ SCHEDULED — Wednesday April 29 2026 at 8 AM CST | Post first comment with landing page link immediately when live
 **Platform:** LinkedIn main feed
 **Formula:** Shame Relief (Formula A) — highest performing formula across 4-channel analysis
 **Expected performance:** Highest-potential post in the series
@@ -130,8 +130,8 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ### EMAIL 2 — Mailchimp Welcome Sequence
 **Topic:** AI Orchestration Deep Dive
-**Status:** ⬜ READY — upload to Mailchimp, set Day 2 delay after Email 1
-**Delay:** 2 days after Email 1 fires
+**Status:** ⬜ READY — upload to Mailchimp, fires immediately on signup (no delay)
+**Delay:** None — Email 1 does not exist. PDF delivered via browser redirect on signup. This is the first email subscribers receive.
 **Personalization tag:** Replace [First Name] with *|FNAME|* in Mailchimp
 
 **SUBJECT LINE OPTIONS (pick one):**
@@ -143,9 +143,9 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 ```
 Hey *|FNAME|*,
 
-Yesterday you grabbed the guide on the 7 AI skills worth building right now.
+A few minutes ago you grabbed the guide on the 7 AI skills worth building right now.
 
-Today I want to go deeper on Skill 01 — because it came up more than any
+I want to go deeper on Skill 01 — because it came up more than any
 other topic in my research. And because most explanations of it are
 completely wrong.
 
@@ -260,7 +260,8 @@ before anyone else.
 
 | Date | Platform | Title | Impressions | Opt-ins driven |
 |---|---|---|---|---|
-| April 15 2026 | LinkedIn | IT Skills Carousel | TBD | TBD |
+| April 15 2026 | LinkedIn | IT Skills Carousel | TBD | 1 thumbs up — Tash outreached via DM |
+| April 27 2026 | LinkedIn | AI Orchestration (Post 1) | Pending | 0 — first comment with link posted |
 
 ---
 
