@@ -299,23 +299,28 @@ def test_query_returns_answer_with_sources():
     from src.knowledge_base.query import ask
 
     fake_index = {
-        "built_at": "2026-04-12T00:00:00+00:00",
-        "total_files": 1,
+        "built_at": "2026-04-12 00:00:00",
+        "total_transcripts": 1,
         "groups": {
             "ai-and-claude-code": {
-                "count": 1,
-                "files": [
-                    {
-                        "filename": "2026-04-01_ai-careers.md",
-                        "path": "/fake/path/2026-04-01_ai-careers.md",
-                        "title": "AI Careers Guide",
-                        "channel": "AI Channel",
-                        "published": "2026-04-01",
-                        "word_count": 500,
-                        "has_comments": False,
-                        "comments_path": None,
+                "total": 1,
+                "channels": {
+                    "AI Channel": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/path/2026-04-01_ai-careers.md",
+                                "video_id": "abc123",
+                                "title": "AI Careers Guide",
+                                "channel": "AI Channel",
+                                "group": "ai-and-claude-code",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 500,
+                            }
+                        ],
                     }
-                ],
+                },
             }
         },
     }
@@ -323,7 +328,7 @@ def test_query_returns_answer_with_sources():
     with patch("src.knowledge_base.query.load_index", return_value=fake_index), \
          patch("src.knowledge_base.query._score_file", return_value=5), \
          patch("src.knowledge_base.query._read_file_content", return_value="AI career content here"), \
-         patch("src.knowledge_base.query._call_claude", return_value="Here is the answer based on transcripts."):
+         patch("src.knowledge_base.query._call_claude", return_value=("Here is the answer based on transcripts.", 100)):
         answer, sources = ask("What are the best AI certifications?")
 
     assert isinstance(answer, str)
@@ -340,29 +345,33 @@ def test_query_no_results_message():
     from src.knowledge_base.query import ask
 
     fake_index = {
-        "built_at": "2026-04-12T00:00:00+00:00",
-        "total_files": 1,
+        "built_at": "2026-04-12 00:00:00",
+        "total_transcripts": 1,
         "groups": {
             "ai-and-claude-code": {
-                "count": 1,
-                "files": [
-                    {
-                        "filename": "2026-04-01_unrelated.md",
-                        "path": "/fake/path/unrelated.md",
-                        "title": "Cooking Recipes",
-                        "channel": "Food Channel",
-                        "published": "2026-04-01",
-                        "word_count": 200,
-                        "has_comments": False,
-                        "comments_path": None,
+                "total": 1,
+                "channels": {
+                    "Food Channel": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/path/unrelated.md",
+                                "video_id": "",
+                                "title": "Cooking Recipes",
+                                "channel": "Food Channel",
+                                "group": "ai-and-claude-code",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 200,
+                            }
+                        ],
                     }
-                ],
+                },
             }
         },
     }
 
-    with patch("src.knowledge_base.query.load_index", return_value=fake_index), \
-         patch("src.knowledge_base.query._read_file_content", return_value=""):
+    with patch("src.knowledge_base.query.load_index", return_value=fake_index):
         # Query about something with zero keyword overlap
         answer, sources = ask("xyzzy quantum entanglement wormhole")
 
@@ -454,38 +463,48 @@ def test_ask_group_limits_search():
     from src.knowledge_base.query import ask
 
     fake_index = {
-        "built_at": "2026-04-12T00:00:00+00:00",
-        "total_files": 2,
+        "built_at": "2026-04-12 00:00:00",
+        "total_transcripts": 2,
         "groups": {
             "ai-and-claude-code": {
-                "count": 1,
-                "files": [
-                    {
-                        "filename": "2026-04-01_ai-video.md",
-                        "path": "/fake/ai.md",
-                        "title": "AI Claude Tutorial",
-                        "channel": "AI Channel",
-                        "published": "2026-04-01",
-                        "word_count": 500,
-                        "has_comments": False,
-                        "comments_path": None,
+                "total": 1,
+                "channels": {
+                    "AI Channel": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/2026-04-01_ai-video.md",
+                                "video_id": "",
+                                "title": "AI Claude Tutorial",
+                                "channel": "AI Channel",
+                                "group": "ai-and-claude-code",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 500,
+                            }
+                        ],
                     }
-                ],
+                },
             },
             "bitcoin-and-economic-news": {
-                "count": 1,
-                "files": [
-                    {
-                        "filename": "2026-04-01_btc-video.md",
-                        "path": "/fake/btc.md",
-                        "title": "Bitcoin Analysis Claude",
-                        "channel": "BTC Channel",
-                        "published": "2026-04-01",
-                        "word_count": 500,
-                        "has_comments": False,
-                        "comments_path": None,
+                "total": 1,
+                "channels": {
+                    "BTC Channel": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/2026-04-01_btc-video.md",
+                                "video_id": "",
+                                "title": "Bitcoin Analysis Claude",
+                                "channel": "BTC Channel",
+                                "group": "bitcoin-and-economic-news",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 500,
+                            }
+                        ],
                     }
-                ],
+                },
             },
         },
     }
@@ -493,13 +512,13 @@ def test_ask_group_limits_search():
     searched_files = []
 
     def fake_score(entry, keywords):
-        searched_files.append(entry["filename"])
+        searched_files.append(os.path.basename(entry["file_path"]))
         return 5  # always match
 
     with patch("src.knowledge_base.query.load_index", return_value=fake_index), \
          patch("src.knowledge_base.query._score_file", side_effect=fake_score), \
          patch("src.knowledge_base.query._read_file_content", return_value="content"), \
-         patch("src.knowledge_base.query._call_claude", return_value="Answer here."):
+         patch("src.knowledge_base.query._call_claude", return_value=("Answer here.", 100)):
         ask("Claude AI career", group="ai-and-claude-code")
 
     assert "2026-04-01_ai-video.md" in searched_files
