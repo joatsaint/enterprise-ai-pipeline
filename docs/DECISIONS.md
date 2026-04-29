@@ -1,10 +1,9 @@
 # DECISIONS.md
 ## Architectural Decision Log — YouTube Transcript Downloader
 
-**Version:** 1.0
+**Version:** 2.0
 **Owner:** Randy Skiles
-**Purpose:** Documents key architectural decisions, the context that drove them,
-the alternatives considered, and the consequences of each choice.
+**Last updated:** April 29 2026
 
 ---
 
@@ -19,6 +18,8 @@ through your architectural decisions," this document is the answer. Every entry
 demonstrates the shift from vibe coding to vibe engineering: deliberate choices made
 with explicit tradeoffs acknowledged.
 
+**Read this file at the start of every Claude Code session before writing any code.**
+
 ---
 
 ## Decision Log Format
@@ -30,12 +31,11 @@ Each entry follows this structure:
 - **Alternatives considered:** What else was evaluated
 - **Reasoning:** Why this option won
 - **Consequences:** What this decision costs and gains
-- **Status:** Active / Superseded / Deprecated
+- **Status:** Active / Superseded / Deprecated / Deferred
 
 ---
 
 ## ADR-001 — Orchestrator Pattern for Pipeline Coordination
-
 **Date:** Phase 1, April 2026
 **Status:** Active
 
@@ -69,10 +69,26 @@ context available.
 - ⚠️ Orchestrator.py grows large — must be actively managed to stay readable
 - ⚠️ All state changes must go through the orchestrator, not modules directly
 
+**State object schema:**
+```python
+state = {
+    "video_id": str,
+    "url": str,
+    "title": str,
+    "channel": str,
+    "status": "pending | success | failed | skipped",
+    "failure_reason": str or None,
+    "retry_count": int,
+    "category": str or None,
+    "file_path": str or None,
+    "tokens_before": int,
+    "tokens_after": int,
+}
+```
+
 ---
 
 ## ADR-002 — Haiku Model for Pain Point Extraction
-
 **Date:** Phase 3, April 2026
 **Status:** Active
 
@@ -110,7 +126,6 @@ prompt changes are needed.
 ---
 
 ## ADR-003 — Webshare Rotating Residential Proxy
-
 **Date:** Phase 2, April 2026
 **Status:** Active
 
@@ -153,7 +168,6 @@ status before assuming a code problem.
 ---
 
 ## ADR-004 — Flat File Index Over Vector Database
-
 **Date:** Phase 3, April 2026
 **Status:** Active — review at 500+ transcripts
 
@@ -194,7 +208,6 @@ reaches 500 transcripts, evaluate ChromaDB as the first upgrade path.
 ---
 
 ## ADR-005 — Randomized Rate Limiting
-
 **Date:** Phase 2, April 2026
 **Status:** Active
 
@@ -232,7 +245,6 @@ operations where sustained requests are more likely to trigger detection.
 ---
 
 ## ADR-006 — .env File with os.environ.setdefault() Pattern
-
 **Date:** Phase 1, April 2026
 **Status:** Active
 
@@ -242,10 +254,17 @@ Credentials must never appear in code or git history. The solution
 must work both in local development (reading from .env file) and in
 production/cloud environments (reading from system environment variables).
 
+A security incident occurred during development where API credentials
+(Anthropic API key and Kalshi password) were surfaced in context during
+a Claude Code session. Both were rotated immediately. Git history was
+confirmed clean. This decision formalizes the lessons learned.
+
 **Decision:**
 Each module that needs credentials implements `_load_env()` at module
 import time using `os.environ.setdefault()`. This loads `.env` file
 values only if the key is not already set in the system environment.
+.env files are never committed to GitHub, never synced to cloud storage
+(OneDrive, Google Drive, Dropbox), and never displayed in terminal output.
 
 **Alternatives considered:**
 - `python-dotenv` library (standard approach, adds dependency)
@@ -272,10 +291,15 @@ need credentials.
 required environment variables and fails fast with a clear error message
 if any are missing.
 
+**Security rules (non-negotiable):**
+- NEVER print, log, or display any API key — not fully, not partially
+- NEVER commit .env to GitHub under any circumstances
+- If .env appears in git status at any point, stop all operations immediately
+- If a key is exposed, rotate it immediately before continuing any work
+
 ---
 
 ## ADR-007 — Comments Weighted Higher Than Transcripts in Pain Point Analysis
-
 **Date:** Phase 3, April 2026
 **Status:** Active
 
@@ -311,7 +335,6 @@ that nobody actually understood it or could apply it.
 ---
 
 ## ADR-008 — Two-Pass Extraction (Questions Then Pain Points)
-
 **Date:** Phase 3, April 2026
 **Status:** Active
 
@@ -346,6 +369,124 @@ excessive API cost.
 
 ---
 
+## ADR-009 — Claude Code as Primary Development Platform
+**Date:** April 27 2026
+**Status:** Active
+
+**Context:**
+Question arose whether to diversify AI development platforms (Cursor,
+GitHub Copilot, etc.) to reduce dependency and cost risk on Anthropic.
+
+**Decision:**
+All project development stays in Claude Code (Anthropic). No diversification
+to other AI development platforms until after first paid sale. All code is
+built model-agnostic to enable future switching if needed.
+
+**Validated by:** LLM Council session April 27 2026 — 5-advisor analysis
+confirmed this recommendation unanimously.
+
+**Alternatives considered:**
+- Cursor — evaluated, rejected at current stage due to switching cost
+- GitHub Copilot — evaluated, rejected, weaker for agentic pipeline work
+- Multi-platform from day one — rejected, over-engineered for current scale
+
+**Reasoning:**
+Randy has existing proficiency in Claude Code — switching costs are real.
+Diversifying platforms at Stage 5 with 0 paid sales splits learning and
+slows the only thing that matters: reaching first paid sale. Claude Code
+is Anthropic's core revenue product — low risk of deprecation. Model-agnostic
+architecture provides free insurance without extra platform cost.
+
+**Model-agnostic implementation requirement:**
+- All Claude API calls must be isolated in one module (analyzer/)
+- API calls must accept a model parameter rather than hardcoding model names
+- Switching to GPT-4 or Gemini must require changing one file, not many
+
+**Consequences:**
+- ✅ No switching cost, no split learning curve
+- ✅ Model-agnostic pattern provides free insurance
+- ⚠️ Single platform dependency — mitigated by model-agnostic architecture
+- ⚠️ Monitor Anthropic pricing — if per-run cost exceeds $1.00, re-evaluate
+
+**Trigger to revisit:**
+- First paid sale confirmed, OR
+- Claude API pricing increases >50% from current baseline, OR
+- A specific project requirement cannot be met by Claude Code
+
+---
+
+## ADR-010 — Spec-First Development (No Code Before Spec)
+**Date:** April 29 2026
+**Status:** Active
+
+**Context:**
+Enterprise readiness audit (April 29 2026) identified three unbuilt modules
+(indexer.py, query.py, digest.py) with no detailed specs in CLAUDE.md.
+Code built without spec produces modules that don't integrate cleanly with
+the existing orchestrator pattern.
+
+**Decision:**
+No new module is built until its full specification is written in CLAUDE.md.
+The spec must include: purpose, inputs, outputs, failure modes, idempotency
+behavior, CLI interface, and integration points with the orchestrator.
+The orchestrator section of CLAUDE.md is the gold standard for spec quality.
+
+**Alternatives considered:**
+- Build first, document later — rejected, produces undocumentable code
+- Lightweight spec (just inputs/outputs) — rejected, insufficient for enterprise grade
+
+**Reasoning:**
+Aligns with Randy's IT background — design before deploy. Spec-first forces
+architectural thinking before implementation thinking. Three remaining modules
+(indexer, query, digest) need specs before any code is touched.
+
+**Consequences:**
+- ✅ Every module integrates cleanly with the orchestrator from day one
+- ✅ CLAUDE.md stays current as the authoritative technical reference
+- ⚠️ Adds time before coding begins — this is intentional, not a bug
+- ⚠️ CLAUDE.md version number must increment with every spec addition
+
+**Modules requiring specs before build:**
+- [ ] indexer.py — scans /transcripts, builds search index
+- [ ] query.py — on-demand Q&A against indexed content
+- [ ] digest.py — daily summary generator by channel group
+
+---
+
+## ADR-011 — Ghost Database Deferred
+**Date:** April 29 2026
+**Status:** Deferred
+
+**Context:**
+Ghost ephemeral database (MCP server integration) was evaluated as a potential
+addition for storing agent intermediate states, prompt logs, and generated code.
+
+**Decision:**
+Ghost is not added to this project at current stage. Deferred until first
+agentic multi-agent build begins.
+
+**What Ghost provides:**
+Ephemeral/local storage for AI agents to store prompt logs, intermediate states,
+and generated code rapidly without polluting production databases. MCP server
+integration allows Claude to read/write data and manage schema changes directly.
+
+**Reasoning:**
+Current project is a pipeline tool, not a multi-agent system. No intermediate
+agent states need to be stored between sessions. Project stores state in flat
+files (download_log.json, run_summary.json) which is sufficient for current
+architecture. Adding infrastructure before it's needed creates maintenance overhead.
+
+**Consequences:**
+- ✅ No added complexity or dependencies at current stage
+- ⚠️ Will need to be revisited when first agentic project begins
+
+**Trigger to revisit:**
+- LinkedIn automation agent build begins, OR
+- Healthcare plan analyzer agent build begins, OR
+- Any project requiring Claude to store intermediate states between agent steps
+
+---
+
 ## Decision Backlog — To Be Documented
 
 These decisions were made but not yet formally documented:
@@ -355,26 +496,22 @@ These decisions were made but not yet formally documented:
 - [ ] Markdown header format for transcripts
 - [ ] Knowledge base directory structure
 - [ ] Test file organization and mock strategy
-- [ ] Git branching strategy (or lack thereof)
+- [ ] Git branching strategy
 
 ---
 
 ## Superseded Decisions
 
-*None yet — project is in Phase 3*
+*None yet*
 
 ---
 
-## How to Add a New Decision
-
-When you make a significant architectural choice, add it here before
-closing the session. Template:
+## Template — Copy This for New Decisions
 
 ```markdown
-## ADR-00X — Title
-
-**Date:** Month Year
-**Status:** Active
+## ADR-00X — [Short Title]
+**Date:** [Month Year]
+**Status:** Active | Deferred | Superseded by ADR-[NUMBER]
 
 **Context:**
 [What situation forced this decision]
@@ -383,8 +520,8 @@ closing the session. Template:
 [What was chosen, in one clear sentence]
 
 **Alternatives considered:**
-- Option A
-- Option B
+- Option A (why rejected)
+- Option B (why rejected)
 
 **Reasoning:**
 [Why this option won over the alternatives]
@@ -398,6 +535,7 @@ closing the session. Template:
 
 ---
 
-*Version 1.0 — April 2026*
+*Version 2.0 — April 29 2026*
+*Merged from original DECISIONS.md v1.0 and April 29 2026 session decisions*
 *Update this document whenever a significant architectural decision is made*
 *Do not wait until "later" — session amnesia is real*
