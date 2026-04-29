@@ -1,8 +1,8 @@
 # MASTER_PLAN.md — AI Transcript Business
 ## Unified Roadmap: Transcript Downloader + PDF Business + Automation
 
-**Version: 1.4** — Created April 2026. Owner: Randy.
-**Last Updated:** April 29 2026 — Knowledge base modules complete. 45/45 tests passing. Project functionally complete.
+**Version: 1.5** — Created April 2026. Owner: Randy.
+**Last Updated:** April 29 2026 — FIRST OPT-IN RECEIVED. Email 2 sent manually. Full system operational.
 
 ---
 
@@ -40,9 +40,14 @@ with every transcript added.
 
 **First email signup on the landing page.**
 
+✅ ACHIEVED — April 29 2026. First opt-in received. Email 2 sent manually.
+Proof of concept confirmed. Funnel works end to end.
+
+Next metric: **First paid sale.**
+
 Everything else — paid products, automation, scaling — is secondary
-until one real person requests your free PDF and gives you their email.
-That is proof of concept. Do not skip to Stage 4 before achieving this.
+until one real person buys your paid PDF. Do not skip to Stage 6
+before achieving this.
 
 ---
 
@@ -543,6 +548,8 @@ Check three numbers only:
 - ✅ 10+ LinkedIn post comments (April 28)
 - ✅ Personal outreach to carousel engager (Tash — April 27)
 - ✅ First YouTube personal brand video created and live (April 27)
+- ✅ First email opt-in received — April 29 2026 🎉
+- ✅ Email 2 manually sent to first subscriber — April 29 2026
 - ⬜ Email 3 written — soft pitch to paid PDF
 - ⬜ Reddit answers (eligible May 5 2026 — 7-day account rule)
 
@@ -584,5 +591,5 @@ Check three numbers only:
 
 ---
 
-*Version 1.4 — April 29 2026*
-*Updated: Knowledge base complete, 45/45 tests, Stage 5 traffic push active*
+*Version 1.5 — April 29 2026*
+*Updated: First opt-in received, Email 2 sent, full system operational*
