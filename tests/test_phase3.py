@@ -82,15 +82,17 @@ def test_indexer_builds_correct_structure():
             os.chdir(orig_dir)
 
     assert "built_at" in index
-    assert "total_files" in index
+    assert "total_transcripts" in index
     assert "groups" in index
-    assert index["total_files"] == 1
+    assert index["total_transcripts"] == 1
     assert "ai-and-claude-code" in index["groups"]
     group = index["groups"]["ai-and-claude-code"]
-    assert group["count"] == 1
-    assert len(group["files"]) == 1
-    entry = group["files"][0]
-    assert entry["filename"] == "2026-04-01_test-video.md"
+    assert group["total"] == 1
+    assert "Test Channel" in group["channels"]
+    transcripts = group["channels"]["Test Channel"]["transcripts"]
+    assert len(transcripts) == 1
+    entry = transcripts[0]
+    assert entry["file_path"].endswith("2026-04-01_test-video.md")
     assert entry["title"] == "Test Video"
     assert entry["channel"] == "Test Channel"
     assert "word_count" in entry
@@ -124,13 +126,11 @@ def test_indexer_detects_comment_files():
         finally:
             os.chdir(orig_dir)
 
-    files = index["groups"]["ai-and-claude-code"]["files"]
-    by_name = {f["filename"]: f for f in files}
+    transcripts = index["groups"]["ai-and-claude-code"]["channels"]["Test Channel"]["transcripts"]
+    by_name = {t["file_path"].split("/")[-1]: t for t in transcripts}
 
     assert by_name["2026-04-01_with-comments.md"]["has_comments"] is True
-    assert by_name["2026-04-01_with-comments.md"]["comments_path"] is not None
     assert by_name["2026-04-02_no-comments.md"]["has_comments"] is False
-    assert by_name["2026-04-02_no-comments.md"]["comments_path"] is None
 
 
 # ---------------------------------------------------------------------------
@@ -153,8 +153,8 @@ def test_indexer_rebuilds_from_scratch():
             os.chdir(orig_dir)
 
     # Second build should have exactly 2 files, not 3 (no duplication from first build)
-    assert index1["total_files"] == 1
-    assert index2["total_files"] == 2
+    assert index1["total_transcripts"] == 1
+    assert index2["total_transcripts"] == 2
 
 
 # ---------------------------------------------------------------------------
