@@ -83,8 +83,16 @@ def main():
     # index — build/rebuild the knowledge base index
     # ----------------------------------------------------------------
     if cmd == "index":
+        group = None
+        verbose = "--verbose" in args
+        if "--group" in args:
+            idx = args.index("--group")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main index [--group <name>] [--verbose]")
+                sys.exit(1)
+            group = args[idx + 1]
         from src.knowledge_base.indexer import build_index
-        build_index()
+        build_index(group_filter=group, verbose=verbose)
         return
 
     # ----------------------------------------------------------------
