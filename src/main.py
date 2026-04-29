@@ -119,19 +119,31 @@ def main():
     if cmd == "ask":
         from src.knowledge_base.query import run_query
         group = None
+        top_n = 10
         remaining = args[1:]
         if "--group" in remaining:
             idx = remaining.index("--group")
             if idx + 1 >= len(remaining):
-                print("Usage: python -m src.main ask [--group <name>] \"question\"")
+                print("Usage: python -m src.main ask [--group <name>] [--top N] \"question\"")
                 sys.exit(1)
             group = remaining[idx + 1]
             remaining = [a for j, a in enumerate(remaining) if j != idx and j != idx + 1]
+        if "--top" in remaining:
+            idx = remaining.index("--top")
+            if idx + 1 >= len(remaining):
+                print("Usage: python -m src.main ask [--group <name>] [--top N] \"question\"")
+                sys.exit(1)
+            try:
+                top_n = int(remaining[idx + 1])
+            except ValueError:
+                print(f"--top requires an integer, got: {remaining[idx + 1]}")
+                sys.exit(1)
+            remaining = [a for j, a in enumerate(remaining) if j != idx and j != idx + 1]
         if not remaining:
-            print("Usage: python -m src.main ask [--group <name>] \"your question\"")
+            print("Usage: python -m src.main ask [--group <name>] [--top N] \"your question\"")
             sys.exit(1)
         question = " ".join(remaining)
-        run_query(question, group=group)
+        run_query(question, group=group, top_n=top_n)
         return
 
     print(f"Unknown command: '{cmd}'")
