@@ -424,19 +424,47 @@ def test_extractor_respects_group_filter():
 
     fake_index = {
         "built_at": "2026-04-12T00:00:00+00:00",
-        "total_files": 2,
+        "total_transcripts": 2,
         "groups": {
             "ai-and-claude-code": {
-                "count": 1,
-                "files": [{"filename": "ai.md", "path": "/fake/ai.md",
-                           "title": "AI", "channel": "AI Ch",
-                           "has_comments": False, "comments_path": None}],
+                "total": 1,
+                "channels": {
+                    "AI Ch": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/ai.md",
+                                "video_id": "",
+                                "title": "AI",
+                                "channel": "AI Ch",
+                                "group": "ai-and-claude-code",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 500,
+                            }
+                        ],
+                    }
+                },
             },
             "bitcoin-and-economic-news": {
-                "count": 1,
-                "files": [{"filename": "btc.md", "path": "/fake/btc.md",
-                           "title": "BTC", "channel": "BTC Ch",
-                           "has_comments": False, "comments_path": None}],
+                "total": 1,
+                "channels": {
+                    "BTC Ch": {
+                        "total": 1,
+                        "transcripts": [
+                            {
+                                "file_path": "/fake/btc.md",
+                                "video_id": "",
+                                "title": "BTC",
+                                "channel": "BTC Ch",
+                                "group": "bitcoin-and-economic-news",
+                                "date": "2026-04-01",
+                                "has_comments": False,
+                                "word_count": 500,
+                            }
+                        ],
+                    }
+                },
             },
         },
     }
