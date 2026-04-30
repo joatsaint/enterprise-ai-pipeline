@@ -1,8 +1,8 @@
 # voice.md — Randy Skiles Brand Voice and Rules
 ## Reference this file for all content generation
 
-**Version:** 1.0
-**Updated:** April 17 2026
+**Version:** 1.1
+**Updated:** April 30 2026
 **Purpose:** Consistent voice across every Claude Code session without re-explaining
 
 ---
@@ -26,13 +26,13 @@ Tertiary: "The data says which AI skills actually pay. Here's what it found."
 
 ---
 
-## Credibility Signal (use in every piece of content)
+**Credibility Signal (use in every piece of content)**
 
-"After analyzing 50 YouTube videos and 2,900 audience comments across 9 AI channels..."
+"After analyzing 259 YouTube transcripts and 2,900+ audience comments across 9 AI channels..."
 Variations:
-- "Based on analysis of 50 videos and 2,900 audience comments..."
-- "The data from 50 videos and 2,900 comments says..."
-- "I analyzed 50 videos and 2,900 audience comments to find out..."
+- "Based on analysis of 259 transcripts and 2,900+ audience comments..."
+- "The data from 259 transcripts and 2,900+ comments says..."
+- "I analyzed 259 transcripts and 2,900+ audience comments to find out..."
 
 Never skip this. It's the differentiator from every other AI career creator.
 
@@ -92,7 +92,31 @@ IT audience filter — credibility-first not claims-first
 
 ---
 
-## Platform-Specific Voice Adjustments
+## Audience Impact Rule (Graham Stephan Principle)
+
+Every insight must immediately answer "what does this mean for YOU."
+Never explain a concept without connecting it to the reader's career,
+income, or job security before moving on.
+
+**The test:** After every claim or data point ask — "so what does
+this mean for the IT professional reading this right now?"
+If the answer isn't in the next sentence, add it.
+
+**Examples:**
+- Don't: "AI orchestration is the top skill in demand."
+- Do: "AI orchestration is the top skill in demand — which means
+  the pipeline you already know how to build is the exact thing
+  companies are paying $140K to hire for right now."
+
+- Don't: "89% of AI outputs require human verification."
+- Do: "89% of AI outputs require human verification — which means
+  your 25 years of validating unreliable systems just became
+  the most valuable skill in every AI deployment."
+
+Explain it the way a trusted colleague would over coffee —
+direct, specific, and always answering "so what does this mean for me?"
+
+---
 
 **LinkedIn posts:**
 - Hook line names the pain in one sentence
