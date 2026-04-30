@@ -223,7 +223,21 @@ def run_extractor(group=None):
     for group_name, group_data in index.get("groups", {}).items():
         if group and group_name != group:
             continue
-        files = group_data.get("files", [])
+        # Flatten channels → transcripts into the entry format expected by _run_for_group
+        files = []
+        for channel_data in group_data.get("channels", {}).values():
+            for entry in channel_data.get("transcripts", []):
+                file_path = entry["file_path"]
+                comments_path = (
+                    file_path.replace(".md", "_comments.md")
+                    if entry.get("has_comments")
+                    else None
+                )
+                files.append({
+                    "path": file_path,
+                    "filename": os.path.basename(file_path),
+                    "comments_path": comments_path,
+                })
         if files:
             groups_to_process.append((group_name, files))
 
