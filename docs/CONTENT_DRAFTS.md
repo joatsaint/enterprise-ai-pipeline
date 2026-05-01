@@ -2,7 +2,7 @@
 ## Ready-to-Publish Content — AI Skills Series
 
 **Owner:** Randy Skiles
-**Last updated:** April 30 2026
+**Last updated:** April 30 2026 — Email 3 added, Posts 3-5 scheduled
 **Rule:** Move each piece to PUBLISHED section after posting. Never delete.
 
 ---
@@ -240,7 +240,108 @@ before anyone else.
 
 ---
 
-### POST 3 — LinkedIn Feed Post
+### EMAIL 3 — Mailchimp Sequence
+**Topic:** Soft Pitch to Paid PDF — AI Agents That Complete the Job
+**Status:** ⬜ READY — upload to Mailchimp after Gumroad link is live
+**Sequence position:** 2nd email subscriber receives (Email 1 doesn't exist — PDF via browser redirect)
+**Delay:** 3-5 days after Email 2 fires
+**Personalization tag:** *|FNAME|* for first name
+**Prerequisite:** Gumroad account set up and paid PDF uploaded before activating
+
+**SUBJECT LINE OPTIONS (pick one):**
+- A: The job AI keeps handing back to you ← recommended
+- B: Why your AI never actually finishes the work
+- C: 8 out of 50 AI channels are saying the same thing about your job
+
+**EMAIL BODY — copy this exactly:**
+```
+Hey *|FNAME|*,
+
+I just finished analyzing 50 AI transcripts and 30 comment files.
+
+One finding appeared in 8 out of 50 videos.
+
+That's the highest hit rate of anything in the dataset.
+
+Here it is:
+
+"AI systems produce outputs requiring substantial human review
+instead of completing work autonomously."
+
+In plain English: AI keeps handing the job back to you.
+
+You ask it to write the report. It gives you a draft.
+You ask it to analyze the data. It gives you a summary.
+You ask it to complete the workflow. It asks what to do next.
+
+This isn't a prompting problem.
+It's an architecture problem.
+
+And it's the #1 thing your future employer needs solved.
+
+---
+
+Here's what the data also found:
+
+The #1 desired outcome — mentioned in 9 out of 50 videos —
+was this:
+
+"Deploy AI agents that autonomously complete complex work
+without requiring human review."
+
+9 out of 50. That's the market telling you exactly what to build.
+
+---
+
+I've spent the last 30 days building exactly that.
+
+A production AI pipeline that downloads transcripts,
+analyzes 2,900+ audience comments, extracts pain points,
+and generates intelligence reports.
+
+Without a human reviewing every step.
+Without babysitting every output.
+Without breaking at 3 AM.
+
+I documented every architectural decision.
+Every failure mode.
+Every lesson from 25 years of IT applied to AI.
+
+And I turned it into a guide.
+
+---
+
+"The IT Professional's Guide to Building AI Agents
+That Complete the Job"
+
+$27. One-time.
+
+This isn't a course. It's a decision framework —
+the exact thinking process for wiring AI into pipelines
+that finish the work instead of handing it back.
+
+Backed by analysis of 317 transcripts and 2,900+
+audience comments. Not theory. Data.
+
+[LINK TO GUMROAD]
+
+---
+
+Reply to this email if you want to talk through
+whether this is the right next step for you.
+I read every response and answer every one.
+
+— Randy Skiles
+linkedin.com/in/randy-skiles
+
+P.S. The window between "IT professional" and
+"AI automation specialist" is open right now.
+The data says 8 out of 50 videos are talking about
+this gap. The people who close it first get hired first.
+The guide shows you how.
+```
+
+---
 **Topic:** Real Jobs vs Hype — Which AI Roles Are Actually Hiring
 **Status:** ⬜ SCHEDULED — Tuesday May 5 2026 at 7 AM CST | Post first comment with landing page link immediately when live
 **Platform:** LinkedIn main feed
@@ -422,7 +523,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 3 | Real Jobs vs Hype | Data Revelation | LinkedIn | ✅ Written |
 | 4 | Benchmark vs Production Gap | Reframe | LinkedIn | ✅ Written |
 | 5 | Troubleshooting IS AI Architecture | Shame Relief | LinkedIn | ✅ Written |
-| 6 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ⬜ Not started |
+| 6 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
 | 7 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
 | 8 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
 | 9 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
@@ -441,6 +542,6 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.0 — April 30 2026*
-*Updated: Posts 3-5 added, Post 2 marked published, content ideas bank updated*
+*Version 2.1 — April 30 2026*
+*Updated: Email 3 added — soft pitch to paid PDF. Needs Gumroad link before activating.*
 *This is your single source of truth for content status*
