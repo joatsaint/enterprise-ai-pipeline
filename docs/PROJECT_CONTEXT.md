@@ -6,7 +6,13 @@
 terrified of becoming irrelevant." Decision validated by LLM Council May 1 2026.
 
 ---
+Positioning statement (May 1 2026):
+"Become the experienced operator who knows how to use AI 
+safely, practically, and profitably inside enterprise systems."
 
+**Evolved positioning statement (May 1 2026 — LLM Council validated):**
+"Become the experienced operator who knows how to use AI 
+safely, practically, and profitably inside enterprise systems."
 ## Ideal Customer Profile
 
 **Who they are:**
