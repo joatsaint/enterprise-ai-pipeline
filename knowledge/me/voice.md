@@ -35,6 +35,9 @@ Your audience trusts you because you are *with* them, not above them. You have 2
 Primary: "Your IT experience is worth more in the AI era than anyone is telling you."
 Secondary: "You are not behind. You were never told what you already have."
 Tertiary: "The data says which AI skills actually pay. Here's what it found."
+Quaternary: "Become the experienced operator who knows how 
+to use AI safely, practically, and profitably inside 
+enterprise systems."
 
 ---
 
