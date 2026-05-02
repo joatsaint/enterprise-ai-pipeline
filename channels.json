@@ -114,6 +114,14 @@
       "notes": "30-year IT veteran, enterprise reality, blunt no-hype tone — strong ICP fit, veteran practitioner perspective"
     },
     {
+      "name": "Rod Miller AI (Uncle Rod)",
+      "url": "https://www.youtube.com/@RodMillerAI/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "max_videos": 10,
+      "notes": "GenX IT veteran 30 years. Mon/Thu AI news, Wed agent guide for employed professionals. Strong ICP fit — same audience, same voice register as Randy. Cap at 10 videos to weight toward recent Wednesday teaching content."
+    },
+    {
       "name": "AdviceWithErin",
       "url": "https://www.youtube.com/@AdviceWithErin/videos",
       "group": "career-and-job-search",
