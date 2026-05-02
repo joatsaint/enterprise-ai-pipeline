@@ -839,6 +839,74 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
+### POST 11 — LinkedIn Feed Post
+**Topic:** The Canary That Survived — Stanford Data on Who AI Is Actually Displacing
+**Status:** ⬜ READY — schedule Thursday May 29 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Shame Relief + Data — peer-reviewed research anchor
+**Source:** Brynjolfsson et al., Stanford/MIT, November 2025 — ADP administrative data
+
+**CITATION:** Brynjolfsson, Chandar, Chen. "Canaries in the Coal Mine? Six Facts about the Recent Employment Effects of Artificial Intelligence." November 13, 2025. ADP administrative data.
+
+**POST BODY — copy this exactly:**
+```
+Everyone's worried AI is coming for their job.
+
+Here's what the data actually shows.
+
+Brynjolfsson et al., Stanford, November 2025.
+ADP administrative data. Real numbers.
+
+Early-career workers ages 22-25 in
+AI-exposed roles:
+16% relative employment decline.
+
+Experienced workers:
+Employment remained stable.
+
+Read that again.
+
+The people losing jobs to AI right now
+are not the 47-year-old IT manager
+with 25 years of enterprise systems experience.
+
+They're the 23-year-old who got hired
+to do the work AI now does faster and cheaper.
+
+Here's why your experience is the moat:
+
+AI automates tasks.
+It cannot automate tacit knowledge —
+the un-digitized wisdom of how systems
+actually break at 3 AM.
+
+AI can write the code.
+It cannot take legal responsibility
+for the data breach.
+
+AI can generate the report.
+It cannot explain to the CFO why
+the numbers don't match the legacy system.
+
+You can do all three.
+
+The data doesn't say you're obsolete.
+The data says you're the canary that survived.
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
+
 ## CONTENT IDEAS BANK — Next to Write
 
 | Priority | Topic | Formula | Platform | Status |
@@ -853,12 +921,13 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 8 | People Most at Risk From AI | Reframe | LinkedIn | ✅ Written |
 | 9 | AI Making Job Worse — Cal Newport | Reframe | LinkedIn | ✅ Written |
 | 10 | Your Value Is What You Prevent | Reframe | LinkedIn | ✅ Written |
-| 11 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
-| 12 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
-| 13 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
-| 14 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
-| 15 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
-| 16 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
+| 11 | The Canary That Survived — Stanford Data | Shame Relief + Data | LinkedIn | ✅ Written |
+| 12 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
+| 13 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
+| 14 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
+| 15 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
+| 16 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
+| 17 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
 
 ---
 
@@ -874,7 +943,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.3 — May 2 2026*
-*Updated: Post 10 added — value invisibility angle from 497-transcript analysis*
-*Paid PDF title updated — "How to Stay Indispensable When AI Makes Everyone Look the Same" at $37*
+*Version 2.4 — May 2 2026*
+*Updated: Post 11 added — Stanford/Brynjolfsson peer-reviewed data, canary framing*
+*Citation verified: Brynjolfsson, Chandar, Chen. November 13 2025. ADP administrative data.*
 *This is your single source of truth for content status*
