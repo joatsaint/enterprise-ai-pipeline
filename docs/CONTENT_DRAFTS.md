@@ -514,6 +514,270 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
+### POST 6 — LinkedIn Feed Post
+**Topic:** Organizations Can't Adapt Fast Enough
+**Status:** ⬜ SCHEDULED — Thursday May 14 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Reframe — digest insight from 259 transcripts
+**Source:** 2026-04-29 digest
+
+**POST BODY — copy this exactly:**
+```
+Your organization bought the AI tools.
+Turned them on.
+Waited for transformation.
+
+Then the first reports came back.
+
+AI gave you summaries instead of decisions.
+Drafts instead of deliverables.
+Recommendations instead of actions.
+
+So someone got blamed.
+Usually the technology.
+
+Here's what actually happened:
+
+Business models built on human inefficiency
+are becoming obsolete faster than
+organizations can adapt.
+
+That's not a technology problem.
+That's an architecture problem.
+
+And it's showing up in the data.
+
+After analyzing 50 AI transcripts and
+2,900+ audience comments, one pain point
+appeared in 7 out of 50 videos:
+
+"We can't adapt fast enough."
+
+The organizations winning right now aren't
+the ones with the best AI tools.
+
+They're the ones who redesigned their
+workflows before they deployed the tools.
+
+25 years of IT taught me one thing:
+Technology doesn't fix broken processes.
+It exposes them.
+
+What's the one workflow in your organization
+that AI has exposed as broken?
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
+
+### POST 7 — LinkedIn Feed Post
+**Topic:** The Claude Code Feature Ladder — Where You Are vs Where Employers Need You
+**Status:** ⬜ SCHEDULED — Tuesday May 19 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Reframe + Data
+**Source:** Claude Code Feature Ladder transcript
+
+**POST BODY — copy this exactly:**
+```
+Most developers using AI right now are at Rung 1.
+
+Copy from the chat window.
+Paste into the editor.
+Repeat 50 times a day.
+
+It feels productive.
+It isn't scalable.
+
+Here's what enterprise employers actually need —
+and where the gap is for IT professionals who get this right.
+
+The Claude Code Feature Ladder has 7 rungs:
+
+Rung 1 — Chat and paste (where most people are)
+Rung 2 — AI in your local terminal
+Rung 3 — Persistent memory via CLAUDE.md
+Rung 4 — Reusable slash commands and workflows
+Rung 5 — Event-driven AI with system guardrails
+Rung 6 — Specialized sub-agents in parallel workflows
+Rung 7 — Fully orchestrated spec-driven automation
+
+Most AI tutorials teach Rungs 1 and 2.
+Enterprise deployment starts at Rung 5.
+
+That gap is where careers are made right now.
+
+Here's what I built at Rung 6 — solo, no team, no budget:
+
+→ Orchestrator coordinates 8 specialized modules
+→ Each module has a defined input, output, and failure mode
+→ Artifacts pass between modules automatically
+→ 45 automated tests verify every handoff
+→ CI/CD enforces guardrails before anything hits production
+→ System runs unattended — no human babysitting
+
+That's not a demo.
+That's the architecture enterprises are paying $140K to hire for.
+
+And here's what most people miss:
+
+IT professionals already think in systems.
+You've been designing handoffs, defining contracts,
+and building guardrails since before AI was a job title.
+
+You're not at Rung 1.
+You never were.
+
+You just didn't know the ladder existed.
+
+After analyzing 317 transcripts and 2,900+ audience comments
+across 9 AI channels — the #1 desired outcome was this:
+
+"Deploy AI agents that complete complex work
+without requiring human review."
+
+That's Rung 6.
+That's what you already know how to build.
+
+Where are you on the ladder right now?
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #ClaudeCode #AIAutomation #CareerPivot
+```
+
+---
+
+### POST 8 — LinkedIn Feed Post
+**Topic:** The People Most at Risk From AI Are Not Who You Think
+**Status:** ⬜ SCHEDULED — Thursday May 21 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Reframe — from channel research and ICP pivot analysis
+**Source:** "Find Your Million Dollar Niche" project + channel research
+
+**POST BODY — copy this exactly:**
+```
+The people most at risk from AI are not older professionals.
+
+They're experienced professionals who stop translating
+their expertise into AI-enabled workflows.
+
+Huge difference.
+
+Your 25 years of IT gave you:
+→ Complexity management
+→ Operational reliability
+→ Failure mode recognition
+→ Governance instinct
+→ Process dependencies
+→ Stakeholder communication
+
+AI desperately needs people who understand those things.
+
+You are not the liability.
+You are the asset nobody has named yet.
+
+The emotional transformation isn't:
+"Become an AI expert."
+
+It's:
+"Become the experienced operator who knows how to use AI
+safely, practically, and profitably inside enterprise systems."
+
+That is a very valuable person over the next 5 years.
+
+After analyzing 317 transcripts and 2,900+ audience comments —
+the organizations winning with AI aren't hiring prompt engineers.
+
+They're hiring people who understand how real organizations
+actually function.
+
+That's you.
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
+
+### POST 9 — LinkedIn Feed Post
+**Topic:** AI Was Supposed to Make Your Job Easier — So Why Are You Busier?
+**Status:** ⬜ SCHEDULED — Tuesday May 26 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Reframe — from Cal Newport research + May 2 digest
+**Source:** Cal Newport "Why Is AI Making My Job Worse" transcript
+
+**POST BODY — copy this exactly:**
+```
+AI was supposed to make your job easier.
+
+So why are you busier than ever?
+
+New research shows that AI tools have
+paradoxically increased shallow work —
+more emails, more messages, more meetings —
+while deep work actually declined.
+
+This isn't a tool problem.
+It's a workflow problem.
+
+The professionals winning with AI right now
+aren't the ones using it most.
+
+They're the ones who redesigned their
+workflows before they added AI to them.
+
+25 years of IT taught me this pattern.
+New technology doesn't fix broken processes.
+It exposes them.
+
+Here's the one question that tells you
+whether you're set up to win or lose
+with AI in the next 12 months:
+
+"Do you control your workflow —
+or does your workflow control you?"
+
+Drop your answer in the comments.
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
+
 ## CONTENT IDEAS BANK — Next to Write
 
 | Priority | Topic | Formula | Platform | Status |
@@ -523,10 +787,16 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 3 | Real Jobs vs Hype | Data Revelation | LinkedIn | ✅ Written |
 | 4 | Benchmark vs Production Gap | Reframe | LinkedIn | ✅ Written |
 | 5 | Troubleshooting IS AI Architecture | Shame Relief | LinkedIn | ✅ Written |
-| 6 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
-| 7 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
-| 8 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
-| 9 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
+| 6 | Organizations Can't Adapt Fast Enough | Reframe | LinkedIn | ✅ Written |
+| 7 | Claude Code Feature Ladder | Reframe + Data | LinkedIn | ✅ Written |
+| 8 | People Most at Risk From AI | Reframe | LinkedIn | ✅ Written |
+| 9 | AI Making Job Worse — Cal Newport | Reframe | LinkedIn | ✅ Written |
+| 10 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
+| 11 | Email 4 — Compounding moat concept | Teaching | Email | ⬜ Not started |
+| 12 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
+| 13 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
+| 14 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
+| 15 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
 
 ---
 
@@ -542,6 +812,6 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.1 — April 30 2026*
-*Updated: Email 3 added — soft pitch to paid PDF. Needs Gumroad link before activating.*
+*Version 2.2 — May 2 2026*
+*Updated: Posts 6-9 added, content ideas bank expanded to 15 items*
 *This is your single source of truth for content status*

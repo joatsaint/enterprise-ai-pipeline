@@ -5,14 +5,14 @@
       "url": "https://www.youtube.com/@NateBJones/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Enterprise AI reality — strong ICP fit"
     },
     {
       "name": "Matt Wolfe",
       "url": "https://www.youtube.com/@mreflow/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": "",
+      "notes": "AI tool awareness — employed professional audience",
       "max_videos": 20
     },
     {
@@ -20,65 +20,153 @@
       "url": "https://www.youtube.com/@JeffSu/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Productivity for knowledge workers — strong ICP fit"
     },
     {
       "name": "Learn with Lukas",
       "url": "https://www.youtube.com/@learnwithlukas/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Certifications + career content — partial ICP fit, watch"
     },
     {
       "name": "Tina Huang",
       "url": "https://www.youtube.com/@TinaHuang1/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Data science focus, skews younger — partial ICP fit, watch"
     },
     {
       "name": "Tech With Tim",
       "url": "https://www.youtube.com/@TechWithTim/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Technical AI fluency — strong ICP fit"
     },
     {
       "name": "Technical Program Management Hub",
       "url": "https://www.youtube.com/@programstrategyhq/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "TPM audience — exact ICP match"
     },
     {
       "name": "AI Explained",
       "url": "https://www.youtube.com/@aiexplained-official/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Enterprise-safe AI education — strong ICP fit"
     },
     {
       "name": "Jack Roberts",
       "url": "https://www.youtube.com/@Itssssss_Jack/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Claude Code technical content — strong fit"
     },
     {
       "name": "theMITmonk",
       "url": "https://www.youtube.com/@theMITmonk/videos",
       "group": "ai-and-claude-code",
       "active": true,
-      "notes": ""
+      "notes": "Self-improvement, broad audience — partial ICP fit, watch"
+    },
+    {
+      "name": "Aishwarya Srinivasan",
+      "url": "https://www.youtube.com/@aishwaryasrinivasan/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Data science / ML — developer adjacent, partial fit"
+    },
+    {
+      "name": "Silicon Valley Girl",
+      "url": "https://www.youtube.com/@SiliconValleyGirl/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Executive interviews — employed professional audience"
+    },
+    {
+      "name": "The Advisor Architect",
+      "url": "https://www.youtube.com/@TheAdvisorArchitect/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Adjacent vertical — compounding moat research, strong fit"
+    },
+    {
+      "name": "Cal Newport",
+      "url": "https://www.youtube.com/@CalNewportMedia/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Best ICP fit in entire list — calm signal, enterprise reality"
+    },
+    {
+      "name": "Thomas Frank",
+      "url": "https://www.youtube.com/@Thomasfrank/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Productivity systems — partial ICP fit, skews younger"
+    },
+    {
+      "name": "AdviceWithErin",
+      "url": "https://www.youtube.com/@AdviceWithErin/videos",
+      "group": "career-and-job-search",
+      "active": true,
+      "notes": "Job seekers — wrong primary ICP, moved for separate analysis"
+    },
+    {
+      "name": "Helena Paschal",
+      "url": "https://www.youtube.com/@HelenaPaschal/videos",
+      "group": "career-and-job-search",
+      "active": true,
+      "notes": "Career coaching for job seekers — wrong primary ICP, moved for separate analysis"
+    },
+    {
+      "name": "David Farley",
+      "url": "https://www.youtube.com/@ModernSoftwareEngineeringYT/videos",
+      "group": "developer-technical",
+      "active": true,
+      "notes": "Senior software engineers — developer audience, not IT managers"
+    },
+    {
+      "name": "Corey Quinn",
+      "url": "https://www.youtube.com/@LastWeekinAWS/videos",
+      "group": "developer-technical",
+      "active": true,
+      "notes": "AWS engineers — too technical for primary ICP"
+    },
+    {
+      "name": "The Pragmatic Engineer",
+      "url": "https://www.youtube.com/@pragmaticengineer/videos",
+      "group": "developer-technical",
+      "active": true,
+      "notes": "Senior engineers — developer audience, not IT managers"
+    },
+    {
+      "name": "David Bombal",
+      "url": "https://www.youtube.com/@davidbombal/videos",
+      "group": "developer-technical",
+      "active": true,
+      "notes": "Cybersecurity technical content — developer audience"
+    },
+    {
+      "name": "Developer Reborn",
+      "url": "https://www.youtube.com/@DevReborn/videos",
+      "group": "developer-technical",
+      "active": true,
+      "notes": "Solo developer consulting — developer audience, not IT managers"
     }
   ],
   "groups": [
     "ai-and-claude-code",
+    "career-and-job-search",
+    "developer-technical",
     "bitcoin-and-economic-news"
   ],
   "display_names": {
-    "ai-and-claude-code": "AI & Claude Code",
+    "ai-and-claude-code": "AI & Claude Code — Primary ICP Research",
+    "career-and-job-search": "Career & Job Search — Secondary Research",
+    "developer-technical": "Developer Technical — Reference Only",
     "bitcoin-and-economic-news": "Bitcoin and Economic News"
   },
-  "notes": "Add channels here. Each entry needs name, url, group, active fields."
+  "notes": "ICP pivot May 1 2026 — primary audience is employed professionals 35-55, not job seekers or developers. Run pain point analysis with --group ai-and-claude-code for primary ICP research. career-and-job-search and developer-technical preserved for reference."
 }
