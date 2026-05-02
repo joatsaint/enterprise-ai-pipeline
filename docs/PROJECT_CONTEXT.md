@@ -1,9 +1,10 @@
 # PROJECT_CONTEXT.md
 
-**Version:** 2.0
-**Updated:** May 1 2026
-**Change:** ICP refined from "IT pivot job seekers" to "employed professionals
-terrified of becoming irrelevant." Decision validated by LLM Council May 1 2026.
+**Version:** 2.1
+**Updated:** May 2 2026
+**Change:** Paid PDF title and price updated based on May 2 pain point analysis.
+New finding: "Value invisibility" (#4 pain point) is stronger hook than
+"agents that complete work" (#3). PDF angle sharpened accordingly.
 
 ---
 Positioning statement (May 1 2026):
@@ -65,12 +66,15 @@ terrified of becoming irrelevant."*
   live nerve for anyone afraid of replacement
 - Delivers via browser redirect on signup — no Email 1
 
-**First paid product ($27):**
-"The IT Professional's Guide to Building AI Agents That Complete the Job"
-- Decision framework for wiring AI into pipelines that finish work autonomously
-- Backed by pain point analysis: #1 desired outcome in 50 transcripts was
-  "deploy AI agents that complete complex work without human review"
-- Trivial price point for employed professional with something to lose
+**First paid product ($37):**
+"How to Stay Indispensable When AI Makes Everyone Look the Same"
+- Decision framework for staying valuable when AI output is indistinguishable
+  from human effort — the new #1 fear confirmed by May 2 pain point analysis
+- Backed by analysis of 497 transcripts across 17 ICP-aligned channels
+- Price raised from $27 to $37 — value invisibility fear justifies higher price,
+  still trivial for employed professional with income to protect
+- Previous title "The IT Professional's Guide to Building AI Agents That Complete
+  the Job" — retired May 2 2026, superseded by stronger angle
 
 **Future product ladder (post first paid sale):**
 - The Listener Kit ($17-27) — AI meeting tool setup, never take notes again
@@ -89,7 +93,7 @@ audience behavior — not course marketing, not opinion, not AI hype.
 
 **For employed professionals:**
 "I've watched three technology waves in 25 years of IT. Here's what actually
-protects you — and what the data from 317 transcripts says your colleagues are
+protects you — and what the data from 497 transcripts says your colleagues are
 about to figure out."
 
 **The research engine is the moat.** No other creator in this space has a
@@ -157,16 +161,17 @@ community.
 
 No paid ads until Stage 6 revenue funds them.
 
-**Current funnel status (May 1 2026):**
-- LinkedIn: 2 posts live, 5 scheduled (Posts 3-7)
+**Current funnel status (May 2 2026):**
+- LinkedIn: 2 posts live, 7 scheduled (Posts 3-9), Posts 10+ in drafts
 - Landing page: live
 - PDF: delivering via browser redirect
 - Email list: 1 subscriber
-- Paid PDF: written, needs Gumroad link
+- Paid PDF: title updated — needs Gumroad setup before Email 3 can go live
 - First paid sale: not yet
 
 ---
 
-*Version 2.0 — May 1 2026*
-*ICP pivot validated by LLM Council — Option B: Employed professionals 35-55*
+*Version 2.1 — May 2 2026*
+*Paid PDF title and price updated — "How to Stay Indispensable When AI Makes Everyone Look the Same" at $37*
+*497 transcripts analyzed across 17 ICP-aligned channels*
 *Update this file when positioning, offer, or strategy changes*
