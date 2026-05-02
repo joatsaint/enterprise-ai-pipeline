@@ -778,12 +778,73 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
+### POST 10 — LinkedIn Feed Post
+**Topic:** Your Value Isn't What You Produce — It's What You Prevent
+**Status:** ⬜ READY — schedule Tuesday May 28 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Reframe — from May 2 pain point analysis, 497 transcripts
+**Source:** pain_points_2026-05-02 — pain point #4 value invisibility + #1 hallucination finding
+
+**POST BODY — copy this exactly:**
+```
+AI just made your output look exactly like
+everyone else's output.
+
+Same quality. Same speed. Same format.
+
+So how do you prove you're worth more
+than the person next to you
+who just hit the same buttons?
+
+Here's what the data says actually matters.
+
+After analyzing 497 transcripts across
+17 AI channels — the professionals keeping
+their jobs aren't the ones producing
+the best AI output.
+
+They're the ones who catch when the
+AI output is wrong.
+
+Confident. Polished. Completely fabricated.
+
+4 out of 50 videos analyzed this week
+mentioned the same crisis:
+
+AI generates false information that
+goes undetected in production.
+
+Nobody catches it because everyone
+assumed the AI was right.
+
+Except the person who's been validating
+unreliable systems for 25 years.
+
+That person catches it every time.
+
+Your value isn't what you produce.
+It's what you prevent.
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
+
 ## CONTENT IDEAS BANK — Next to Write
 
 | Priority | Topic | Formula | Platform | Status |
 |---|---|---|---|---|
 | 1 | AI Orchestration | Teaching | LinkedIn + Email | ✅ Written |
-| 2 | You Are Not Behind | Shame Relief (A) | LinkedIn | ✅ Written |
+| 2 | You Are Not Behind | Shame Relief | LinkedIn | ✅ Written |
 | 3 | Real Jobs vs Hype | Data Revelation | LinkedIn | ✅ Written |
 | 4 | Benchmark vs Production Gap | Reframe | LinkedIn | ✅ Written |
 | 5 | Troubleshooting IS AI Architecture | Shame Relief | LinkedIn | ✅ Written |
@@ -791,12 +852,13 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 7 | Claude Code Feature Ladder | Reframe + Data | LinkedIn | ✅ Written |
 | 8 | People Most at Risk From AI | Reframe | LinkedIn | ✅ Written |
 | 9 | AI Making Job Worse — Cal Newport | Reframe | LinkedIn | ✅ Written |
-| 10 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
-| 11 | Email 4 — Compounding moat concept | Teaching | Email | ⬜ Not started |
-| 12 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
-| 13 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
-| 14 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
-| 15 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
+| 10 | Your Value Is What You Prevent | Reframe | LinkedIn | ✅ Written |
+| 11 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
+| 12 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
+| 13 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
+| 14 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
+| 15 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
+| 16 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
 
 ---
 
@@ -812,6 +874,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.2 — May 2 2026*
-*Updated: Posts 6-9 added, content ideas bank expanded to 15 items*
+*Version 2.3 — May 2 2026*
+*Updated: Post 10 added — value invisibility angle from 497-transcript analysis*
+*Paid PDF title updated — "How to Stay Indispensable When AI Makes Everyone Look the Same" at $37*
 *This is your single source of truth for content status*
