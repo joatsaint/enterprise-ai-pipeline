@@ -107,6 +107,13 @@
       "notes": "Productivity systems — partial ICP fit, skews younger"
     },
     {
+      "name": "Eli the Computer Guy",
+      "url": "https://www.youtube.com/@elithecomputerguy/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "30-year IT veteran, enterprise reality, blunt no-hype tone — strong ICP fit, veteran practitioner perspective"
+    },
+    {
       "name": "AdviceWithErin",
       "url": "https://www.youtube.com/@AdviceWithErin/videos",
       "group": "career-and-job-search",
