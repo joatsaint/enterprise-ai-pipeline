@@ -943,7 +943,97 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.5 — May 2 2026*
-*Updated: Email 3 Gumroad link activated — https://joatsaint.gumroad.com/l/wngpso*
-*Email 3 ready to upload to Mailchimp immediately*
-*This is your single source of truth for content status.*
+## WEDNESDAY LINKEDIN ARTICLE SCHEDULE
+
+**Rule:** Every article must have "AI" in the title or add "— What AI Teams Need to Learn" as subtitle.
+**Rule:** Every article must end with this CTA before publishing:
+```
+I spent [X] years making sure enterprise systems could always be put back exactly 
+the way they were. I'm now applying that discipline to AI deployment strategy. 
+If you're an IT professional transitioning into AI, or an organization trying to 
+deploy AI without the horror stories, I put together a free guide on the skills 
+that actually transfer.
+
+Check the first comment to download it.
+```
+**Rule:** First comment on every article = landing page link + hashtags immediately after publishing.
+
+---
+
+### MAY — HIRING DIRECTOR IMPACT MONTH
+
+| Date | Article | Title Check | Status |
+|---|---|---|---|
+| Wed May 7 | Article 1 | "Why AI Deployments Fail the Same Way Server Upgrades Did" — has AI ✅ | ⬜ Schedule now |
+| Wed May 14 | Article 8 | "Why Enterprise AI Projects Stall in the Same Place Every Time" — has AI ✅ | ⬜ Schedule now |
+| Wed May 21 | Article 5 | "Scope, Workaround, Communicate, Fix: The Incident Response Playbook AI Teams Are Missing" — has AI ✅ | ⬜ Schedule now |
+| Wed May 28 | Article 7 | "How to Hold an AI Vendor Accountable Before You Need To — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Schedule now |
+
+---
+
+### JUNE — CREDIBILITY DEPTH MONTH
+
+| Date | Article | Title Check | Status |
+|---|---|---|---|
+| Wed June 4 | Article 4 | "Your Stakeholders Don't Need to Understand the Model. They Need to Trust the Process." — add "— What AI Teams Need to Learn" ⚠️ | ⬜ Not yet |
+| Wed June 11 | Article 3 (new) | "Why the Best IT People Know Where Their Role Ends — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Not yet |
+| Wed June 18 | Article 10 | "How to Talk to Stakeholders Who Don't Understand What You're Building — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Not yet |
+| Wed June 25 | Article 2 (new) | "Two Rollback Plans Before You Touch Production — An IT Lesson for AI Teams" — has AI ✅ | ⬜ Not yet |
+
+---
+
+### JULY — AUTHORITY BUILDING MONTH
+
+| Date | Article | Title Check | Status |
+|---|---|---|---|
+| Wed July 2 | Article 3 (original) | "Two Rollback Plans Before You Touch Production — What AI Teams Need to Learn" — add subtitle ⚠️ OR combine with June 25 article | ⬜ Not yet |
+| Wed July 9 | Article 6 | "Every Incident Is a Documentation Opportunity — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Not yet |
+| Wed July 16 | Article 9 | "What a ServiceNow Install Taught Me About Enterprise AI Security" — has AI ✅ | ⬜ Not yet |
+| Wed July 23 | Article 12 | "Scope Creep Killed Our ServiceNow Timeline — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Not yet |
+| Wed July 30 | Article 11 | "I Earned 25 Certifications While Implementing Enterprise Software Full Time — What AI Teams Need to Learn" — add subtitle ⚠️ | ⬜ Not yet |
+
+---
+
+## COMPLETE COMBINED SCHEDULE — MAY THROUGH JULY
+
+| Date | Day | Content | Type |
+|---|---|---|---|
+| May 5 | Tuesday | Post 3 — Real Jobs vs Hype | LinkedIn Post |
+| May 7 | Wednesday | Article 1 — AI Deployments Fail Like Server Upgrades | LinkedIn Article |
+| May 7 | Thursday | Post 4 — Benchmark vs Production Gap | LinkedIn Post |
+| May 12 | Tuesday | Post 5 — Troubleshooting IS AI Architecture | LinkedIn Post |
+| May 14 | Wednesday | Article 8 — Enterprise AI Projects Stall Same Place | LinkedIn Article |
+| May 14 | Thursday | Post 6 — Organizations Can't Adapt Fast Enough | LinkedIn Post |
+| May 19 | Tuesday | Post 7 — Claude Code Feature Ladder | LinkedIn Post |
+| May 21 | Wednesday | Article 5 — Incident Response Playbook AI Teams Missing | LinkedIn Article |
+| May 21 | Thursday | Post 8 — People Most at Risk From AI | LinkedIn Post |
+| May 26 | Tuesday | Post 9 — AI Making Job Worse | LinkedIn Post |
+| May 28 | Wednesday | Article 7 — Hold AI Vendor Accountable | LinkedIn Article |
+| May 28 | Thursday | Post 10 — Your Value Is What You Prevent | LinkedIn Post |
+| May 29 | Friday | Post 11 — The Canary That Survived (Stanford data) | LinkedIn Post |
+| June 4 | Wednesday | Article 4 — Stakeholders Need to Trust the Process | LinkedIn Article |
+| June 11 | Wednesday | Article 3 — Best IT People Know Where Role Ends | LinkedIn Article |
+| June 18 | Wednesday | Article 10 — How to Talk to Stakeholders | LinkedIn Article |
+| June 25 | Wednesday | Article 2 — Two Rollback Plans (new version) | LinkedIn Article |
+| July 2 | Wednesday | Article 3 original OR combine rollback articles | LinkedIn Article |
+| July 9 | Wednesday | Article 6 — Every Incident is Documentation | LinkedIn Article |
+| July 16 | Wednesday | Article 9 — ServiceNow + AI Security | LinkedIn Article |
+| July 23 | Wednesday | Article 12 — Scope Creep Killed Timeline | LinkedIn Article |
+| July 30 | Wednesday | Article 11 — 25 Certifications (revised title) | LinkedIn Article |
+
+---
+
+## ARTICLE CHECKLIST — Before Publishing Each Article
+
+- [ ] "AI" appears in title OR subtitle reads "— What AI Teams Need to Learn"
+- [ ] CTA paragraph added at end of article body
+- [ ] First comment ready with landing page link + hashtags
+- [ ] Post first comment IMMEDIATELY after publishing
+- [ ] Move article to PUBLISHED table with date and impressions
+
+---
+
+*Version 2.6 — May 3 2026*
+*Updated: Wednesday article schedule added — 13 articles May through July*
+*Complete combined schedule: Posts + Articles through July 30*
+*This is your single source of truth for content status*
