@@ -122,6 +122,13 @@
       "notes": "GenX IT veteran 30 years. Mon/Thu AI news, Wed agent guide for employed professionals. Strong ICP fit — same audience, same voice register as Randy. Cap at 10 videos to weight toward recent Wednesday teaching content."
     },
     {
+      "name": "IT Project Managers",
+      "url": "https://www.youtube.com/@ITProjectManagers/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "Project Manager AI workflows — Jira, Confluence, Atlassian. Employed professional ICP, real enterprise toolstack. Strong fit for knowledge worker pain point research."
+    },
+    {
       "name": "AdviceWithErin",
       "url": "https://www.youtube.com/@AdviceWithErin/videos",
       "group": "career-and-job-search",
