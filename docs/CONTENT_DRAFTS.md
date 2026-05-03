@@ -242,7 +242,7 @@ before anyone else.
 
 ### EMAIL 3 — Mailchimp Sequence
 **Topic:** Soft Pitch to Paid PDF — AI Agents That Complete the Job
-**Status:** ⬜ READY — upload to Mailchimp after Gumroad link is live
+**Status:** ✅ READY TO ACTIVATE — Gumroad link live. Upload to Mailchimp immediately.
 **Sequence position:** 2nd email subscriber receives (Email 1 doesn't exist — PDF via browser redirect)
 **Delay:** 3-5 days after Email 2 fires
 **Personalization tag:** *|FNAME|* for first name
@@ -323,7 +323,7 @@ that finish the work instead of handing it back.
 Backed by analysis of 317 transcripts and 2,900+
 audience comments. Not theory. Data.
 
-[LINK TO GUMROAD]
+[https://joatsaint.gumroad.com/l/wngpso]
 
 ---
 
@@ -922,7 +922,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 9 | AI Making Job Worse — Cal Newport | Reframe | LinkedIn | ✅ Written |
 | 10 | Your Value Is What You Prevent | Reframe | LinkedIn | ✅ Written |
 | 11 | The Canary That Survived — Stanford Data | Shame Relief + Data | LinkedIn | ✅ Written |
-| 12 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ Written — needs Gumroad link |
+| 12 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ READY TO ACTIVATE — Gumroad link live |
 | 13 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
 | 14 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
 | 15 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
@@ -943,7 +943,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-*Version 2.4 — May 2 2026*
-*Updated: Post 11 added — Stanford/Brynjolfsson peer-reviewed data, canary framing*
-*Citation verified: Brynjolfsson, Chandar, Chen. November 13 2025. ADP administrative data.*
+*Version 2.5 — May 2 2026*
+*Updated: Email 3 Gumroad link activated — https://joatsaint.gumroad.com/l/wngpso*
+*Email 3 ready to upload to Mailchimp immediately*
 *This is your single source of truth for content status*
