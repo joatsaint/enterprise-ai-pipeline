@@ -946,4 +946,4 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 *Version 2.5 — May 2 2026*
 *Updated: Email 3 Gumroad link activated — https://joatsaint.gumroad.com/l/wngpso*
 *Email 3 ready to upload to Mailchimp immediately*
-*This is your single source of truth for content status*
+*This is your single source of truth for content status.*
