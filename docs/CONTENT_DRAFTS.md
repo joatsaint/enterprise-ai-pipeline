@@ -907,7 +907,77 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-## CONTENT IDEAS BANK — Next to Write
+### POST 12 — LinkedIn Feed Post
+**Topic:** The Three Buckets — LinkedIn's Own Framework for Staying Indispensable
+**Status:** ⬜ READY — schedule Tuesday June 2 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Platform:** LinkedIn main feed
+**Formula:** Data Revelation + Reframe
+**Source:** "Open to Work" — LinkedIn executives. LinkedIn/Microsoft research data.
+**Data citation:** LinkedIn research — 70% of job skills will change by 2030. Two-thirds of corporate leaders won't consider candidates without AI skills.
+
+**POST BODY — copy this exactly:**
+```
+LinkedIn's own research says 70% of job skills
+will change by 2030.
+
+Here's the framework that determines
+which 30% you need to protect.
+
+Three buckets. Every IT professional needs
+to audit theirs right now.
+
+Bucket 1: What AI can do alone
+Bucket 2: What you do better with AI
+Bucket 3: What only you can do
+
+For a 25-year IT professional:
+
+Bucket 1 — AI does alone:
+→ Writing incident reports
+→ Generating status updates
+→ Basic ticket categorization
+
+Bucket 2 — you + AI:
+→ Root cause analysis
+→ Change impact assessment
+→ Security audit documentation
+
+Bucket 3 — only you:
+→ Knowing which system breaks at 3 AM
+→ Translating technical risk to executives
+→ Political navigation across departments
+→ Judgment calls that carry legal weight
+
+The professionals being displaced right now
+are the ones whose entire job was Bucket 1.
+
+The ones staying indispensable own Bucket 3
+and are rapidly building Bucket 2.
+
+LinkedIn also found that two-thirds of corporate
+leaders won't consider candidates without AI skills.
+
+That's not a threat.
+That's a map.
+
+Bucket 2 is where you put those AI skills to work.
+Bucket 3 is why they still need you after.
+
+Where does most of your day live?
+
+— Randy Skiles
+25 years IT → AI Automation
+```
+
+**FIRST COMMENT — post immediately after publishing:**
+```
+Free guide → "The AI Skills That Won't Be Replaced"
+Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+
+#AISkills #ITCareers #CareerPivot #AIAutomation
+```
+
+---
 
 | Priority | Topic | Formula | Platform | Status |
 |---|---|---|---|---|
@@ -922,7 +992,13 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 | 9 | AI Making Job Worse — Cal Newport | Reframe | LinkedIn | ✅ Written |
 | 10 | Your Value Is What You Prevent | Reframe | LinkedIn | ✅ Written |
 | 11 | The Canary That Survived — Stanford Data | Shame Relief + Data | LinkedIn | ✅ Written |
-| 12 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ READY TO ACTIVATE — Gumroad link live |
+| 12 | The Three Buckets — LinkedIn Framework | Data Revelation + Reframe | LinkedIn | ✅ Written |
+| 13 | Email 3 — Soft pitch to paid PDF | Teaching | Email | ✅ READY TO ACTIVATE — Gumroad link live |
+| 14 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
+| 15 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
+| 16 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
+| 17 | The Listener — YouTube Video 1 | Story + Demo | YouTube | ✅ Outline written |
+| 18 | Not Behind: Learn AI With IT Background | Shame Relief | YouTube | ⬜ Title only |
 | 13 | Email 4 — Value invisibility + compounding moat | Teaching | Email | ⬜ Not started |
 | 14 | Career Audit — 3 Surprising Skills | Personal Story | LinkedIn | ⬜ Draft notes exist |
 | 15 | Did AI Just Make Your IT Certs Worthless? | Threat Question | LinkedIn + YouTube | ⬜ Not started |
@@ -1033,7 +1109,7 @@ Check the first comment to download it.
 
 ---
 
-*Version 2.6 — May 3 2026*
-*Updated: Wednesday article schedule added — 13 articles May through July*
-*Complete combined schedule: Posts + Articles through July 30*
+*Version 2.7 — May 3 2026*
+*Updated: Post 12 added — Three Buckets framework, LinkedIn research data*
+*Schedule: Post 12 → Tuesday June 2 2026*
 *This is your single source of truth for content status*
