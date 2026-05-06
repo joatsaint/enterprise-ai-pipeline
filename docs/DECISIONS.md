@@ -413,6 +413,32 @@ architecture provides free insurance without extra platform cost.
 - Claude API pricing increases >50% from current baseline, OR
 - A specific project requirement cannot be met by Claude Code
 
+**Platform Agnostic Refactor — Stage 6 Backlog Item (May 2026):**
+Token pricing risk identified: As Anthropic and OpenAI approach IPO and investor
+pressure for revenue increases, token prices may rise significantly from current
+subsidized adoption pricing. The model-agnostic architecture documented above
+already provides protection. The formal refactor task is:
+
+Isolate all LLM API calls into a single module named llm_client.py. Currently
+Claude API calls exist in pain_point_extractor.py, query.py, and digest.py.
+Consolidating into one abstraction layer means switching providers requires
+changing one file and one API key — regardless of which provider is targeted.
+
+Switching options in priority order if Anthropic pricing becomes untenable:
+1. AWS Bedrock — same Claude models, enterprise compliance, pay-per-token
+2. Google Gemini Flash — ~$0.075/1M tokens, strong classification performance
+3. OpenAI GPT-4o-mini — ~$0.15/1M tokens, widely understood by employers
+4. DeepSeek API — ~$0.07/1M tokens, 75% cheaper than US labs
+5. Ollama (local) — zero token cost, run open-source models on own hardware
+
+Estimated refactor effort: one afternoon.
+Trigger: Before first professional employer deployment, OR if Haiku pricing
+increases 3x from current baseline (~$0.30/run), OR before any project built
+for an employer that will run the pipeline at scale.
+
+Monitor pricing at: llmpricecheck.com (real-time cross-provider tracker)
+Set spend alerts in Anthropic console at $5 and $10/month thresholds.
+
 ---
 
 ## ADR-010 — Spec-First Development (No Code Before Spec)

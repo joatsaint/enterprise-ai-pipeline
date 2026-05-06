@@ -232,6 +232,21 @@ Keep it under 10 pages. Actionable beats comprehensive every time.
 - Add paid guide offer into Email 3 of welcome sequence
 - Write 1-2 additional nurture emails
 
+**Stage 6 Technical Backlog — complete before first employer deployment:**
+
+Platform Agnostic Refactor (ADR-009 — May 2026)
+Consolidate all LLM API calls from pain_point_extractor.py, query.py, and
+digest.py into a single llm_client.py abstraction module. Switching providers
+then requires changing one file and one API key. Estimated: one afternoon.
+Trigger: before professional employer deployment OR if Haiku pricing hits 3x
+current baseline (~$0.30/run). Monitor: llmpricecheck.com, Anthropic console
+spend alerts at $5 and $10/month.
+
+LinkedIn automation tool build
+Healthcare plan analyzer agent
+Automated news monitoring pipeline (Layer 3)
+Notion/Airtable intelligence database (from tribe playbook)
+
 **Done when:** First paid sale, any amount.
 **This validates the entire system.**
 
