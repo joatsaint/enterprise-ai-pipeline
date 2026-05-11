@@ -594,6 +594,63 @@ Check three numbers only:
 - Executive AI integration framework (PRODUCT_IDEAS.md Idea 003)
 - Multi-platform posting automation
 - Paid advertising of any kind
+- Google Drive RAG Organizer (PRODUCT_IDEAS.md Idea 004 — see below)
+- Vehicle Maintenance Report App (PRODUCT_IDEAS.md Idea 005 — see below)
+
+## PRODUCT_IDEAS.md — Future Projects Backlog
+
+### Idea 004 — Google Drive RAG Organizer
+**Logged:** May 10 2026
+**Musk Filter:** Does this get to first paid sale faster? No. Build after.
+
+A RAG application that connects to a user's Google Drive, reads all
+documents, uses Claude AI to categorize them, creates folder structures,
+and moves documents into correct folders with preview-before-execute.
+
+**Build approach:** MCP server (not public web app) — user runs locally
+with their own Google credentials. No privacy issues, no Google OAuth
+verification required.
+
+**Phase 1:** Build for your own Google Drive first — prove the concept,
+create recorded demo video as portfolio artifact.
+**Phase 2:** Package as MCP server after completing Advanced MCP course.
+
+**Portfolio value:** Fills RAG architecture gap in current portfolio.
+Demonstrates Google Drive API, document classification, MCP development.
+
+**Trigger to start:** After first paid sale on enterprise-ai-pipeline
+AND after completing Advanced MCP course.
+
+Full analysis: Topic 2 Summary document — May 10 2026.
+
+---
+
+### Idea 005 — Vehicle Maintenance Report App
+**Logged:** May 10 2026
+**Musk Filter:** Does this get to first paid sale faster? No. Build after.
+
+A web app where user enters Year/Make/Model/Mileage and receives:
+- Open recalls from NHTSA free public API (no key required)
+- Factory scheduled maintenance plan
+- Maintenance items due based on mileage
+- Carfax affiliate link for vehicle history report
+- Downloadable PDF report + email to self
+
+**Target audiences:** DIY consumers (free), used car dealers ($49/month).
+**80% code reuse** from video-to-pdf-guide-creator — PDF creator, email
+capture, Streamlit UI pattern all reusable.
+
+**NHTSA API:** Free, no auth:
+https://api.nhtsa.gov/recalls/recallsByVehicle?make=Toyota&model=Camry&modelYear=2018
+
+**Note:** License plate lookup is NOT buildable — DPPA federal law
+protects DMV data. Use Year/Make/Model/Mileage input instead.
+
+**Trigger to start:** After Google Drive RAG Organizer (Idea 004).
+
+Full analysis: Topic 3 Summary document — May 10 2026.
+
+---
 
 ## What's NOT In Scope (until Stage 6 is complete)
 
@@ -606,5 +663,5 @@ Check three numbers only:
 
 ---
 
-*Version 1.5 — April 29 2026*
-*Updated: First opt-in received, Email 2 sent, full system operational*
+*Version 1.6 — May 10 2026*
+*Updated: Product Ideas 004 and 005 added. SA job search strategy documented.*
