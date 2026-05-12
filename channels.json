@@ -176,19 +176,26 @@
       "group": "developer-technical",
       "active": true,
       "notes": "Solo developer consulting — developer audience, not IT managers"
-    }
+    },
+	{
+	  "name": "Gartner",
+	  "url": "https://www.youtube.com/@Gartnervideo/videos",
+	  "group": "enterprise-strategy"
+	}
   ],
   "groups": [
     "ai-and-claude-code",
     "career-and-job-search",
     "developer-technical",
-    "bitcoin-and-economic-news"
+    "bitcoin-and-economic-news",
+	"enterprise-strategy"
   ],
   "display_names": {
     "ai-and-claude-code": "AI & Claude Code — Primary ICP Research",
     "career-and-job-search": "Career & Job Search — Secondary Research",
     "developer-technical": "Developer Technical — Reference Only",
-    "bitcoin-and-economic-news": "Bitcoin and Economic News"
+    "bitcoin-and-economic-news": "Bitcoin and Economic News",
+	"enterprise-strategy": "Delivers actionable, objective business and technology insights"
   },
   "notes": "ICP pivot May 1 2026 — primary audience is employed professionals 35-55, not job seekers or developers. Run pain point analysis with --group ai-and-claude-code for primary ICP research. career-and-job-search and developer-technical preserved for reference."
 }
