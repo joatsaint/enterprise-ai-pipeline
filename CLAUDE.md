@@ -19,6 +19,17 @@ The human operator (Randy) reviews, approves, and deploys.
 Before writing any code, state assumptions explicitly and ask Randy for confirmation if anything is ambiguous.
 
 ---
+---
+
+## Content Writing Rules
+
+Before drafting any article, LinkedIn content, newsletter, email, or 
+any written content for the audience:
+
+- Read knowledge/me/voice.md and apply Randy's voice profile to all writing
+- Never write content in a generic AI voice — always apply the voice profile
+- The voice profile contains the master style-transfer prompt — use it
+---
 
 ## Current Status (as of project upgrade)
 
