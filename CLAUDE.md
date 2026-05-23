@@ -1,6 +1,17 @@
 # CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
 **Version: 1.6** — Orchestration layer, observability, idempotency, input validation, graceful shutdown, CCA-F best practices, business pipeline integrated, comment fetching added, randomized rate limiting. Knowledge base module specs added: indexer.py, query.py, digest.py.
 
+## Session Start Protocol
+
+At the start of every new session, before doing any work:
+1. Ask Randy to share `memory/SESSION_LOG.md`
+2. Do not proceed until the session log has been read
+3. Confirm what session number this is and what was left outstanding from the previous session
+
+If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG.md from your memory/ folder?"
+
+---
+
 ## Project Identity
 
 This project is a commercial research engine that downloads YouTube transcripts,
