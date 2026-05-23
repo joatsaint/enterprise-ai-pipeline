@@ -23,57 +23,110 @@ echo Changed to repo directory OK
 echo.
 
 echo ===================================  >> "%LOGFILE%"
-echo Pipeline started — %DATE% %TIME%    >> "%LOGFILE%"
+echo Pipeline started -- %DATE% %TIME%   >> "%LOGFILE%"
 echo ===================================  >> "%LOGFILE%"
 
-:: STEP 1 — Incremental Download
-echo Running incremental download...
-echo Running incremental download...      >> "%LOGFILE%"
-call python main.py download --incremental >> "%LOGFILE%" 2>&1
+:: ----------------------------------------------------------------
+:: STEP 1 -- Download all groups
+:: ----------------------------------------------------------------
+
+echo Running incremental download -- ai-and-claude-code...
+echo Running incremental download -- ai-and-claude-code... >> "%LOGFILE%"
+call python -m src.main group ai-and-claude-code >> "%LOGFILE%" 2>&1
 if %ERRORLEVEL% NEQ 0 (
-    echo ERROR: Download step failed
-    echo ERROR: Download step failed       >> "%LOGFILE%"
+    echo ERROR: ai-and-claude-code download failed
+    echo ERROR: ai-and-claude-code download failed >> "%LOGFILE%"
     set STATUS=FAILED
-    set ERRORS=%ERRORS% [Download FAILED]
+    set ERRORS=%ERRORS% [ai-and-claude-code FAILED]
 ) else (
-    echo Download complete — OK
-    echo Download complete — OK            >> "%LOGFILE%"
+    echo ai-and-claude-code complete -- OK
+    echo ai-and-claude-code complete -- OK >> "%LOGFILE%"
 )
 
-:: STEP 2 — Indexer
+echo Running incremental download -- career-and-job-search...
+echo Running incremental download -- career-and-job-search... >> "%LOGFILE%"
+call python -m src.main group career-and-job-search >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: career-and-job-search download failed
+    echo ERROR: career-and-job-search download failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [career-and-job-search FAILED]
+) else (
+    echo career-and-job-search complete -- OK
+    echo career-and-job-search complete -- OK >> "%LOGFILE%"
+)
+
+echo Running incremental download -- developer-technical...
+echo Running incremental download -- developer-technical... >> "%LOGFILE%"
+call python -m src.main group developer-technical >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: developer-technical download failed
+    echo ERROR: developer-technical download failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [developer-technical FAILED]
+) else (
+    echo developer-technical complete -- OK
+    echo developer-technical complete -- OK >> "%LOGFILE%"
+)
+
+echo Running incremental download -- enterprise-strategy...
+echo Running incremental download -- enterprise-strategy... >> "%LOGFILE%"
+call python -m src.main group enterprise-strategy >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: enterprise-strategy download failed
+    echo ERROR: enterprise-strategy download failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [enterprise-strategy FAILED]
+) else (
+    echo enterprise-strategy complete -- OK
+    echo enterprise-strategy complete -- OK >> "%LOGFILE%"
+)
+
+:: ----------------------------------------------------------------
+:: STEP 2 -- Index
+:: ----------------------------------------------------------------
+
 echo Running indexer...
-echo Running indexer...                   >> "%LOGFILE%"
-call python main.py index >> "%LOGFILE%" 2>&1
+echo Running indexer... >> "%LOGFILE%"
+call python -m src.main index >> "%LOGFILE%" 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Index step failed
-    echo ERROR: Index step failed          >> "%LOGFILE%"
+    echo ERROR: Index step failed >> "%LOGFILE%"
     set STATUS=FAILED
     set ERRORS=%ERRORS% [Index FAILED]
 ) else (
-    echo Index complete — OK
-    echo Index complete — OK               >> "%LOGFILE%"
+    echo Index complete -- OK
+    echo Index complete -- OK >> "%LOGFILE%"
 )
 
-:: STEP 3 — Digest
+:: ----------------------------------------------------------------
+:: STEP 3 -- Digest
+:: ----------------------------------------------------------------
+
 echo Running digest...
-echo Running digest...                    >> "%LOGFILE%"
-call python main.py digest >> "%LOGFILE%" 2>&1
+echo Running digest... >> "%LOGFILE%"
+call python -m src.main digest >> "%LOGFILE%" 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo ERROR: Digest step failed
-    echo ERROR: Digest step failed         >> "%LOGFILE%"
+    echo ERROR: Digest step failed >> "%LOGFILE%"
     set STATUS=FAILED
     set ERRORS=%ERRORS% [Digest FAILED]
 ) else (
-    echo Digest complete — OK
-    echo Digest complete — OK              >> "%LOGFILE%"
+    echo Digest complete -- OK
+    echo Digest complete -- OK >> "%LOGFILE%"
 )
 
+:: ----------------------------------------------------------------
+:: WRAP UP
+:: ----------------------------------------------------------------
+
 echo ===================================  >> "%LOGFILE%"
-echo Pipeline %STATUS% — %DATE% %TIME%   >> "%LOGFILE%"
+echo Pipeline %STATUS% -- %DATE% %TIME%  >> "%LOGFILE%"
 if defined ERRORS echo Errors: %ERRORS%  >> "%LOGFILE%"
 echo ===================================  >> "%LOGFILE%"
 
-:: Call PowerShell script for email
+:: Send email notification
+echo.
 echo Sending email notification...
 powershell -ExecutionPolicy Bypass -File "%PSSCRIPT%" -Status "%STATUS%" -Errors "%ERRORS%" -LogFile "%LOGFILE%" -Email "%PIPELINE_EMAIL%" -Password "%PIPELINE_PASSWORD%"
 
