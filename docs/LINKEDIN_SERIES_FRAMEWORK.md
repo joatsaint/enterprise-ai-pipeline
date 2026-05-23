@@ -1,20 +1,30 @@
-# LinkedIn Article Series Framework
-## IT Professional to AI Architect: A Documented Journey
+---
+name: linkedin-content-system
+description: Use this skill before doing ANY LinkedIn content work — drafting posts, articles, carousels, newsletters, comments, or updating the tracker. This encodes Randy's full LinkedIn publishing system, rules, timing, formats, lead magnet, and automation workflow. Load it first, then act.
+---
 
-**Owner:** Randy Skiles
-**Created:** April 2026
-**Target Audience:** IT Directors, IT Managers, Senior IT Professionals
-**Publishing Schedule:** Tuesday or Wednesday, 10 AM Central — one article per week
-**Rule:** Bank three articles before publishing Article 1. Never publish without a buffer.
+# LinkedIn Content System — Randy Skiles
+## IT-to-AI Transition Expert | enterprise-ai-pipeline project
 
 ---
 
-## Series Brand Identity
+## WHO THIS IS FOR
 
-**Series Name:** *From Infrastructure to Intelligence*
+**Author:** Randy Skiles  
+**ICP (Ideal Customer Profile):** Employed IT professionals, 35–55, 15–25 years experience, quietly terrified of becoming irrelevant in the AI shift  
+**Brand voice:** Authoritative but human. 25 years of real enterprise IT war stories. Humor that comes from experience, not performance. Never corporate. Never preachy.  
+**Core positioning:** "I spent 25 years in enterprise IT. The skills that made you valuable then are the foundation AI needs now. You're not behind — you're early."  
+**Lead magnet:** Gumroad PDF guide — https://joatsaint.gumroad.com/l/wngpso ($37)  
+**LinkedIn profile:** Randy Skiles — AI Automation Specialist / Systems Analyst
+
+---
+
+## SERIES BRAND IDENTITY
+
+**Series Name:** *From Infrastructure to Intelligence*  
 **Tagline:** *25 years of IT. Starting over. Documenting everything.*
 
-**The core brand promise to the reader:**
+**Core brand promise to the reader:**
 "I have the same background you do. I am walking the path your team is about to walk.
 I will document every prerequisite they glossed over, every hour I lost, every decision
 that changed the direction of the build — so you don't have to figure it out alone."
@@ -27,7 +37,7 @@ that changed the direction of the build — so you don't have to figure it out a
 
 ---
 
-## Audience Profiles
+## AUDIENCE PROFILES
 
 **Primary: IT Directors and VPs**
 What they want: Validation that AI adoption is hard, a credible peer who has walked
@@ -46,398 +56,118 @@ don't have to" framing.
 
 ---
 
-## Universal Article Structure
+## THE CONTENT SYSTEM — HOW IT WORKS
 
-Every article in the series follows this structure regardless of topic:
+Every LinkedIn Article produces **5 pieces of content** spread across **8 days**.  
+The Article launches the week. Everything else follows, each pointing back to the article and the lead magnet.
 
-**Headline:** Problem-first or number-first. Never "Part X of My Journey."
-- Good: "Claude Code Took Me 6 Hours to Install. Here's the 20-Minute Version."
-- Good: "5 Things the Claude Code Course Assumes You Already Know (That Nobody Tells You)"
-- Bad: "My Claude Code Journey — Part 2"
+### The 8-Day Article Week Schedule
 
-**Opening paragraph (2 sentences max):**
-State the problem and promise the payoff. The reader decides in 8 seconds.
+```
+DAY 1 — TUESDAY (Article Launch Day)
+  10:00 AM  → LinkedIn Article publishes (MANUAL — must be done in LinkedIn directly)
+  10:05 AM  → LinkedIn Newsletter issue publishes (MANUAL — copy intro + first 2 paragraphs + "read full article" link)
+  10:15 AM  → Text feed post goes live (BUFFER — scheduled)
+              First comment auto-fires 3 min later (BUFFER)
 
-**Body (800-1,200 words total):**
-- Subheading every 200-300 words (directors skim first)
-- One specific "this is exactly what I did" moment — specificity is credibility
-- One moment of failure or confusion — relatability is trust
-- One concrete fix, decision, or insight — this is the value delivery
+DAY 2 — WEDNESDAY
+  → NO publishing. Comment block only (30 min on other people's posts).
 
-**Closing paragraph:**
-Connect the technical experience to a business insight. This elevates it from
-tutorial to thought leadership. End with one question to drive comments.
+DAY 3 — THURSDAY
+  10:00 AM  → Image post publishes (BUFFER — scheduled)
+              First comment auto-fires 3 min later (BUFFER)
 
-**CTA (comments, not post):**
-Drive to landing page or next article in comments, not in the post body.
-LinkedIn penalizes external links in posts.
+DAY 4 — FRIDAY
+  10:00 AM  → PDF Carousel publishes (BUFFER — scheduled)
+              First comment auto-fires 3 min later (BUFFER)
 
----
-
-## Two-Track Architecture
-
-Articles alternate between two tracks, published weekly.
-Both tracks are part of the same series — same author, same journey, two lenses.
-
-**Track 1 — Technical Gotcha Series**
-Audience lean: Senior IT professionals, team leads, hands-on implementers
-Tone: Peer to peer, honest, specific, occasionally frustrated
-Frame: "Here's what they didn't document and what it cost me"
-
-**Track 2 — Strategic & Business Track**
-Audience lean: Directors, VPs, decision makers
-Tone: Thoughtful, outcome-focused, leadership-aware
-Frame: "Here's what this means for your team and your budget"
+DAY 5 — FOLLOWING TUESDAY (+7 days)
+  10:00 AM  → Video post publishes (BUFFER — scheduled, OPTIONAL until video workflow built)
+              First comment auto-fires 3 min later (BUFFER)
+```
 
 ---
 
-## TRACK 1 — Technical Gotcha Series
-### Course Adventures + Transcript Downloader Build
+## CONTENT SPECS BY FORMAT
+
+### LinkedIn Article (Long-form)
+- Published manually in LinkedIn Articles editor
+- Must include: subtitle, urgency statement, CTA at bottom
+- Urgency statement: *"Change at work will never be as slow as it is now." — Ryan Roslansky*
+- CTA: Drive to lead magnet or email list
+- 3 hashtags max, relevant and niche
+- Title generated using the Title Scoring Process (see ARTICLE TITLE GENERATION below)
+- Word count: 1,200–1,800 words (under 1,200 feels like a feed post; over 1,800 loses readers before CTA)
+
+### LinkedIn Newsletter
+- Same day as article (Tuesday, 10:05 AM)
+- Content: First 2–3 paragraphs of article + "Read the full article: [URL]"
+- Fires push notification to ALL followers — free reach, zero extra writing
+- Setup: LinkedIn profile → Write article → Switch to Newsletter → name it "IT to AI — The Transition Playbook"
+
+### Text Feed Post (Tuesday, 10:15 AM)
+- Hook: sharpest sentence or counterintuitive claim from the article
+- 3–4 lines of native value (give something real, don't just tease)
+- End with: "Full breakdown in the comments 👇"
+- **NO link in post body — EVER** (25–60% reach penalty)
+- 3 hashtags max
+- 1,800–2,000 characters is the sweet spot
+- Line break every 2–3 lines for mobile readability
+
+### Image Post (Thursday, 10:00 AM)
+- Format: Post image (vertical 1376x768) — NOT article landscape format
+- Post text: One punchy stat or counterintuitive claim from the article + 2–3 lines context
+- End with: "I wrote about this Tuesday — link in the comments"
+- **NO link in post body**
+- Use the LinkedIn Image Engine prompt (in Google Drive: "LinkedIn Image Engine — Master System Prompt")
+
+### PDF Carousel (Friday, 10:00 AM)
+- 5–8 slides
+- Slide 1: Bold hook — article's core tension as a statement
+- Slides 2–6: One key point per slide, clean visual, short text (under 30 words per slide)
+- Slide 7: "The full breakdown" — tease the article
+- Slide 8: Lead magnet CTA — "Free guide for IT pros: [title]" + Gumroad URL
+- Post text: 1 line hook + "Swipe through 👉"
+- **NO link in post body**
+- Build in Canva, export as PDF, upload to Buffer as document post
+
+### Video Post (Following Tuesday, 10:00 AM)
+**Randy's confirmed setup — no additional equipment needed:**
+- iPhone camera
+- Quality lapel mic (already owned) — clips to shirt, plugs into iPhone
+- Selfie stick / tripod combo with Bluetooth remote shutter
+- CapCut (installed) — auto-captions + basic edit
+- Location: Outdoors by the pool, morning — this IS the brand setting, own it
+
+**Filming workflow (30 min total):**
+1. Set up tripod at pool. Clip on lapel mic. Frame shot — chest up, pool/greenery in background.
+2. Pull up 3 bullet points from the article on your phone BEFORE hitting record (screenshot them)
+3. Use Bluetooth remote to start recording
+4. Talk through 3 bullets conversationally — like explaining to a coworker. No script.
+5. Remote stop. Take one more take if first felt completely off. Use whichever sounds more natural — usually take 1.
+6. Open CapCut → Import → Auto-captions (takes 60 sec) → review for errors → Export as MP4
+7. Upload directly to Buffer — NEVER share a link, always native upload
+
+**Video specs:**
+- Format: Vertical 9:16 (film in portrait mode) — 34% higher dwell time on mobile
+- Length: 60–90 seconds max
+- Hook: Start with your most counterintuitive sentence — NOT your name, NOT "today I want to talk about"
+- Captions: Required — 80% of LinkedIn video watched on mute
+- No script — 3 bullets only. Stumbles are fine. Authenticity outperforms polish.
+
+**Post text:** One punchy line from the video + "Full breakdown in the comments 👇"
+**NO link in post body**
+
+**On-camera comfort ramp:** First 3 videos will feel awkward — that's normal and expected. By video 7–10 it becomes routine. Don't delete the uncomfortable ones — post them anyway. Your ICP responds to real, not polished.
 
 ---
 
-### ARTICLE 1 (CORNERSTONE) — Track 1
-**Headline options:**
-- "25 Years in IT. I Just Started Over. Here's Why I'm Documenting Everything."
-- "I Have 25 Years of IT Experience. Claude Code Still Humbled Me."
+## ARTICLE TITLE GENERATION
 
-**Type:** Origin story / Series introduction
-**Word count:** 1,200-1,500 (cornerstone only — all others 800-1,200)
-**Publish:** First. Everything links back to this.
+Never use a raw question from a pain point report as a title. Raw questions inform —
+strong titles pull attention. Follow this process for every article and every PDF.
 
-**Outline:**
-- Who I am: 25 years of IT infrastructure, systems auditing, enterprise ops
-- The pivot decision: Why AI automation, why now, why Claude Code
-- What I discovered immediately: This is not a beginner-friendly space
-  despite being marketed as one
-- What this series will document: Every prerequisite, every error, every
-  gotcha, every decision that changed direction
-- Who should follow: IT professionals considering the same pivot, directors
-  evaluating AI tooling for their teams
-- The honest admission: I am not a developer. I am an IT professional
-  learning to build. That is exactly why this is worth documenting.
-
-**Closing question:** "What's the biggest obstacle you've seen when your
-team tries to adopt new AI tools?"
-
-**LinkedIn SEO tags:** #ClaudeCode #AIAutomation #ITLeadership #CareerPivot
-#ArtificialIntelligence #DigitalTransformation
-
----
-
-### ARTICLE 2 — Track 1
-**Headline options:**
-- "Claude Code Took Me Hours to Install. Here's the 20-Minute Version."
-- "5 Things the Claude Code Course Assumes You Already Know (That Nobody Documents)"
-
-**Type:** Technical gotcha — installation prerequisites
-**Word count:** 900-1,100
-
-**Outline:**
-- The promise vs. the reality: Course implies smooth setup, reality is a
-  prerequisite minefield
-- The undocumented list (each gets a paragraph):
-  - WSL — why it's required, why it's not mentioned upfront
-  - curl error 23 — what it means, exact fix
-  - PATH configuration — C:\Users\joatsaint\.local\bin, why it matters
-  - Node.js v24 — specific version requirement, where official docs fail you
-  - GitHub CLI — installation via winget, why it's needed
-  - Git initialization — the step everyone skips that breaks everything
-  - Playwright MCP — what it is, why it's needed, where to find it
-- Time cost: X hours of troubleshooting condensed to a 20-minute checklist
-- The business implication: If one experienced IT professional lost this
-  much time, what does that cost an enterprise team at scale?
-
-**Closing question:** "Has your team hit invisible prerequisites with any
-AI tooling? What was the cost?"
-
-**Sidebar box (pull quote style):**
-"The course is excellent. The prerequisites are a ghost town of missing documentation.
-This article is the documentation that should have existed."
-
----
-
-### ARTICLE 3 — Track 1
-**Headline options:**
-- "I Built an AI Tool to Solve My Own Problem. Here's What Happened Next."
-- "From Manual Copy-Paste to Automated Pipeline: How a Frustrating Task
-  Became a Claude Code Project"
-
-**Type:** Transcript downloader origin story — proof of concept phase
-**Word count:** 900-1,100
-
-**Outline:**
-- The manual pain: Copying YouTube transcripts by hand for research —
-  why I was doing it, how long it took
-- The "why not automate this" moment — what triggered the idea
-- The proof of concept: One URL, one .txt file, one working tool
-  built with Claude Code and Cowork
-- What I expected Claude Code to do vs. what it actually did
-- The first surprise: It worked faster than I thought but exposed
-  how much I didn't know about production-grade thinking
-- The lesson: Proof of concept is not the same as a finished tool —
-  and that gap is where the real learning begins
-
-**Closing question:** "What repetitive manual task in your workflow
-is secretly begging to be automated?"
-
----
-
-### ARTICLE 4 — Track 1
-**Headline options:**
-- "What 'Orchestration' Actually Means When You're Not a Developer"
-- "The Architect Principle That Changed How I Build AI Tools"
-
-**Type:** Technical concept — orchestration layer, CCA-F best practices
-**Word count:** 900-1,100
-
-**Outline:**
-- The problem with my first build: Modules talking to each other directly,
-  no central coordinator, one failure = cascade
-- The air traffic controller analogy: Planes (modules) don't talk to each
-  other — they all talk to the tower (orchestrator)
-- What Vinh Nguyen's architect framework taught me about production thinking
-- The practical difference: Before orchestrator vs. after orchestrator
-  in the transcript downloader
-- The state object explained in plain English — what it is, why it matters
-- What this means for enterprise AI: Every AI agent your team builds
-  needs a coordinator or you're building a system that fails silently
-- The CCA-F connection: Why certification matters for building this correctly
-
-**Closing question:** "Does your team have a standard architecture pattern
-for AI agent pipelines, or is everyone building differently?"
-
----
-
-### ARTICLE 5 — Track 1
-**Headline options:**
-- "The Day My Personal Research Tool Became a Business"
-- "How Adding One Feature to an AI Tool Changed Its Entire Purpose"
-
-**Type:** Transcript downloader evolution — from personal tool to business engine
-**Word count:** 1,000-1,200
-
-**Outline:**
-- Where the tool was: Single URL, clean .md transcript, category sorting
-- The business plan document: How a 7-day sprint plan reframed everything
-- The pivot moment: Transcript downloader as research engine, not just
-  personal productivity tool
-- What changed in the architecture when business requirements entered:
-  - Comment fetching for pain point research
-  - Pain point extraction module
-  - Channel batch download
-  - The PDF business pipeline downstream
-- The "silly GPT" connection: How Adam's framework validated the direction
-- What IT directors should note: Internal tools become products when you
-  document them properly — the same skills apply
-
-**Closing question:** "Have you ever built an internal tool that had
-commercial potential nobody recognized at first?"
-
----
-
-### ARTICLE 6 — Track 1
-**Headline options:**
-- "Token Budgets, Rate Limiting, and Why Your AI Tool Will Get Banned
-  Without Them"
-- "The Production Checklist Nobody Gives You for Claude Code Projects"
-
-**Type:** Technical — production best practices, security, rate limiting
-**Word count:** 900-1,100
-
-**Outline:**
-- The gap between "it works on my machine" and production-ready
-- Token efficiency: What it is, why it matters for cost, how the
-  transcript cleaner achieves 30-50% reduction
-- Rate limiting: Why YouTube will throttle you, why randomized intervals
-  beat fixed ones, the bot signature problem
-- Security rules: The CLAUDE.md approach to enforcing rules in code
-  not just in prompts (Vinh Nguyen's programmatic hooks principle)
-- The Caveman skill: What it actually saves (4-5% realistic), when to
-  use it, when not to (learning phase — the explanations ARE the lesson)
-- The audit log: Why every AI decision should be logged and what that
-  enables downstream
-- Business framing: This is the difference between a demo and a deployable
-
-**Closing question:** "What's your team's standard for 'production ready'
-when it comes to AI tools?"
-
----
-
-### ARTICLE 7 — Track 1
-**Headline options:**
-- "I Taught an AI to Research My Market For Me. Here's the Architecture."
-- "Pain Point Extraction at Scale: How 200 YouTube Transcripts Become
-  a Product Roadmap"
-
-**Type:** Pain point extractor — Stage 3 of the business pipeline
-**Word count:** 1,000-1,200
-**Publish:** After Stage 3 is built and verified
-
-**Outline:**
-- The research problem: How do you know what your market actually wants
-  without spending weeks reading forums?
-- The manual alternative: What Adam does by hand, how long it takes
-- The automated solution: pain_point_extractor.py — what it does,
-  how it works in plain English
-- Comments vs. transcripts: Why audience comments are higher-signal
-  data than creator transcripts for pain point research
-- Sample output: What a ranked pain point list actually looks like
-- The business application: From ranked list to PDF topic selection
-  to product roadmap
-- The IT director angle: This is market research automation — the same
-  principle applies to internal stakeholder research, ticket pattern
-  analysis, support queue analysis
-
-**Closing question:** "How does your team currently identify recurring
-pain points from unstructured data sources?"
-
----
-
-## TRACK 2 — Strategic & Business Track
-
----
-
-### ARTICLE A — Track 2
-**Headline options:**
-- "Why I Stopped Watching AI Tutorials and Started Building"
-- "The Difference Between AI Literacy and AI Capability — And Why
-  Your Team Needs Both"
-
-**Type:** Strategic — consuming vs. building, the capability gap
-**Word count:** 800-1,000
-
-**Outline:**
-- The tutorial trap: How it's possible to watch 100 hours of AI content
-  and still not be able to build anything
-- The moment the switch flipped: First working Claude Code project
-- What "building" teaches that tutorials never can:
-  real error handling, real constraints, real decisions
-- For IT directors: Training budgets that produce consumption, not capability
-- The certification question: What CCA-F is actually testing vs. what
-  tutorial courses teach
-- The recommendation: Build something small and real before investing
-  in formal certification — in that order
-
-**Closing question:** "How does your organization measure the difference
-between AI literacy and AI capability in your team?"
-
----
-
-### ARTICLE B — Track 2
-**Headline options:**
-- "The Hidden Cost of Undocumented AI Prerequisites"
-- "What One Missing Sentence in the Docs Cost Me 6 Hours —
-  and What It Would Cost Your Team"
-
-**Type:** Strategic — documentation debt, enterprise AI adoption cost
-**Word count:** 800-1,000
-
-**Outline:**
-- The specific incident: Claude Code installation, undocumented prerequisites
-- The time math: X hours × senior IT professional hourly rate = real cost
-- Scaled to a team: What that cost becomes at 5, 10, 20 team members
-- The documentation debt problem in enterprise AI tooling:
-  tools move fast, docs lag, teams pay the gap
-- What good looks like: The CLAUDE.md approach — persistent context
-  documentation that every session reads automatically
-- The recommendation for directors: Budget for documentation time
-  as part of every AI tool adoption, not as an afterthought
-- The broader principle: The prerequisite gap is not unique to Claude Code —
-  it is endemic to the AI tooling ecosystem right now
-
-**Closing question:** "How does your organization handle documentation
-debt when adopting new AI tools at speed?"
-
----
-
-### ARTICLE C — Track 2
-**Headline options:**
-- "What a $5 Product Strategy Taught Me About AI Automation ROI"
-- "The 'Buyer List' Principle: Why Proving Value Beats Chasing Users"
-
-**Type:** Strategic — the silly PDF/GPT model applied to AI automation ROI
-**Word count:** 900-1,100
-
-**Outline:**
-- Adam's core insight: Free lead magnets attract freeloaders, $5 products
-  build buyer lists — the filter is the product
-- The parallel in enterprise AI: Proof of concept tools that nobody uses
-  vs. tools people pay to access (even internally via chargeback)
-- The AOV principle applied internally: A tool that saves 2 hours/week
-  has an implicit value — document it and you have your business case
-- How the transcript downloader evolved to apply this logic:
-  personal tool → research engine → PDF business → buyer list builder
-- For IT directors: How to frame AI tool ROI in terms that survive
-  a budget review — time saved, decisions improved, products enabled
-- The one metric: First proof of value before building Phase 2
-
-**Closing question:** "What's your team's framework for proving AI tool
-ROI before scaling investment?"
-
----
-
-### ARTICLE D — Track 2
-**Headline options:**
-- "What 200 YouTube Transcripts Taught Me About Finding a Market"
-- "AI-Powered Market Research: How I Replaced Hours of Manual Research
-  with an Automated Pipeline"
-
-**Type:** Strategic — the research engine as a business intelligence tool
-**Word count:** 900-1,100
-**Publish:** After pain point extractor is built
-
-**Outline:**
-- The research problem every IT professional faces when pivoting:
-  how do you know what the market actually needs?
-- The manual approach: Forums, Reddit, YouTube comments — hours per week
-- The automated approach: transcript downloader + comment fetcher +
-  pain point extractor = ranked market intelligence in minutes
-- What the data actually showed: Top questions, top pain points,
-  content gaps where no good answer exists (those are product opportunities)
-- The enterprise application: The same architecture applied to support
-  tickets, internal surveys, customer feedback, stakeholder interviews
-- The business intelligence angle: This is not just a YouTube tool —
-  it's an unstructured data analysis framework
-- For directors: What this capability looks like as an internal tool
-  for your team
-
-**Closing question:** "What unstructured data sources in your organization
-are sitting unanalyzed because there's no efficient way to process them?"
-
----
-
-## Publishing Calendar Template
-
-| Week | Article | Track | Status |
-|---|---|---|---|
-| Week 1 | Article 1 — Cornerstone (Origin Story) | 1 | READY TO WRITE |
-| Week 2 | Article A — Consuming vs. Building | 2 | READY TO WRITE |
-| Week 3 | Article 2 — Claude Code Prerequisites | 1 | READY TO WRITE |
-| Week 4 | Article B — Hidden Cost of Undocumented Tools | 2 | READY TO WRITE |
-| Week 5 | Article 3 — Transcript Downloader Origin | 1 | READY TO WRITE |
-| Week 6 | Article C — $5 Product Strategy & AI ROI | 2 | READY TO WRITE |
-| Week 7 | Article 4 — Orchestration in Plain English | 1 | WRITE AFTER STAGE 1 ✓ |
-| Week 8 | Article 5 — Personal Tool to Business | 1 | WRITE AFTER STAGE 2 |
-| Week 9 | Article 6 — Production Checklist | 1 | WRITE AFTER STAGE 2 |
-| Week 10 | Article D — Market Research Automation | 2 | WRITE AFTER STAGE 3 |
-| Week 11 | Article 7 — Pain Point Extraction | 1 | WRITE AFTER STAGE 3 |
-
-**Bank rule:** Articles 1, A, and 2 must be written and approved before
-Article 1 publishes. Do not start publishing without a 3-article buffer.
-
----
-
-
----
-
-## Title Generation Process (Use This Every Time)
-
-Never use the raw question from the pain point report as a title. Raw questions
-inform — strong titles pull attention. Follow this process for every article
-and every PDF.
-
-### Step 1 — Extract the raw question from the pain point report
+### Step 1 — Extract the raw question or topic
 Example: "Which skills will remain valuable as AI advances?"
 
 ### Step 2 — Identify the emotional driver
@@ -459,8 +189,6 @@ Pick the title that scores highest on all three:
 
 ### Transformation Examples
 
-**Raw question:** "Which skills will remain valuable as AI advances?"
-
 | Type | Title |
 |---|---|
 | ❌ Weak | "Future-Proof Skills for AI" |
@@ -469,10 +197,7 @@ Pick the title that scores highest on all three:
 | ✅ Urgency + specificity | "The AI Skills That Will Still Pay in 3 Years — And the Ones That Won't" |
 | ✅ Personal + direct | "If You're in IT, Read This Before You Learn Another AI Tool" |
 
-One informs. The other pulls attention. Always choose the one that pulls.
-
-### Title Rules for LinkedIn (different from YouTube)
-- Up to 50+ characters — the 23-character mobile rule does NOT apply here
+### Title Rules for LinkedIn
 - Lead with the pain or the cost, not the solution
 - Numbers work well: "7 Skills", "3 Years", "142 Days"
 - Questions work when they name a fear the reader already has
@@ -480,46 +205,278 @@ One informs. The other pulls attention. Always choose the one that pulls.
 - Never use the word "Journey" — use "path", "pivot", or "transition"
 
 ### Apply this process to PDF titles too
-The same transformation works for PDF lead magnet titles. Your first PDF:
+The same transformation works for PDF lead magnet titles.
 
 | Type | Title |
 |---|---|
 | ❌ Weak | "AI Skills for Career Advancement" |
-| ✅ Strong | "The AI Skills That Won't Be Replaced: 7 Capabilities Worth Building Right Now (Backed by Data)" |
+| ✅ Strong | "The AI Skills That Won't Be Replaced: 7 Capabilities Worth Building Right Now" |
 | ✅ Stronger | "Stop Learning the Wrong AI Skills — Here Are the 7 That Actually Pay" |
 | ✅ Most direct | "If You're Pivoting Into AI, Read This Before You Take Another Course" |
 
 ---
 
-## Article Writing Process (Per Article)
+## LINKEDIN ARTICLE FORMATTING RULES
 
-1. Open SKILLS_LOG.md — find the relevant skill entry, use the resume
-   translation as your article thesis statement
-2. Write the opening paragraph first — if you can't state the problem
-   and payoff in 2 sentences, the article isn't focused enough yet
-3. Draft the body — one specific moment of failure, one concrete fix,
-   one business insight
-4. Write the headline last — after you know what the article actually says
-5. Check: Does a 10-second skim of subheadings tell the story?
-6. Check: Is the first 23 characters of the headline the key topic?
-   (LinkedIn mobile — same rule as YouTube)
-7. Schedule via LinkedIn for Tuesday or Wednesday 10 AM Central
-8. Stay available for first 60 minutes to respond to comments
+These rules apply to every LinkedIn Article before publish. They govern
+visual layout, mobile readability, and structural additions validated
+against top LinkedIn creators (Justin Welsh, Chris Donnelly, Lara Acosta).
+
+### Paragraph Length
+- 2 sentences max per paragraph throughout the entire article
+- 1 sentence is better when the point is sharp
+- Never 3+ sentence blocks — they read as walls on mobile
+
+### Subheadings
+- Every subheading must read as a hook, not a label
+- Wrong: "The Bridge" / "Context" / "What This Means"
+- Right: "The employees didn't do anything wrong." / "The gap is already here."
+- A skimmer should stop on every subheading — not scroll past it
+
+### Opening Lines — 62/50 Character Discipline
+- Line 1: 62 characters max
+- Line 2: 62 characters max
+- Line 3 (hook line before "see more"): 50 characters max
+- Test every opening against this before publish
+- Prevents mobile line-wrap that breaks the visual rhythm of the hook
+
+### The Re-Hook
+- Required after the War Story, before the Setup/Context section
+- One sentence that answers: "okay, but why should I keep reading?"
+- Bridges the incident to the current moment explicitly
+- Example: "That gap is open again right now — and it's bigger."
+
+### Bold Usage
+- One bolded line per major section — maximum
+- Use it on the single sentence a skimmer must not miss
+- Never bold for decoration or general emphasis
+- If everything is bold, nothing is
+
+### The Power-Ending
+- Required before every CTA
+- 2-3 short punchy lines that summarize the entire article's lesson
+- Written for the skimmer who read nothing else
+- Lands the point, then hands off to the CTA
+- Example: "Move first. One page. This week."
+
+### Urgency Statement Placement
+- The Ryan Roslansky quote goes immediately above the final CTA
+- Not buried mid-article — it needs emotional surface area to land
+- Format: italicized, standalone line, then CTA on the next line
+
+### Pull Quote
+- One per article — pick the sharpest line in the piece
+- Pull it out visually using LinkedIn's native pull quote format
+- Rewards skimmers and breaks up long text blocks
+
+### Article Length
+- Target: 1,200–1,800 words
+- Under 1,200 feels like a feed post
+- Over 1,800 loses most readers before the CTA
+
+### Cover Image
+- Every article requires a landscape cover image (1376x768)
+- A missing cover image signals an unfinished article to readers and the algorithm
+- Generate using the LinkedIn Article image prompt in this skill
 
 ---
 
-## What NOT to Write
+## TWO-TRACK ARTICLE ARCHITECTURE
 
+Articles alternate between two tracks, published weekly.
+Both tracks are part of the same series — same author, same journey, two lenses.
+
+**Track 1 — Technical Gotcha Series**
+Audience lean: Senior IT professionals, team leads, hands-on implementers
+Tone: Peer to peer, honest, specific, occasionally frustrated
+Frame: "Here's what they didn't document and what it cost me"
+
+**Track 2 — Strategic & Business Track**
+Audience lean: Directors, VPs, decision makers
+Tone: Thoughtful, outcome-focused, leadership-aware
+Frame: "Here's what this means for your team and your budget"
+
+### Publishing Calendar Template
+
+| Week | Article | Track |
+|---|---|---|
+| Week 1 | Article 1 — Cornerstone (Origin Story) | 1 |
+| Week 2 | Article A — Consuming vs. Building | 2 |
+| Week 3 | Article 2 — Claude Code Prerequisites | 1 |
+| Week 4 | Article B — Hidden Cost of Undocumented Tools | 2 |
+| Week 5 | Article 3 — Transcript Downloader Origin | 1 |
+| Week 6 | Article C — $5 Product Strategy & AI ROI | 2 |
+| Week 7 | Article 4 — Orchestration in Plain English | 1 |
+| Week 8 | Article 5 — Personal Tool to Business | 1 |
+| Week 9 | Article 6 — Production Checklist | 1 |
+| Week 10 | Article D — Market Research Automation | 2 |
+| Week 11 | Article 7 — Pain Point Extraction | 1 |
+
+**Bank rule:** Three articles must be written and approved before Article 1 publishes.
+Never publish without a 3-article buffer.
+
+---
+
+## ARTICLE WRITING PROCESS (Per Article)
+
+1. Read cultural_reference_bank.md — select one reference that fits the article's situation
+2. Open SKILLS_LOG.md — find the relevant skill entry, use the resume translation as your article thesis statement
+3. Write the opening paragraph first — if you can't state the problem and payoff in 2 sentences, the article isn't focused enough yet
+4. Draft the body — one specific moment of failure, one concrete fix, one business insight
+5. Write the headline last — use the Title Scoring Process after you know what the article actually says
+6. Apply the Article Formatting Rules checklist before publish
+7. Schedule via LinkedIn for Tuesday or Wednesday 10 AM Central
+8. Stay available for first 60 minutes to respond to comments
+
+### What NOT to Write
 - Chronological narration without a point ("First I did X, then Y...")
 - Generic AI enthusiasm ("AI is changing everything!")
 - Tutorial-style step-by-step without a business frame
 - Anything that requires the reader to already understand Claude Code
 - Humble bragging disguised as vulnerability
-- Articles longer than 1,200 words (except the cornerstone)
+- Articles outside the 1,200–1,800 word range
 
 ---
 
-## Headline Bank (Unused — Reserve for Future Articles)
+## WHAT CLAUDE SHOULD DO WHEN GIVEN AN ARTICLE
+
+When Randy pastes an article and asks for content, produce ALL of the following in one response:
+
+1. **Text Feed Post** — hook + 3–4 lines value + "Full breakdown in comments 👇" (no link, 3 hashtags)
+2. **Image Post Text** — punchy stat/claim + 2–3 lines + "I wrote about this Tuesday — link in comments" (no link, 3 hashtags)
+3. **Carousel Outline** — slide-by-slide outline (Slide 1 hook through Slide 8 CTA)
+4. **Newsletter Intro** — first 2–3 paragraphs adapted for newsletter + "Read the full article: [ARTICLE_URL]"
+5. **First Comments** — Versions A, B, C, D with [ARTICLE_URL] as placeholder
+6. **Poll Option** — one yes/no or either/or question based on the article's core tension (optional but high-engagement)
+7. **Buffer Schedule Block** — exact dates/times for all 4 Buffer items based on the article's publish Tuesday
+
+Label each section clearly. Randy approves/edits before anything goes to Buffer or LinkedIn.
+
+---
+
+## FIRST COMMENT TEMPLATES
+
+Buffer auto-fires the first comment 3 minutes after each post goes live.  
+Vary the wording slightly each time — never use identical text twice.
+
+**Version A — Tuesday text post:**
+```
+Full article here: [ARTICLE_URL]
+
+If you're an IT pro figuring out where you fit in the AI shift → free guide: https://joatsaint.gumroad.com/l/wngpso
+```
+
+**Version B — Thursday image post:**
+```
+Went deep on this Tuesday: [ARTICLE_URL]
+
+Free framework for IT-to-AI transition: https://joatsaint.gumroad.com/l/wngpso
+```
+
+**Version C — Friday carousel:**
+```
+Full story behind this: [ARTICLE_URL]
+
+Free guide — no email required: https://joatsaint.gumroad.com/l/wngpso
+```
+
+**Version D — Video:**
+```
+Read version here: [ARTICLE_URL]
+
+The free guide I reference: https://joatsaint.gumroad.com/l/wngpso
+```
+
+---
+
+## TIMING AND ALGORITHM RULES — NON-NEGOTIABLE
+
+| Rule | Reason |
+|------|--------|
+| Minimum 18–24 hours between feed posts | Second post kills first post's distribution cycle |
+| NEVER put links in post body | 25–60% reach penalty — always use first comment |
+| 3 hashtags max per post | 6+ triggers spam classification |
+| Never post same format 3x in a row | ~35% visibility drop |
+| Golden Hour: be available for 60 min after every post | Algorithm decides post's fate in first hour |
+| Reply to EVERY comment within 60 min of posting | Commenting back boosts reach by 30% |
+| Never edit a post to add a link later | Additional 20% penalty on top of link penalty |
+| Articles must be published manually in LinkedIn | Buffer cannot schedule LinkedIn long-form Articles |
+
+---
+
+## DAILY MANUAL BLOCKS
+
+### Morning Comment Block (30 min, every weekday)
+1. Search 2–3 of these terms, rotating daily:
+   - "AI layoffs IT"
+   - "enterprise AI deployment"
+   - "IT career 2026"
+   - "sysadmin automation"
+   - "AI replacing jobs"
+   - "future of IT jobs"
+2. Filter: Past week, sort by Latest
+3. Target posts by people with **5K+ followers** — your comment rides their distribution
+4. Leave **2–3 comments max** — quality over quantity
+5. Each comment must include a specific insight from 25 years of IT experience
+6. **NEVER include links in comments on other people's posts**
+7. Check your own posts — reply to every comment from the past 24 hours
+
+### Golden Hour Block (15 min, every publish day)
+- Must be available 10:00–11:00 AM on Tue, Thu, Fri
+- Reply to every comment that comes in
+- Ask one follow-up question to anyone who comments substantively
+- Like every reply
+
+### Weekly Batch Block (60–90 min, Monday morning)
+- Draft all content for the week using Claude
+- Load Text post, Image post, Carousel into Buffer with first comments
+- Schedule at correct times
+- Publish Article and Newsletter manually Tuesday morning
+
+---
+
+## ARTICLE PUBLISHING CHECKLIST
+
+Before publishing any article to LinkedIn:
+
+**Voice & Structure**
+- [ ] Opens with a specific real incident — not a question, not a statistic, not a cliché
+- [ ] Credentials established briefly and casually in the first third
+- [ ] IT war story is specific — named company, named technology, named stakes
+- [ ] Re-hook present after the War Story — one sentence bridging incident to current moment
+- [ ] Explicit bridge from IT story to AI situation
+- [ ] "What This Means For You" section present and actionable
+- [ ] Power-Ending present (2-3 punchy summary lines) immediately before CTA
+- [ ] Urgency statement (Ryan Roslansky quote) placed immediately above CTA
+- [ ] CTA at bottom pointing to lead magnet or email list
+- [ ] No more than 2 cultural references
+- [ ] No LinkedIn thought-leader language
+- [ ] No passive voice on key claims
+- [ ] Reader feels understood, capable, and early — not behind
+
+**Formatting & Layout**
+- [ ] Title generated using the Title Scoring Process
+- [ ] Subtitle added
+- [ ] Paragraphs are 2 sentences or fewer throughout
+- [ ] Subheadings read as hooks, not labels
+- [ ] Opening Line 1 and Line 2 are 62 characters max
+- [ ] Opening Line 3 (hook line) is 50 characters max
+- [ ] One bolded line per section max — used on the single most important sentence
+- [ ] One pull quote used in the body — LinkedIn native format
+- [ ] Cover image attached (landscape 1376x768)
+- [ ] Word count is between 1,200–1,800 words
+- [ ] 3 hashtags max
+
+**Publishing & Distribution**
+- [ ] First comment text ready to paste immediately after publish
+- [ ] Text feed post loaded in Buffer for 10:15 AM same day
+- [ ] Image post loaded in Buffer for Thursday 10:00 AM
+- [ ] Carousel loaded in Buffer for Friday 10:00 AM
+- [ ] Newsletter issue drafted and ready to publish at 10:05 AM
+
+---
+
+## HEADLINE BANK (Unused — Reserve for Future Articles)
 
 - "The Security Rules Nobody Puts in Their AI Agent Documentation"
 - "Why I Added a Backup Strategy to a YouTube Downloader (And You Should Too)"
@@ -532,6 +489,96 @@ The same transformation works for PDF lead magnet titles. Your first PDF:
 
 ---
 
-*Version 1.0 — April 2026*
-*Update this document after each article publishes — note what performed,
-what comments surfaced, what follow-up articles those comments suggest.*
+## CONTENT CALENDAR — CURRENT ARTICLE QUEUE
+
+| # | Title | Publish Date | Status |
+|---|-------|-------------|--------|
+| Art. 1 | Why AI Deployments Fail Like Server Upgrades | May 7, 2026 | ✅ LIVE |
+| SA-1 | Why Enterprise AI Projects Stall in the Same Place Every Time | May 13, 2026 | ✅ LIVE |
+| Art. 2 | The Vendor You Can't Fire | May 21, 2026 | ⏰ Next up |
+| Art. 3 | Two Rollback Plans Before You Touch Production | May 28, 2026 | ⬜ Ready |
+| Art. 4 | Stakeholders Need to Trust the Process | June 4, 2026 | ⬜ Written |
+| Art. 5 | Best IT People Know Where Their Role Ends | June 11, 2026 | ⬜ Written |
+| Art. 6 | How to Talk to Stakeholders | June 18, 2026 | ⬜ Written |
+| Art. 7 | Hold AI Vendor Accountable | June 25, 2026 | ⬜ Not found in Drive |
+| Art. 8 | Every Incident Is a Documentation Opportunity | July 2, 2026 | ⬜ Written |
+| Art. 9 | ServiceNow + AI Security | July 9, 2026 | ⬜ Written |
+| Art. 10 | Scope Creep Killed Timeline | July 16, 2026 | ⬜ Written |
+| Art. 11 | 25 Certifications (revised title TBD) | July 23, 2026 | ⬜ Written |
+
+---
+
+## AUTOMATION STATUS — WHAT'S BUILT VS MANUAL
+
+| Task | Status | Tool |
+|------|--------|------|
+| Feed post scheduling | ✅ Automatable | Buffer (free) |
+| First comment auto-fire | ✅ Automatable | Buffer (free) |
+| Image post scheduling | ✅ Automatable | Buffer (free) |
+| Carousel (PDF) scheduling | ✅ Automatable | Buffer (free) |
+| Video scheduling | ✅ Automatable | Buffer (free) |
+| Newsletter optimal send time | ✅ Automatable | LinkedIn native |
+| Content drafting (all 5 pieces) | ✅ Automatable | Claude (this session) |
+| Article publishing | ❌ Manual forever | LinkedIn only |
+| Newsletter publishing | ❌ Manual forever | LinkedIn only |
+| Commenting on others' posts | ❌ Manual forever | Risk of ban if automated |
+| Replying to comments on your posts | ❌ Manual forever | Golden hour required |
+| Tracker updates | 🔄 Partially | Update LINKEDIN_TRACKER.md each session |
+
+---
+
+## TOOLS IN USE
+
+| Tool | Purpose | Cost |
+|------|---------|------|
+| Buffer (free plan) | Schedule posts + first comments | $0 |
+| Claude (this project) | Draft all 5 content pieces per article | Already paying |
+| Canva | Build PDF carousels | Free tier |
+| LinkedIn native | Publish Articles + Newsletters | Free |
+| Google Drive | Store article drafts | Free |
+| Gumroad | Lead magnet delivery | Free (transaction fee only) |
+| LINKEDIN_TRACKER.md | Status board | This project |
+| iPhone + lapel mic + tripod + Bluetooth remote | Video filming — fully equipped | Already owned — $0 |
+| CapCut (iPhone) | Auto-captions + basic video edit | Free |
+
+---
+
+## VIDEO FILMING CHECKLIST (run through before every shoot)
+
+**Before you hit record:**
+- [ ] Lapel mic clipped to shirt, plugged into iPhone
+- [ ] Tripod stable, framed chest-up, pool/greenery in background
+- [ ] Morning light — before 10 AM is ideal (soft, even, no harsh shadows)
+- [ ] Wind check — slight breeze is fine with lapel mic, strong wind = reschedule
+- [ ] 3 bullet points from the article visible on another device or memorized
+- [ ] Bluetooth remote in hand
+- [ ] Phone in portrait mode (9:16 vertical)
+
+**The 3 bullets structure:**
+1. The counterintuitive hook — what most people get wrong about this topic
+2. The real-world example from your IT experience that proves the point
+3. The takeaway — what an IT pro should do or think differently about
+
+**After filming:**
+- [ ] Watch it back once — if the message is clear, use it. Don't chase perfect.
+- [ ] CapCut: Import → Auto Captions → review errors → Export MP4
+- [ ] Upload to Buffer as native video (NOT a link)
+- [ ] Set schedule: Following Tuesday 10:00 AM CST
+- [ ] Add first comment Version D in Buffer (fires 3 min after post)
+
+---
+
+## STANDING REMINDERS (check every session)
+
+1. Post first comment on EVERY LinkedIn post the moment it goes live
+2. Golden Hour: be available 10:00–11:00 AM every publish day
+3. Rotate comment search terms daily — don't use same term two days in a row
+4. Never comment on the same creator's posts every day (algorithm flags as pod behavior)
+5. Check Buffer queue every Monday — confirm the week is fully loaded
+6. Update LINKEDIN_TRACKER.md at end of every session
+
+---
+
+*Version 2.0 — May 2026*
+*Merged from: LINKEDIN_CONTENT_SKILL.md v1.0 + LinkedIn_Series_Framework v1.0 + LinkedIn Article Formatting Rules*
+*Conflict resolutions: Word count → 1,200–1,800 (Formatting Rules); Closing structure → Power-Ending + CTA (no closing question); Title system → Title Scoring Process (Series Framework)*
