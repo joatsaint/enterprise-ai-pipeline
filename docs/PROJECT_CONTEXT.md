@@ -1,12 +1,38 @@
 # PROJECT_CONTEXT.md
 
-**Version:** 2.1
-**Updated:** May 2 2026
-**Change:** Paid PDF title and price updated based on May 2 pain point analysis.
-New finding: "Value invisibility" (#4 pain point) is stronger hook than
-"agents that complete work" (#3). PDF angle sharpened accordingly.
+**Version:** 2.2
+**Updated:** May 15 2026
+**Change:** Project Mission and Automation-First Philosophy section added.
+Dual-goal clarification: side business via LinkedIn automation + employer
+portfolio of AI skills demonstrated through real project execution.
 
 ---
+
+## Project Mission
+
+Two parallel goals drive every decision in this project:
+
+**Goal 1 — Build a Side Business**
+Use LinkedIn as the primary channel to build an audience of experienced
+IT professionals navigating the AI shift. Automate as much of the content
+creation, distribution, and sales pipeline as possible — so the business
+runs with minimal manual effort. Expand to additional social media platforms
+once LinkedIn is producing consistent results.
+
+**Goal 2 — Build an Employer Portfolio**
+Every tool, workflow, and automation built here is a portfolio artifact.
+The project itself demonstrates AI-assisted development, prompt engineering,
+pipeline architecture, and real-world automation — skills employers are
+actively hiring for.
+
+## Automation-First Philosophy
+Inspired by Julia McCoy: before adding any new task or tool, ask —
+"Can AI do this better than me, and can I automate it entirely?"
+The goal is not productivity. The goal is liberation from manual work.
+Every manual step in this project is a future automation target.
+
+---
+
 Positioning statement (May 1 2026):
 "Become the experienced operator who knows how to use AI 
 safely, practically, and profitably inside enterprise systems."

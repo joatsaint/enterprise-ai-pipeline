@@ -114,6 +114,44 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # digest — generate daily content digest
+    # ----------------------------------------------------------------
+    if cmd == "digest":
+        from src.knowledge_base.digest import run_digest
+        group = None
+        date_filter = None
+        since_filter = None
+        force = "--force" in args
+        scheduled = "--scheduled" in args
+        remaining = args[1:]
+        if "--group" in remaining:
+            idx = remaining.index("--group")
+            if idx + 1 >= len(remaining):
+                print("Usage: python -m src.main digest [--group <name>] [--date YYYY-MM-DD] [--since YYYY-MM-DD] [--force] [--scheduled]")
+                sys.exit(1)
+            group = remaining[idx + 1]
+        if "--date" in remaining:
+            idx = remaining.index("--date")
+            if idx + 1 >= len(remaining):
+                print("Usage: python -m src.main digest [--date YYYY-MM-DD]")
+                sys.exit(1)
+            date_filter = remaining[idx + 1]
+        if "--since" in remaining:
+            idx = remaining.index("--since")
+            if idx + 1 >= len(remaining):
+                print("Usage: python -m src.main digest [--since YYYY-MM-DD]")
+                sys.exit(1)
+            since_filter = remaining[idx + 1]
+        run_digest(
+            group_filter=group,
+            date_filter=date_filter,
+            since_filter=since_filter,
+            force=force,
+            scheduled=scheduled,
+        )
+        return
+
+    # ----------------------------------------------------------------
     # ask — Q&A against knowledge base
     # ----------------------------------------------------------------
     if cmd == "ask":
