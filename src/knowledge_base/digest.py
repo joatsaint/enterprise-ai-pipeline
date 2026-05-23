@@ -477,6 +477,6 @@ def run_digest(
     # Step 11 — Terminal confirmation
     _log(
         f"Digest complete: {total_count} new "
-        f"transcript{'s' if total_count != 1 else ''} summarized → {output_file}",
+        f"transcript{'s' if total_count != 1 else ''} summarized -> {output_file}",
         scheduled,
     )
