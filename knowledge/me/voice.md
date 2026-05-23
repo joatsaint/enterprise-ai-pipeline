@@ -320,27 +320,154 @@ Now rewrite the following article using those voice principles:
 
 Run every article through this before publishing:
 
-* Opens with a specific real incident — not a question, not a statistic, not a cliche
+**Voice & Structure**
+- [ ] Opens with a specific real incident — not a question, not a statistic, not a cliché
+- [ ] Credentials established briefly and casually in the first third
+- [ ] The IT war story is specific — named company, named technology, named stakes
+- [ ] Re-hook present after the War Story — one sentence bridging incident to current moment
+- [ ] Explicit bridge from IT story to AI situation
+- [ ] 'What This Means For You' section present and actionable
+- [ ] Closes with a short, direct instruction — second person
+- [ ] Power-Ending (2-3 line punchy summary) present immediately before CTA
+- [ ] Urgency statement (Ryan Roslansky quote) placed immediately above CTA
+- [ ] No more than 2 cultural references
+- [ ] No LinkedIn thought-leader language
+- [ ] No passive voice on key claims
+- [ ] One light digression maximum
+- [ ] Reader feels understood, capable, and early — not behind
 
-* Credentials established briefly and casually in the first third
+**Formatting & Layout**
+- [ ] Paragraphs are 2 sentences or fewer throughout
+- [ ] Subheadings read as hooks, not labels — a skimmer stops on every one
+- [ ] Opening Line 1 and Line 2 are 62 characters max
+- [ ] Opening Line 3 (hook line) is 50 characters max
+- [ ] One bolded line per section max — used on the single most important sentence
+- [ ] One pull quote used in the body — LinkedIn native format
+- [ ] Cover image attached (landscape 1376x768)
+- [ ] Article word count is between 1,200–1,800 words
+- [ ] Subtitle added (or "AI" already in title)
+- [ ] 3 hashtags max
 
-* The IT war story is specific — named company, named technology, named stakes
+**Publishing & Distribution**
+- [ ] First comment text ready to paste immediately after publish
+- [ ] Text feed post loaded in Buffer for 10:15 AM same day
+- [ ] Image post loaded in Buffer for Thursday 10:00 AM
+- [ ] Carousel loaded in Buffer for Friday 10:00 AM
+- [ ] Newsletter issue drafted and ready to publish at 10:05 AM
 
-* Explicit bridge from IT story to AI situation
+# **PART 8 — FORMATTING AND READABILITY RULES**
 
-* 'What This Means For You' section present and actionable
+Your audience reads on a phone during a meeting, between tickets, or at 6 AM before anyone else is in the office. They skim first. If the structure earns their attention, they read. If it doesn't, they're gone.
 
-* Closes with a short, direct instruction — second person
+Formatting is not decoration. It is the thing that makes the argument readable at speed.
 
-* No more than 2 cultural references
+---
 
-* No LinkedIn thought-leader language
+## The Guiding Principle
 
-* No passive voice on key claims
+Prose carries the voice. Structure carries the skimmer.
 
-* One light digression maximum
+The war story, the bridge, the "what this means for you" — all prose. No bullets, no headers breaking it apart. That section needs to breathe.
 
-* Reader feels understood, capable, and early — not behind
+The action items, the lists, the checklists — formatted. A sysadmin who has four minutes needs to see the three things they have to do without reading every sentence to find them.
+
+**Rule:** Never format something that needs to be felt. Never leave unformatted something that needs to be done.
+
+---
+
+## Section Dividers
+
+Use a horizontal rule (`---`) between every major section of the article.
+
+- Between the war story and the "that gap is open now" section
+- Between the body and the "what this means for you" section
+- Between the action items and the closing
+
+Do not use dividers within a section. If you feel the urge to add a divider mid-section, the section needs to be split, not divided.
+
+---
+
+## Headers (H2)
+
+Use H2 headers to name each major section. Write them the way Randy talks — short, direct, sometimes a half-sentence that assumes the reader is mid-conversation.
+
+**Good header examples:**
+- *That gap is open again right now.*
+- *What this means for you.*
+- *The thing you're actually protecting.*
+- *Here is what Dave did wrong.*
+
+**Bad header examples:**
+- *Understanding the Current AI Governance Landscape*
+- *Key Takeaways for IT Professionals*
+- *Section 3: Action Items*
+
+Headers should not sound like a PowerPoint slide. They should sound like the next thing Randy said.
+
+**H3 headers:** Use only inside the action items section, when breaking down multiple numbered steps that each need a label. Never use H3 in narrative sections.
+
+---
+
+## Bullet Points
+
+| Use bullets when | Do not use bullets when |
+|---|---|
+| Listing 3 or more items that would be awkward in prose | The content is part of the war story or narrative |
+| Giving the reader a checklist of actions | You have only 2 items — write them as prose |
+| Listing what belongs in a category (e.g. data types, tool types) | The point lands harder as a single punchy sentence |
+| Breaking down the contents of a policy or framework | The item needs context or explanation to be useful |
+
+**Bullet formatting rules:**
+- One idea per bullet — never a paragraph disguised as a bullet
+- No period at the end of bullets unless they are complete sentences
+- Never nest bullets more than one level deep
+- If a bullet needs more than one sentence to make sense, it belongs in prose
+
+---
+
+## Bold Text
+
+Use bold for the single phrase in a paragraph that a skimmer must not miss.
+
+One bold phrase per paragraph maximum. If everything is bold, nothing is.
+
+**Use bold for:**
+- The core rule or instruction
+- The key number or data point
+- The phrase that carries the whole paragraph
+
+**Do not bold:**
+- Decorative emphasis
+- Words that feel important but aren't the load-bearing idea
+- More than one phrase per paragraph
+
+---
+
+## Paragraph Length
+
+- War story and narrative sections: 2–4 sentences per paragraph. Let them breathe.
+- Action item sections: 1–3 sentences. Get in, get out.
+- Never let a paragraph run past 5 sentences. If it does, find the break.
+- Single-sentence paragraphs are allowed when the sentence carries enough weight to stand alone.
+
+*"He was a good sysadmin. He just didn't move first."*
+
+That is two paragraphs, not one. The pause between them is the point.
+
+---
+
+## What Never to Do
+
+| Never | Because |
+|---|---|
+| Bullet the war story | Bullets kill narrative momentum |
+| Use headers in the first section | The hook needs to land before the reader knows where they are |
+| Bold a whole sentence | Emphasis disappears when overused |
+| Use numbered lists for narrative points | Numbers imply sequence — use only for actual steps |
+| Add a divider after every paragraph | Dividers signal major transitions, not breathing room |
+| Use formatting to hide thin content | If the idea isn't there, a header won't save it |
+
+---
 
 # **FINAL NOTE**
 
