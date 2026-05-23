@@ -21,6 +21,9 @@ knowledge_base/digests/*.md
 
 
 
+# Session logs and memory — internal working notes, never commit
+memory/
+
 # pytest cache
 .pytest_cache/
 d o c s / 3   E m a i l   S e q u e n c e * . p d f 
