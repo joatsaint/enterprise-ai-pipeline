@@ -11,7 +11,18 @@
       "Bash(python -m pytest tests/ -v)",
       "Bash(python -m src.main list-channels)",
       "Bash(python -m src.main add-channel)",
-      "Bash(python -m src.main channel \"AI News & Strategy Daily | Nate B Jones\")"
+      "Bash(python -m src.main channel \"AI News & Strategy Daily | Nate B Jones\")",
+      "Bash(gh repo:*)",
+      "Bash(python -c \"from src.downloader.transcript_fetcher import get_ytt_api; api = get_ytt_api\\(\\); print\\('API type:', type\\(api\\).__name__\\)\")",
+      "Bash(python -c ':*)",
+      "Bash(python download.py https://youtu.be/dQw4w9WgXcQ)",
+      "Bash(python download.py https://youtu.be/3e7gmNPr5Vo)",
+      "Bash(python -c \"from src.downloader.comment_fetcher import fetch_comments; comments, status = fetch_comments\\('3e7gmNPr5Vo'\\); print\\(status\\)\")",
+      "Bash(python -c \"from dotenv import load_dotenv, find_dotenv; f = find_dotenv\\(\\); print\\(f'Loading from: {f}'\\)\")",
+      "Bash(python -c \"from src.downloader.comment_fetcher import fetch_comments; comments, status = fetch_comments\\('3e7gmNPr5Vo'\\); print\\(f'Status: {status}'\\); print\\(f'Comments fetched: {len\\(comments\\)}'\\)\")",
+      "Bash(echo \"\")",
+      "Bash(python -m src.main index)",
+      "Bash(python -m src.main analyze --group ai-and-claude-code)"
     ]
   }
 }
