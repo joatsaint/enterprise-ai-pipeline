@@ -27,6 +27,24 @@ echo Pipeline started -- %DATE% %TIME%   >> "%LOGFILE%"
 echo ===================================  >> "%LOGFILE%"
 
 :: ----------------------------------------------------------------
+:: STEP 0 -- Health check
+:: ----------------------------------------------------------------
+
+echo Running health check...
+echo Running health check... >> "%LOGFILE%"
+call python health_check.py >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Health check failed -- aborting pipeline
+    echo ERROR: Health check failed -- aborting pipeline >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Health check FAILED]
+    goto :notify
+)
+echo Health check passed -- OK
+echo Health check passed -- OK >> "%LOGFILE%"
+echo.
+
+:: ----------------------------------------------------------------
 :: STEP 1 -- Download all groups
 :: ----------------------------------------------------------------
 
@@ -125,7 +143,8 @@ echo Pipeline %STATUS% -- %DATE% %TIME%  >> "%LOGFILE%"
 if defined ERRORS echo Errors: %ERRORS%  >> "%LOGFILE%"
 echo ===================================  >> "%LOGFILE%"
 
-:: Send email notification
+::  Send email notification
+:notify
 echo.
 echo Sending email notification...
 powershell -ExecutionPolicy Bypass -File "%PSSCRIPT%" -Status "%STATUS%" -Errors "%ERRORS%" -LogFile "%LOGFILE%" -Email "%PIPELINE_EMAIL%" -Password "%PIPELINE_PASSWORD%"
@@ -133,4 +152,3 @@ powershell -ExecutionPolicy Bypass -File "%PSSCRIPT%" -Status "%STATUS%" -Errors
 echo.
 echo Pipeline finished with status: %STATUS%
 echo Log file: %LOGFILE%
-pause
