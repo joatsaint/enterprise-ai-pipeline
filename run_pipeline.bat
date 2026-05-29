@@ -135,6 +135,62 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: ----------------------------------------------------------------
+:: STEP 4 -- Pain point analysis (all 4 groups)
+:: ----------------------------------------------------------------
+
+echo Running pain point analysis -- ai-and-claude-code...
+echo Running pain point analysis -- ai-and-claude-code... >> "%LOGFILE%"
+call python -m src.main analyze --group ai-and-claude-code >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: ai-and-claude-code analysis failed
+    echo ERROR: ai-and-claude-code analysis failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Analyze ai-and-claude-code FAILED]
+) else (
+    echo ai-and-claude-code analysis complete -- OK
+    echo ai-and-claude-code analysis complete -- OK >> "%LOGFILE%"
+)
+
+echo Running pain point analysis -- career-and-job-search...
+echo Running pain point analysis -- career-and-job-search... >> "%LOGFILE%"
+call python -m src.main analyze --group career-and-job-search >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: career-and-job-search analysis failed
+    echo ERROR: career-and-job-search analysis failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Analyze career-and-job-search FAILED]
+) else (
+    echo career-and-job-search analysis complete -- OK
+    echo career-and-job-search analysis complete -- OK >> "%LOGFILE%"
+)
+
+echo Running pain point analysis -- developer-technical...
+echo Running pain point analysis -- developer-technical... >> "%LOGFILE%"
+call python -m src.main analyze --group developer-technical >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: developer-technical analysis failed
+    echo ERROR: developer-technical analysis failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Analyze developer-technical FAILED]
+) else (
+    echo developer-technical analysis complete -- OK
+    echo developer-technical analysis complete -- OK >> "%LOGFILE%"
+)
+
+echo Running pain point analysis -- enterprise-strategy...
+echo Running pain point analysis -- enterprise-strategy... >> "%LOGFILE%"
+call python -m src.main analyze --group enterprise-strategy >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: enterprise-strategy analysis failed
+    echo ERROR: enterprise-strategy analysis failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Analyze enterprise-strategy FAILED]
+) else (
+    echo enterprise-strategy analysis complete -- OK
+    echo enterprise-strategy analysis complete -- OK >> "%LOGFILE%"
+)
+
+:: ----------------------------------------------------------------
 :: WRAP UP
 :: ----------------------------------------------------------------
 
