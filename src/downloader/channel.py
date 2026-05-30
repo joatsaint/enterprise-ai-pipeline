@@ -137,7 +137,7 @@ def run_channel(channel_name_or_url, force_full=False, pre_suggestion=None):
     # Apply minimum duration filter
     # ----------------------------------------------------------------
     before_count = len(entries)
-    entries = [e for e in entries if e.get("duration", 0) >= min_duration]
+    entries = [e for e in entries if (e.get("duration") or 0) >= min_duration]
     filtered_count = before_count - len(entries)
     if filtered_count > 0:
         print(f"[INFO] Skipped {filtered_count} video(s) under {min_duration // 60} minutes.")
