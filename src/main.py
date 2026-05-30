@@ -14,6 +14,8 @@ Usage:
   python -m src.main ask "your question"        # Q&A against knowledge base (Sonnet)
   python -m src.main ask --fast "your question" # Q&A with Haiku (faster, cheaper)
   python -m src.main ask --group <name> "q"    # Q&A limited to a group
+  python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM"  # schedule LinkedIn post via Buffer
+  python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
 """
 import sys
 
@@ -187,6 +189,32 @@ def main():
             sys.exit(1)
         question = " ".join(remaining)
         run_query(question, group=group, top_n=top_n, fast=fast)
+        return
+
+    # ----------------------------------------------------------------
+    # schedule-post — schedule a LinkedIn post via Buffer
+    # ----------------------------------------------------------------
+    if cmd == "schedule-post":
+        post_num = None
+        date_str = None
+        dry_run = "--dry-run" in args
+        if "--post" in args:
+            idx = args.index("--post")
+            if idx + 1 < len(args):
+                try:
+                    post_num = int(args[idx + 1])
+                except ValueError:
+                    print(f"--post requires an integer, got: {args[idx + 1]}")
+                    sys.exit(1)
+        if "--date" in args:
+            idx = args.index("--date")
+            if idx + 1 < len(args):
+                date_str = args[idx + 1]
+        if not post_num or not date_str:
+            print('Usage: python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" [--dry-run]')
+            sys.exit(1)
+        from src.publisher.schedule import run_schedule_post
+        run_schedule_post(post_num, date_str, dry_run=dry_run)
         return
 
     print(f"Unknown command: '{cmd}'")
