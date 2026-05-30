@@ -22,7 +22,6 @@ import sys
 from datetime import datetime, timezone
 
 
-MODEL = "claude-haiku-4-5-20251001"
 INDEX_PATH = "knowledge_base/index.json"
 DOWNLOAD_LOG_PATH = "logs/download_log.json"
 DIGEST_LOG_PATH = "logs/digest_log.json"
@@ -44,6 +43,8 @@ def _load_env():
                     os.environ.setdefault(key.strip(), value.strip())
 
 _load_env()
+
+MODEL = os.getenv("DIGEST_MODEL", "claude-haiku-4-5-20251001")
 
 
 # ---------------------------------------------------------------------------
