@@ -45,7 +45,7 @@ echo Health check passed -- OK >> "%LOGFILE%"
 echo.
 
 :: ----------------------------------------------------------------
-:: STEP 1 -- Download all groups
+:: STEP 1 -- Download all groups (add new groups here when channels.json is updated)
 :: ----------------------------------------------------------------
 
 echo Running incremental download -- ai-and-claude-code...
@@ -100,6 +100,19 @@ if %ERRORLEVEL% NEQ 0 (
     echo enterprise-strategy complete -- OK >> "%LOGFILE%"
 )
 
+echo Running incremental download -- ai-marketing...
+echo Running incremental download -- ai-marketing... >> "%LOGFILE%"
+call python -m src.main group ai-marketing >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: ai-marketing download failed
+    echo ERROR: ai-marketing download failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [ai-marketing FAILED]
+) else (
+    echo ai-marketing complete -- OK
+    echo ai-marketing complete -- OK >> "%LOGFILE%"
+)
+
 :: ----------------------------------------------------------------
 :: STEP 2 -- Index
 :: ----------------------------------------------------------------
@@ -135,7 +148,7 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: ----------------------------------------------------------------
-:: STEP 4 -- Pain point analysis (all 4 groups)
+:: STEP 4 -- Pain point analysis (all groups — add new groups here when channels.json is updated)
 :: ----------------------------------------------------------------
 
 echo Running pain point analysis -- ai-and-claude-code...
@@ -188,6 +201,19 @@ if %ERRORLEVEL% NEQ 0 (
 ) else (
     echo enterprise-strategy analysis complete -- OK
     echo enterprise-strategy analysis complete -- OK >> "%LOGFILE%"
+)
+
+echo Running pain point analysis -- ai-marketing...
+echo Running pain point analysis -- ai-marketing... >> "%LOGFILE%"
+call python -m src.main analyze --group ai-marketing >> "%LOGFILE%" 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: ai-marketing analysis failed
+    echo ERROR: ai-marketing analysis failed >> "%LOGFILE%"
+    set STATUS=FAILED
+    set ERRORS=%ERRORS% [Analyze ai-marketing FAILED]
+) else (
+    echo ai-marketing analysis complete -- OK
+    echo ai-marketing analysis complete -- OK >> "%LOGFILE%"
 )
 
 :: ----------------------------------------------------------------
