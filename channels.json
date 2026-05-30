@@ -211,6 +211,13 @@
       "group": "developer-technical",
       "active": true,
       "notes": ""
+    },
+    {
+      "name": "Duncan Rogoff | AI Automation",
+      "url": "https://www.youtube.com/@duncanrogoff/videos",
+      "group": "ai-marketing",
+      "active": true,
+      "notes": "AI automation for social media content creation — practical workflow content for solo operators and small teams. Direct relevance to Randy's content marketing business."
     }
   ],
   "groups": [
@@ -218,14 +225,16 @@
     "career-and-job-search",
     "developer-technical",
     "bitcoin-and-economic-news",
-    "enterprise-strategy"
+    "enterprise-strategy",
+    "ai-marketing"
   ],
   "display_names": {
     "ai-and-claude-code": "AI & Claude Code — Primary ICP Research",
     "career-and-job-search": "Career & Job Search — Secondary Research",
     "developer-technical": "Developer Technical — Reference Only",
     "bitcoin-and-economic-news": "Bitcoin and Economic News",
-    "enterprise-strategy": "Delivers actionable, objective business and technology insights"
+    "enterprise-strategy": "Delivers actionable, objective business and technology insights",
+    "ai-marketing": "AI Marketing — Social Media Automation & Content Creation"
   },
   "notes": "ICP pivot May 1 2026 — primary audience is employed professionals 35-55, not job seekers or developers. Run pain point analysis with --group ai-and-claude-code for primary ICP research. career-and-job-search and developer-technical preserved for reference."
 }
