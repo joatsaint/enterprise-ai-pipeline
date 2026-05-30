@@ -11,7 +11,8 @@ Usage:
   python -m src.main index                      # build/rebuild knowledge base index
   python -m src.main analyze --group <name>     # run pain point analysis on a group
   python -m src.main analyze --all              # run pain point analysis on all groups
-  python -m src.main ask "your question"        # Q&A against knowledge base
+  python -m src.main ask "your question"        # Q&A against knowledge base (Sonnet)
+  python -m src.main ask --fast "your question" # Q&A with Haiku (faster, cheaper)
   python -m src.main ask --group <name> "q"    # Q&A limited to a group
 """
 import sys
@@ -158,18 +159,19 @@ def main():
         from src.knowledge_base.query import run_query
         group = None
         top_n = 10
+        fast = False
         remaining = args[1:]
         if "--group" in remaining:
             idx = remaining.index("--group")
             if idx + 1 >= len(remaining):
-                print("Usage: python -m src.main ask [--group <name>] [--top N] \"question\"")
+                print("Usage: python -m src.main ask [--group <name>] [--top N] [--fast] \"question\"")
                 sys.exit(1)
             group = remaining[idx + 1]
             remaining = [a for j, a in enumerate(remaining) if j != idx and j != idx + 1]
         if "--top" in remaining:
             idx = remaining.index("--top")
             if idx + 1 >= len(remaining):
-                print("Usage: python -m src.main ask [--group <name>] [--top N] \"question\"")
+                print("Usage: python -m src.main ask [--group <name>] [--top N] [--fast] \"question\"")
                 sys.exit(1)
             try:
                 top_n = int(remaining[idx + 1])
@@ -177,11 +179,14 @@ def main():
                 print(f"--top requires an integer, got: {remaining[idx + 1]}")
                 sys.exit(1)
             remaining = [a for j, a in enumerate(remaining) if j != idx and j != idx + 1]
+        if "--fast" in remaining:
+            fast = True
+            remaining = [a for a in remaining if a != "--fast"]
         if not remaining:
-            print("Usage: python -m src.main ask [--group <name>] [--top N] \"your question\"")
+            print("Usage: python -m src.main ask [--group <name>] [--top N] [--fast] \"your question\"")
             sys.exit(1)
         question = " ".join(remaining)
-        run_query(question, group=group, top_n=top_n)
+        run_query(question, group=group, top_n=top_n, fast=fast)
         return
 
     print(f"Unknown command: '{cmd}'")

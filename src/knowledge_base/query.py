@@ -22,7 +22,6 @@ import sys
 from datetime import datetime, timezone
 
 
-MODEL = "claude-haiku-4-5-20251001"
 INDEX_PATH = "knowledge_base/index.json"
 QUERY_LOG_PATH = "logs/query_log.json"
 ERROR_LOG_PATH = "logs/error_log.json"
@@ -43,6 +42,9 @@ def _load_env():
                     os.environ.setdefault(key.strip(), value.strip())
 
 _load_env()
+
+MODEL_DEFAULT = os.getenv("QUERY_MODEL", "claude-sonnet-4-6")
+MODEL_FAST = "claude-haiku-4-5-20251001"
 
 
 # ---------------------------------------------------------------------------
@@ -99,7 +101,7 @@ def _read_file_content(path, max_chars=None):
         return ""
 
 
-def _call_claude(question, context):
+def _call_claude(question, context, model):
     """
     Send question + transcript context to Claude.
     Returns (answer_text, tokens_consumed).
@@ -117,7 +119,7 @@ def _call_claude(question, context):
     )
 
     response = client.messages.create(
-        model=MODEL,
+        model=model,
         max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -172,7 +174,7 @@ def load_index():
         return json.load(fh)
 
 
-def ask(question, group=None, top_n=10):
+def ask(question, group=None, top_n=10, fast=False):
     """
     Answer a question using the transcript knowledge base.
 
@@ -180,9 +182,11 @@ def ask(question, group=None, top_n=10):
         question: Natural language question string.
         group:    Optional group name to restrict search.
         top_n:    Max number of transcripts to pass to Claude (default 10).
+        fast:     If True, use Haiku for speed/cost. Default uses QUERY_MODEL (Sonnet).
 
     Returns: (answer_text, sources_list)
     """
+    model = MODEL_FAST if fast else MODEL_DEFAULT
     index = load_index()
     keywords = _extract_keywords(question)
 
@@ -270,7 +274,7 @@ def ask(question, group=None, top_n=10):
 
     # Step 7 — call Claude API
     try:
-        answer, tokens_consumed = _call_claude(question, context)
+        answer, tokens_consumed = _call_claude(question, context, model)
     except Exception as exc:
         msg = f"Claude API error: {exc}. Try again in a moment."
         _append_error_log(str(exc))
@@ -284,18 +288,19 @@ def ask(question, group=None, top_n=10):
         "transcripts_searched": transcripts_searched,
         "transcripts_used": [s["file_path"] for s in sources],
         "tokens_consumed": tokens_consumed,
-        "model": MODEL,
+        "model": model,
     })
 
     return answer, sources
 
 
-def run_query(question, group=None, top_n=10):
+def run_query(question, group=None, top_n=10, fast=False):
     """CLI entry point — prints answer and sources to terminal."""
+    model_label = MODEL_FAST if fast else MODEL_DEFAULT
     group_label = f" (group: {group})" if group else ""
-    print(f"\nSearching knowledge base{group_label}...")
+    print(f"\nSearching knowledge base{group_label} [{model_label}]...")
 
-    answer, sources = ask(question, group=group, top_n=top_n)
+    answer, sources = ask(question, group=group, top_n=top_n, fast=fast)
 
     source_count = len(sources)
     print(
