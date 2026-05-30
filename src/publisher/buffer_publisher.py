@@ -87,6 +87,45 @@ def schedule_post(text, due_at_utc):
     return post
 
 
+def add_image(post_id, image_url, due_at_utc):
+    """
+    Attach an image to an existing scheduled Buffer post.
+
+    Args:
+        post_id:     Buffer post ID string.
+        image_url:   Publicly accessible image URL.
+        due_at_utc:  Original scheduled datetime (UTC) — required by Buffer on edits.
+
+    Returns dict with keys: id, status, dueAt.
+    """
+    _EDIT_POST = """
+    mutation EditPost($input: EditPostInput!) {
+      editPost(input: $input) {
+        ... on PostActionSuccess {
+          post { id status dueAt }
+        }
+        ... on RestProxyError { message }
+        ... on InvalidInputError { message }
+        ... on UnexpectedError { message }
+      }
+    }
+    """
+    data = _graphql(_EDIT_POST, {
+        "input": {
+            "id": post_id,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "assets": [{"image": {"url": image_url}}],
+        }
+    })
+    result = data.get("editPost", {})
+    post = result.get("post")
+    if not post:
+        raise RuntimeError(f"Buffer editPost failed: {result.get('message', result)}")
+    return post
+
+
 def delete_post(post_id):
     """Delete a scheduled Buffer post by ID. Returns the deleted post id."""
     data = _graphql(_DELETE_POST, {"input": {"postId": post_id}})
