@@ -191,6 +191,13 @@
       "max_videos": 20
     },
     {
+      "name": "Wes Roth",
+      "url": "https://www.youtube.com/@WesRoth/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "notes": "AI implications and preparation — calm, accessible tone. 'Don't Panic' framing aligns with ICP fear of irrelevance. Strong fit."
+    },
+    {
       "name": "Mo Bitar",
       "url": "https://www.youtube.com/@atmoio/videos",
       "group": "developer-technical",
