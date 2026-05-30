@@ -198,6 +198,14 @@
       "notes": "AI implications and preparation — calm, accessible tone. 'Don't Panic' framing aligns with ICP fear of irrelevance. Strong fit."
     },
     {
+      "name": "Mark Savant",
+      "url": "https://www.youtube.com/@MarkSavant/videos",
+      "group": "ai-and-claude-code",
+      "active": true,
+      "max_videos": 20,
+      "notes": "AI layoff news channel — 'AI Takeover' framing covers every major enterprise layoff (Microsoft, Oracle, Amazon, Cisco, Meta). Comments are ICP in real-time panic mode. Cap at 20 to avoid older unrelated content."
+    },
+    {
       "name": "Mo Bitar",
       "url": "https://www.youtube.com/@atmoio/videos",
       "group": "developer-technical",
