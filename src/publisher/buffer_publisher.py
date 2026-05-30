@@ -1,0 +1,93 @@
+"""
+Buffer GraphQL publisher — schedules posts to LinkedIn via Buffer's GraphQL API.
+Reads BUFFER_ACCESS_TOKEN and BUFFER_LINKEDIN_CHANNEL_ID from .env.
+"""
+import os
+import requests
+
+GRAPHQL_URL = "https://api.buffer.com/graphql"
+
+_CREATE_POST = """
+mutation CreatePost($input: CreatePostInput!) {
+  createPost(input: $input) {
+    ... on PostActionSuccess {
+      post { id status dueAt }
+    }
+  }
+}
+"""
+
+_DELETE_POST = """
+mutation DeletePost($input: DeletePostInput!) {
+  deletePost(input: $input) {
+    ... on PostActionSuccess {
+      post { id }
+    }
+  }
+}
+"""
+
+
+def _load_env():
+    if os.path.exists(".env"):
+        with open(".env", "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    key, _, value = line.partition("=")
+                    os.environ.setdefault(key.strip(), value.strip())
+
+_load_env()
+
+
+def _graphql(query, variables):
+    token = os.getenv("BUFFER_ACCESS_TOKEN")
+    if not token:
+        raise RuntimeError("BUFFER_ACCESS_TOKEN not set in .env")
+    r = requests.post(
+        GRAPHQL_URL,
+        json={"query": query, "variables": variables},
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+        timeout=30,
+    )
+    r.raise_for_status()
+    data = r.json()
+    if "errors" in data:
+        raise RuntimeError(f"Buffer API error: {data['errors']}")
+    return data["data"]
+
+
+def schedule_post(text, due_at_utc):
+    """
+    Schedule a LinkedIn post via Buffer.
+
+    Args:
+        text:        Post body string.
+        due_at_utc:  datetime (UTC) for when Buffer should publish.
+
+    Returns dict with keys: id, status, dueAt.
+    """
+    channel_id = os.getenv("BUFFER_LINKEDIN_CHANNEL_ID")
+    if not channel_id:
+        raise RuntimeError("BUFFER_LINKEDIN_CHANNEL_ID not set in .env")
+
+    data = _graphql(_CREATE_POST, {
+        "input": {
+            "channelId": channel_id,
+            "text": text,
+            "schedulingType": "automatic",
+            "mode": "customScheduled",
+            "dueAt": due_at_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "assets": [],
+        }
+    })
+    post = (data.get("createPost") or {}).get("post")
+    if not post:
+        raise RuntimeError(f"Unexpected Buffer response: {data}")
+    return post
+
+
+def delete_post(post_id):
+    """Delete a scheduled Buffer post by ID. Returns the deleted post id."""
+    data = _graphql(_DELETE_POST, {"input": {"postId": post_id}})
+    return (data.get("deletePost") or {}).get("post", {})
