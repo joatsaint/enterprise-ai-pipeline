@@ -342,6 +342,8 @@ The guide shows you how.
 ```
 
 ---
+
+### POST 3 — LinkedIn Feed Post
 **Topic:** Real Jobs vs Hype — Which AI Roles Are Actually Hiring
 **Status:** ⬜ SCHEDULED — Tuesday May 5 2026 at 7 AM CST | Post first comment with landing page link immediately when live
 **Platform:** LinkedIn main feed
@@ -376,6 +378,10 @@ The data says you're in the right place at the right time.
 
 You just need to know which door to walk through.
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -383,7 +389,7 @@ You just need to know which door to walk through.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -434,6 +440,10 @@ You've been validating unreliable systems your entire career.
 You didn't know it was AI architecture experience.
 Now you do.
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -441,7 +451,7 @@ Now you do.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -498,6 +508,10 @@ You needed someone to tell you what you already have.
 
 What's the hardest system failure you ever diagnosed?
 Drop it below — I'll show you exactly which AI skill it maps to.
+
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
 
 — Randy Skiles
 25 years IT → AI Automation
@@ -566,6 +580,10 @@ It exposes them.
 What's the one workflow in your organization
 that AI has exposed as broken?
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -573,7 +591,7 @@ that AI has exposed as broken?
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -650,6 +668,10 @@ That's what you already know how to build.
 
 Where are you on the ladder right now?
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -657,7 +679,7 @@ Where are you on the ladder right now?
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #ClaudeCode #AIAutomation #CareerPivot
 ```
@@ -709,6 +731,10 @@ They're hiring people who understand how real organizations
 actually function.
 
 That's you.
+
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
 
 — Randy Skiles
 25 years IT → AI Automation
@@ -764,6 +790,10 @@ or does your workflow control you?"
 
 Drop your answer in the comments.
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -771,7 +801,7 @@ Drop your answer in the comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -825,6 +855,10 @@ That person catches it every time.
 Your value isn't what you produce.
 It's what you prevent.
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -832,7 +866,7 @@ It's what you prevent.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -893,6 +927,10 @@ You can do all three.
 The data doesn't say you're obsolete.
 The data says you're the canary that survived.
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -900,7 +938,7 @@ The data says you're the canary that survived.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -965,6 +1003,10 @@ Bucket 3 is why they still need you after.
 
 Where does most of your day live?
 
+Comment "GUIDE" and I'll DM you the free breakdown —
+7 AI skills that won't be replaced, backed by
+analysis of 2,900 real audience comments.
+
 — Randy Skiles
 25 years IT → AI Automation
 ```
@@ -972,7 +1014,7 @@ Where does most of your day live?
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
+Grab it here: [Kit landing page URL]
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
