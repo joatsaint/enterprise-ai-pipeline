@@ -128,11 +128,11 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ---
 
-### EMAIL 2 — Mailchimp Welcome Sequence
+### EMAIL 2 — Kit Welcome Sequence
 **Topic:** AI Orchestration Deep Dive
-**Status:** ⬜ READY — upload to Mailchimp, fires immediately on signup (no delay)
+**Status:** ⬜ READY — upload to Kit, fires immediately on signup (no delay)
 **Delay:** None — Email 1 does not exist. PDF delivered via browser redirect on signup. This is the first email subscribers receive.
-**Personalization tag:** Replace [First Name] with *|FNAME|* in Mailchimp
+**Personalization tag:** Kit uses `{{ subscriber.first_name }}` — already in the body below
 
 **SUBJECT LINE OPTIONS (pick one):**
 - A: Why your AI keeps handing you homework (and how to fix it) ← recommended
@@ -141,7 +141,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 **EMAIL BODY — copy this exactly:**
 ```
-Hey *|FNAME|*,
+Hey {{ subscriber.first_name }},
 
 A few minutes ago you grabbed the guide on the 7 AI skills worth building right now.
 
@@ -240,12 +240,12 @@ before anyone else.
 
 ---
 
-### EMAIL 3 — Mailchimp Sequence
+### EMAIL 3 — Kit Sequence
 **Topic:** Soft Pitch to Paid PDF — AI Agents That Complete the Job
-**Status:** ✅ READY TO ACTIVATE — Gumroad link live. Upload to Mailchimp immediately.
+**Status:** ✅ READY TO ACTIVATE — Gumroad link live. Upload to Kit immediately.
 **Sequence position:** 2nd email subscriber receives (Email 1 doesn't exist — PDF via browser redirect)
 **Delay:** 3-5 days after Email 2 fires
-**Personalization tag:** *|FNAME|* for first name
+**Personalization tag:** Kit uses `{{ subscriber.first_name }}` — already in the body below
 **Prerequisite:** Gumroad account set up and paid PDF uploaded before activating
 
 **SUBJECT LINE OPTIONS (pick one):**
@@ -255,7 +255,7 @@ before anyone else.
 
 **EMAIL BODY — copy this exactly:**
 ```
-Hey *|FNAME|*,
+Hey {{ subscriber.first_name }},
 
 I just finished analyzing 50 AI transcripts and 30 comment files.
 
@@ -909,7 +909,7 @@ Grab it here: [YOUR MAILCHIMP LANDING PAGE URL]
 
 ### POST 12 — LinkedIn Feed Post
 **Topic:** The Three Buckets — LinkedIn's Own Framework for Staying Indispensable
-**Status:** ⬜ READY — schedule Tuesday June 2 2026 at 7 AM CST | Post first comment with landing page link immediately when live
+**Status:** ✅ SCHEDULED IN BUFFER — 2026-06-02 07:00 CDT | Buffer ID: 6a1b4fef0ec87dc5073ac1ae
 **Platform:** LinkedIn main feed
 **Formula:** Data Revelation + Reframe
 **Source:** "Open to Work" — LinkedIn executives. LinkedIn/Microsoft research data.

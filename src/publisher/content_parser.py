@@ -7,7 +7,7 @@ import re
 DRAFTS_PATH = "docs/CONTENT_DRAFTS.md"
 
 # Matches from "### POST N —" up to the next post, section, or end of file
-_SECTION_RE = r"(### POST {n} —[^\n]*\n(?:.*\n)*?)(?=### POST \d+|## PUBLISHED|## WEDNESDAY|\Z)"
+_SECTION_RE = r"(### POST {n}(?!\d) —[^\n]*\n(?:.*\n)*?)(?=### POST \d+|## PUBLISHED|## WEDNESDAY|\Z)"
 _STATUS_RE = r"(\*\*Status:\*\* )([^\n]+)"
 _BODY_RE = r"\*\*POST BODY[^\n]*\n```\n(.*?)```"
 
@@ -18,8 +18,11 @@ def _load():
 
 
 def _save(content):
-    with open(DRAFTS_PATH, "w", encoding="utf-8") as f:
+    import os as _os
+    tmp = DRAFTS_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
         f.write(content)
+    _os.replace(tmp, DRAFTS_PATH)
 
 
 def _get_section(content, post_number):

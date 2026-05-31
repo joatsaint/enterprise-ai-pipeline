@@ -130,12 +130,12 @@ Page 8 — Your 90-Day AI Skills Roadmap
 
 ### STEP 2 — Build the Landing Page
 **Status:** ✅ COMPLETE — April 15 2026
-Mailchimp Lead Generation — Wild Country template
+Originally built on Mailchimp (Wild Country template) — migrated to Kit
 Headline: "Stop Learning the Wrong AI Skills"
 Redirects to PDF download on opt-in
 **Priority:** High — needed before posting anything
 **Time estimate:** 1–2 hours
-**Tool:** Mailchimp (free tier, you already know it) or Carrd.co ($19/year — cleaner)
+**Tool:** Kit (free up to 10,000 subscribers)
 
 **Landing page must contain:**
 - Headline: *"Stop Learning the Wrong AI Skills"*
@@ -147,7 +147,7 @@ Redirects to PDF download on opt-in
 - Privacy note: "No spam. Unsubscribe anytime."
 
 **URL to use:** Keep it short and memorable
-- Option A: your Mailchimp landing page URL
+- Option A: your Kit landing page URL
 - Option B: Carrd.co custom domain (yourname.com/aiskills or similar)
 
 **After opt-in:**
@@ -159,7 +159,7 @@ Redirects to PDF download on opt-in
 ### STEP 3 — Set Up Email Welcome Sequence (3 emails)
 **Status:** 🔄 IN PROGRESS — Email 1 wired to PDF delivery, Emails 2-3 pending
 **Priority:** High — set up before first opt-in arrives
-**Tool:** Mailchimp free tier (up to 500 contacts, 1,000 emails/month free)
+**Tool:** Kit (free up to 10,000 subscribers — use sequences for automated delivery)
 
 **Email 1 — Immediate delivery (sent instantly on signup)**
 Subject: "Your AI Skills Guide + one thing most people miss"
@@ -378,7 +378,7 @@ Follow for weekly AI skills breakdowns.
 
 ### STEP 12 — Email Sequence Automation
 **Status:** ⬜ NOT STARTED
-**Cost:** Free (Mailchimp free tier)
+**Cost:** Free (Kit free tier)
 
 **What to automate:**
 - Opt-in confirmation email (instant)
@@ -394,7 +394,7 @@ Follow for weekly AI skills breakdowns.
 **Status:** ⬜ FUTURE — do not build until first paid sale
 
 Upgrade sequence when ready:
-1. **Mailchimp → ConvertKit** ($29/month) — better automation and segmentation
+1. **Kit free → Kit Creator** ($25/month) — unlocks automations and advanced sequences
 2. **Carrd.co free → custom domain** ($19/year) — more professional
 3. **Buffer free → Buffer paid** ($18/month) — more channels and posts
 4. **Manual Quora → semi-automated research** — use transcript downloader to find questions
@@ -421,8 +421,8 @@ Upgrade sequence when ready:
 | Carousel HTML file | ✅ DONE | Downloaded from Claude chat |
 | Carousel PDF (print from Chrome) | ⬜ NOT DONE | Export from Chrome |
 | Lead magnet PDF (expanded guide) | ⬜ NOT DONE | Build next session |
-| Landing page | ⬜ NOT DONE | Mailchimp or Carrd |
-| Email welcome sequence (3 emails) | ⬜ NOT DONE | Mailchimp |
+| Landing page | ⬜ NOT DONE | Kit |
+| Email welcome sequence (3 emails) | ⬜ NOT DONE | Kit |
 | LinkedIn profile updated (bio + featured) | ⬜ NOT DONE | Add landing page URL |
 
 ---
@@ -494,7 +494,7 @@ The system is done enough. Post the carousel. Stay consistent for 90 days.
 - [ ] Add landing page link as first comment immediately after posting
 
 **After Thursday token reset (Claude Code sessions):**
-- [ ] Build Mailchimp landing page (1 hour)
+- [ ] Build Kit landing page (1 hour)
 - [ ] Set up 3-email welcome sequence
 - [ ] Begin writing PDF lead magnet from pain point report
 
