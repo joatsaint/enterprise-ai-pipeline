@@ -13,6 +13,9 @@ mutation CreatePost($input: CreatePostInput!) {
     ... on PostActionSuccess {
       post { id status dueAt }
     }
+    ... on RestProxyError { message }
+    ... on InvalidInputError { message }
+    ... on UnexpectedError { message }
   }
 }
 """
@@ -23,6 +26,9 @@ mutation DeletePost($input: DeletePostInput!) {
     ... on PostActionSuccess {
       post { id }
     }
+    ... on RestProxyError { message }
+    ... on InvalidInputError { message }
+    ... on UnexpectedError { message }
   }
 }
 """
@@ -35,7 +41,8 @@ def _load_env():
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
                     key, _, value = line.partition("=")
-                    os.environ.setdefault(key.strip(), value.strip())
+                    value = value.strip().strip('"').strip("'")
+                    os.environ.setdefault(key.strip(), value)
 
 _load_env()
 
@@ -51,7 +58,12 @@ def _graphql(query, variables):
         timeout=30,
     )
     r.raise_for_status()
-    data = r.json()
+    try:
+        data = r.json()
+    except ValueError as exc:
+        raise RuntimeError(
+            f"Buffer returned non-JSON response (HTTP {r.status_code}): {r.text[:200]}"
+        ) from exc
     if "errors" in data:
         raise RuntimeError(f"Buffer API error: {data['errors']}")
     return data["data"]
@@ -127,6 +139,10 @@ def add_image(post_id, image_url, due_at_utc):
 
 
 def delete_post(post_id):
-    """Delete a scheduled Buffer post by ID. Returns the deleted post id."""
+    """Delete a scheduled Buffer post by ID. Returns the deleted post dict."""
     data = _graphql(_DELETE_POST, {"input": {"postId": post_id}})
-    return (data.get("deletePost") or {}).get("post", {})
+    result = data.get("deletePost") or {}
+    post = result.get("post")
+    if not post:
+        raise RuntimeError(f"Buffer deletePost failed: {result.get('message', result)}")
+    return post

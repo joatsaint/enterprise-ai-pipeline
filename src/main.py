@@ -210,7 +210,7 @@ def main():
             idx = args.index("--date")
             if idx + 1 < len(args):
                 date_str = args[idx + 1]
-        if not post_num or not date_str:
+        if post_num is None or not date_str:
             print('Usage: python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" [--dry-run]')
             sys.exit(1)
         from src.publisher.schedule import run_schedule_post

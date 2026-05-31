@@ -20,11 +20,11 @@ CST_OFFSET = timedelta(hours=-6)  # Nov–Mar
 def _parse_local(date_str):
     """
     Parse 'YYYY-MM-DD HH:MM' as US Central time and return a UTC datetime.
-    Assumes CDT (UTC-5) — adjust CST_OFFSET in winter.
+    Applies CDT (UTC-5) March–October, CST (UTC-6) November–February.
     """
     local = datetime.strptime(date_str.strip(), "%Y-%m-%d %H:%M")
-    local_tz = timezone(CDT_OFFSET)
-    local_aware = local.replace(tzinfo=local_tz)
+    offset = CDT_OFFSET if 3 <= local.month <= 10 else CST_OFFSET
+    local_aware = local.replace(tzinfo=timezone(offset))
     return local_aware.astimezone(timezone.utc)
 
 
@@ -75,7 +75,10 @@ def run_schedule_post(post_number, date_str, dry_run=False):
         print(f"[ERROR] Buffer API failed: {e}")
         return
 
-    buffer_id = result["id"]
+    buffer_id = result.get("id")
+    if not buffer_id:
+        print(f"[ERROR] Post created in Buffer but ID missing in response: {result}")
+        return
     print(f"[OK] Scheduled — Buffer post ID: {buffer_id}")
     print(f"     Status: {result['status']} | Publishes: {result['dueAt']}")
 
