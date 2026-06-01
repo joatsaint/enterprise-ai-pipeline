@@ -3,6 +3,8 @@ name: linkedin-content-system
 description: Use this skill before doing ANY LinkedIn content work — drafting posts, articles, carousels, newsletters, comments, or updating the tracker. This encodes Randy's full LinkedIn publishing system, rules, timing, formats, lead magnet, and automation workflow. Load it first, then act.
 ---
 
+> **Voice:** Always load `knowledge/me/voice.md` before drafting any written content. The master style-transfer prompt and all voice rules live there. This framework governs workflow and structure — voice.md governs how it sounds.
+
 # LinkedIn Content System — Randy Skiles
 ## IT-to-AI Transition Expert | enterprise-ai-pipeline project
 
@@ -203,6 +205,8 @@ Pick the title that scores highest on all three:
 - Questions work when they name a fear the reader already has
 - Never use: "The Future of", "Leveraging", "Harnessing", "Journey"
 - Never use the word "Journey" — use "path", "pivot", or "transition"
+- **60 characters max** — hard limit for desktop and mobile display without truncation
+- **SEO formula:** cause-and-effect framing outperforms clever titles — "Why X Fails Without Y" is more extractable by Google AI than any hook-first title
 
 ### Apply this process to PDF titles too
 The same transformation works for PDF lead magnet titles.
@@ -223,15 +227,18 @@ visual layout, mobile readability, and structural additions validated
 against top LinkedIn creators (Justin Welsh, Chris Donnelly, Lara Acosta).
 
 ### Paragraph Length
-- 2 sentences max per paragraph throughout the entire article
+- 2 sentences max per paragraph throughout the entire article — all sections, including narrative
 - 1 sentence is better when the point is sharp
-- Never 3+ sentence blocks — they read as walls on mobile
+- Never 3+ sentence blocks — Google's AI extraction and mobile readability both penalize dense blocks
+- Every sentence must deliver a new fact, step, or concrete example — no filler, no restatement
 
 ### Subheadings
-- Every subheading must read as a hook, not a label
-- Wrong: "The Bridge" / "Context" / "What This Means"
-- Right: "The employees didn't do anything wrong." / "The gap is already here."
-- A skimmer should stop on every subheading — not scroll past it
+- Every H2 must be written as a direct question that mirrors a real search query
+- Right: "Why Do Enterprise AI Deployments Fail?" / "How Does IT Skepticism Protect AI ROI?"
+- Wrong: "The Bridge" / "Context" / "What This Means" / "That gap is open again."
+- Google AI Overviews and LinkedIn search extract H2 questions verbatim — this is how articles get cited
+- Randy's voice comes through in the ANSWER to the H2, not the H2 itself
+- H3s (action item sections only): short, direct labels — not questions
 
 ### Opening Lines — 62/50 Character Discipline
 - Line 1: 62 characters max
@@ -319,14 +326,18 @@ Never publish without a 3-article buffer.
 
 ## ARTICLE WRITING PROCESS (Per Article)
 
-1. Read cultural_reference_bank.md — select one reference that fits the article's situation
-2. Open SKILLS_LOG.md — find the relevant skill entry, use the resume translation as your article thesis statement
-3. Write the opening paragraph first — if you can't state the problem and payoff in 2 sentences, the article isn't focused enough yet
-4. Draft the body — one specific moment of failure, one concrete fix, one business insight
-5. Write the headline last — use the Title Scoring Process after you know what the article actually says
-6. Apply the Article Formatting Rules checklist before publish
-7. Schedule via LinkedIn for Tuesday or Wednesday 10 AM Central
-8. Stay available for first 60 minutes to respond to comments
+1. Load `knowledge/me/voice.md` — apply the master style-transfer prompt to all writing
+2. Read cultural_reference_bank.md — select one reference that fits the article's situation
+3. Open SKILLS_LOG.md — find the relevant skill entry, use the resume translation as your article thesis statement
+4. Write the opening paragraph first — if you can't state the problem and payoff in 2 sentences, the article isn't focused enough yet
+5. Draft the body — one specific moment of failure, one concrete fix, one business insight
+6. **Front-load every section** — answer the H2 question in the first sentence under each heading; AI systems extract the first complete sentence, burying the answer kills snippet eligibility
+7. Write H2s as direct search questions FIRST, then write the body under them
+8. Add FAQ section before the Power-Ending — 3 questions, 2–3 sentences each (feeds Google PAA and LinkedIn AI search)
+9. Write the headline last — use the Title Scoring Process, confirm under 60 characters
+10. Apply the Article Formatting Rules checklist before publish
+11. Schedule via LinkedIn for Tuesday or Wednesday 10 AM Central
+12. Stay available for first 60 minutes to respond to comments
 
 ### What NOT to Write
 - Chronological narration without a point ("First I did X, then Y...")
@@ -456,9 +467,14 @@ Before publishing any article to LinkedIn:
 
 **Formatting & Layout**
 - [ ] Title generated using the Title Scoring Process
+- [ ] Title is under 60 characters (hard limit — test before publish)
+- [ ] Title uses cause-and-effect SEO formula where possible ("Why X Fails Without Y")
 - [ ] Subtitle added
-- [ ] Paragraphs are 2 sentences or fewer throughout
-- [ ] Subheadings read as hooks, not labels
+- [ ] Paragraphs are 2 sentences or fewer throughout — all sections including narrative
+- [ ] Every sentence delivers a new fact, step, or example — no filler
+- [ ] H2s written as direct search questions ("Why Does X Happen?" not "The Bridge")
+- [ ] First sentence under each H2 directly answers the H2 question (front-loaded)
+- [ ] FAQ section present before Power-Ending (3 questions, 2–3 sentences each)
 - [ ] Opening Line 1 and Line 2 are 62 characters max
 - [ ] Opening Line 3 (hook line) is 50 characters max
 - [ ] One bolded line per section max — used on the single most important sentence

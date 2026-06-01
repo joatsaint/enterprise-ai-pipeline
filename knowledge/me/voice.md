@@ -389,22 +389,21 @@ Do not use dividers within a section. If you feel the urge to add a divider mid-
 
 ## Headers (H2)
 
-Use H2 headers to name each major section. Write them the way Randy talks — short, direct, sometimes a half-sentence that assumes the reader is mid-conversation.
+Write H2s as direct questions that mirror real search queries. Google AI Overviews and LinkedIn search extract H2 questions verbatim — this is how articles earn citations. Randy's voice comes through in the ANSWER to the H2, not the H2 itself.
 
-**Good header examples:**
+**Good H2 examples:**
+- *Why Do Enterprise AI Deployments Fail?*
+- *How Does IT Skepticism Protect Enterprise ROI?*
+- *What Should Experienced IT Professionals Do Now?*
+
+**Bad H2 examples:**
 - *That gap is open again right now.*
-- *What this means for you.*
-- *The thing you're actually protecting.*
-- *Here is what Dave did wrong.*
-
-**Bad header examples:**
 - *Understanding the Current AI Governance Landscape*
-- *Key Takeaways for IT Professionals*
 - *Section 3: Action Items*
 
-Headers should not sound like a PowerPoint slide. They should sound like the next thing Randy said.
+The first sentence under every H2 must directly answer the question asked — front-loaded, no preamble. AI systems extract the first complete sentence under a heading.
 
-**H3 headers:** Use only inside the action items section, when breaking down multiple numbered steps that each need a label. Never use H3 in narrative sections.
+**H3 headers:** Use only inside action item sections, when breaking down numbered steps that each need a label. Never use H3 in narrative sections.
 
 ---
 
@@ -445,10 +444,11 @@ One bold phrase per paragraph maximum. If everything is bold, nothing is.
 
 ## Paragraph Length
 
-- War story and narrative sections: 2–4 sentences per paragraph. Let them breathe.
-- Action item sections: 1–3 sentences. Get in, get out.
-- Never let a paragraph run past 5 sentences. If it does, find the break.
-- Single-sentence paragraphs are allowed when the sentence carries enough weight to stand alone.
+- 2 sentences max per paragraph throughout — all sections including narrative
+- 1 sentence is better when the point is sharp
+- Never 3+ sentences in any paragraph — Google AI extraction and mobile readability both penalize dense blocks
+- Every sentence must deliver a new fact, step, or concrete example — no filler, no restatement
+- Single-sentence paragraphs are encouraged when the sentence carries enough weight to stand alone
 
 *"He was a good sysadmin. He just didn't move first."*
 
