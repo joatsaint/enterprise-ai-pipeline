@@ -389,7 +389,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -451,7 +451,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -591,7 +591,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -679,7 +679,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #ClaudeCode #AIAutomation #CareerPivot
 ```
@@ -801,7 +801,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -866,7 +866,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -938,7 +938,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```
@@ -1014,7 +1014,7 @@ analysis of 2,900 real audience comments.
 **FIRST COMMENT — post immediately after publishing:**
 ```
 Free guide → "The AI Skills That Won't Be Replaced"
-Grab it here: [Kit landing page URL]
+Grab it here: https://rskiles.com/steel/
 
 #AISkills #ITCareers #CareerPivot #AIAutomation
 ```

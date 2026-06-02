@@ -5,3 +5,4 @@ yt-dlp
 google-api-python-client
 anthropic
 pytest
+flask

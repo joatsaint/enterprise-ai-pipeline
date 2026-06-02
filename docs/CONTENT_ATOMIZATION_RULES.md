@@ -76,7 +76,7 @@ Free guide in the first comment ↓
 
 [First comment — posted immediately]
 I broke this down in a free guide for IT professionals making the pivot.
-"The AI Skills That Won't Be Replaced" — grab it here: [Kit landing page URL]
+"The AI Skills That Won't Be Replaced" — grab it here: https://rskiles.com/steel/
 ```
 
 **Cardone positioning in LinkedIn post:**
@@ -114,12 +114,12 @@ treated differently from feed posts. External links do not suppress reach.
 ```
 [Mid-article — after key insight section]
 I put together a free guide covering all 7 of these skills in detail.
-If you want the full breakdown: [Kit landing page URL]
+If you want the full breakdown: https://rskiles.com/steel/
 
 [End of article]
 Every week I publish research-backed analysis on which AI skills
 actually pay for IT professionals. Follow along at [LinkedIn profile URL]
-and grab the free guide here: [Kit landing page URL]
+and grab the free guide here: https://rskiles.com/steel/
 ```
 
 **Cardone positioning in LinkedIn article:**
@@ -249,7 +249,7 @@ Maximum one link per answer, at the end, framed as additional resource.
 [End of complete answer — after full value delivered]
 I went deeper on this specific question in a free guide based on
 analysis of 50 AI videos and 2,900 audience comments — covers all
-7 skills with a 90-day roadmap: [Kit landing page URL]
+7 skills with a 90-day roadmap: https://rskiles.com/steel/
 ```
 
 **Cardone positioning on Quora:**
@@ -285,7 +285,7 @@ tags or rewrite sufficiently.
 ```
 [End of article]
 If you want the full research breakdown with the 90-day roadmap,
-I put it together as a free guide: [Kit landing page URL]
+I put it together as a free guide: https://rskiles.com/steel/
 Follow me here on Medium for weekly analysis — or connect on
 LinkedIn: [LinkedIn URL]
 ```
@@ -320,7 +320,7 @@ What's your experience with this? Drop it below.
 
 [Your comment — immediately after]
 I put together a free guide on exactly this for IT professionals —
-happy to share it if useful: [Kit landing page URL]
+happy to share it if useful: https://rskiles.com/steel/
 ```
 
 **Cardone positioning in Facebook groups:**

@@ -53,11 +53,11 @@ SECTION_MAP = {
 REVIEW_CHECKLIST = """\
 ## Review Checklist
 
-- [ ] Text feed post: hook in first line, no link in body, CTA is `Comment "GUIDE"`
+- [ ] Text feed post: hook in first line, no link in body, CTA routes to Featured Section
 - [ ] Image post: copy fits the visual, stat/quote is accurate, no link in body
-- [ ] Carousel: ≤ 10 slides, one idea per slide, CTA on final slide
-- [ ] Newsletter: subject line ≤ 50 chars, Kit URL placeholder present
-- [ ] First comments: A–D options drafted, pick one before scheduling
+- [ ] Carousel: ≤ 10 slides, one idea per slide, CTA on final slide routes to Featured Section
+- [ ] Newsletter: subject line ≤ 50 chars, https://rskiles.com/the-riddle-of-steel present
+- [ ] First comments: A–D options drafted (context-adding, no links), pick one before scheduling
 - [ ] Poll: question is curiosity-driven, not leading
 - [ ] Buffer schedule: date/time matches publish calendar, all slots filled
 """
@@ -156,26 +156,30 @@ Rules for each section:
 
 ## TEXT FEED POST
 Standalone LinkedIn feed post drawn from the article. Hook in the very first line
-(no label, no "Hook:"). No links anywhere in the body. End with exactly:
-Comment "GUIDE" and I'll DM you the free breakdown.
+(no label, no "Hook:"). No links anywhere in the body. End with a Featured Section
+CTA — point readers to the free 14-day plan pinned at the top of Randy's profile.
+Example close: "The free 14-day plan to stay indispensable in the AI era is pinned
+to the top of my Featured Section." Write it in Randy's voice — don't copy the example verbatim.
 
 ## IMAGE POST
 Short post to accompany a single static image — a stat, bold claim, or pull quote
-from the article. No link in the body. CTA: comment GUIDE.
+from the article. No link in the body. CTA routes to Featured Section (not "comment GUIDE").
 
 ## CAROUSEL
 Slide-by-slide copy. Label each slide Slide 1, Slide 2, etc. Maximum 10 slides.
-Each slide: one headline + 1–2 supporting lines. Final slide: CTA to comment GUIDE.
+Each slide: one headline + 1–2 supporting lines. Final slide: CTA to Featured Section —
+the free 14-day plan is pinned there. No "comment GUIDE."
 
 ## NEWSLETTER
 Email to the Kit subscriber list.
 First line: Subject: [subject line, 50 chars max]
-Then the email body in Randy's voice. End with a CTA that includes [Kit landing page URL].
+Then the email body in Randy's voice. End with a CTA that includes https://rskiles.com/the-riddle-of-steel.
 
 ## FIRST COMMENTS
 Four comment options labeled A, B, C, D for the first comment on the feed post.
-Comments add context — they do not repeat the post copy.
-At least one option includes [Kit landing page URL].
+Comments add context and depth — they do NOT repeat the post copy and contain NO links.
+Goal: start a thread, surface a second insight from the article, or pose a follow-up
+question that drives replies. No URLs. No "link in comments" language.
 
 ## POLL
 LinkedIn poll. Write the question + exactly 4 answer options.
