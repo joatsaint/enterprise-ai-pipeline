@@ -280,7 +280,7 @@ def main() -> None:
     print(f"[info] Calling Claude API — slug: {slug}")
     client = anthropic.Anthropic()
     message = client.messages.create(
-        model="claude-sonnet-4-6",
+        model="claude-opus-4-8",
         max_tokens=8192,
         messages=[{"role": "user", "content": prompt}],
     )
@@ -289,7 +289,7 @@ def main() -> None:
     sections = _split_sections(response_text)
     written  = _save_output(slug, args.date, sections)
 
-    print(f"[done] {len(written)} files → pending/{slug}/")
+    print(f"[done] {len(written)} files -> pending/{slug}/")
     for f in written:
         print(f"       {f}")
 
