@@ -1,3 +1,0 @@
-## BUFFER-SCHEDULE
-
-(content here)

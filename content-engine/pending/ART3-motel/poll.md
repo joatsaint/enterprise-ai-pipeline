@@ -1,3 +1,0 @@
-## POLL
-
-(content here)
