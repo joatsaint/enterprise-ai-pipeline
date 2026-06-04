@@ -30,10 +30,10 @@ STAGES = ["pending", "approved", "scheduled", "published"]
 
 PIECES = [
     {"key": "linkedin-article",   "label": "LinkedIn Article",   "day": "Mon",      "manual": False, "tool": None, "task_overrides": {"scheduled": "Ready"}},
-    {"key": "article-hero-image", "label": "Article Hero Image", "day": "Mon",      "manual": True,  "tool": "Gemini — landscape hero (article header)"},
+    {"key": "article-hero-image", "label": "Article Hero Image", "day": "Mon",      "manual": True,  "tool": "ChatGPT — landscape hero (article header)"},
     {"key": "carousel",           "label": "Carousel",           "day": "Mon · Thu","manual": True,  "tool": "Canva — paste slide copy from carousel.md"},
     {"key": "text-post",          "label": "Text Feed Post",     "day": "Wed",      "manual": False, "tool": None},
-    {"key": "image-post",         "label": "Image Post",         "day": "Sat",      "manual": True,  "tool": "Gemini image generator"},
+    {"key": "image-post",         "label": "Image Post",         "day": "Sat",      "manual": True,  "tool": "ChatGPT image generator"},
     {"key": "newsletter",         "label": "Newsletter",         "day": "Sun",      "manual": False, "tool": None},
     {"key": "first-comments",     "label": "First Comments",     "day": "—",        "manual": False, "tool": None},
     {"key": "poll",               "label": "Poll",               "day": "—",        "manual": False, "tool": None},
