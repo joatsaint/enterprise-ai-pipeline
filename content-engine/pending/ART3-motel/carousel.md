@@ -1,3 +1,0 @@
-## CAROUSEL
-
-(content here)
