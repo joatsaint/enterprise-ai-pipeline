@@ -415,6 +415,12 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem; }
   font-size: .68rem; font-weight: 700; padding: .18rem .5rem;
   background: #fee2e2; color: #dc2626; border-radius: 99px; flex-shrink: 0;
 }
+.article-card.is-overdue {
+  border-left: 3px solid #dc2626;
+}
+.section-hdr.overdue-hdr {
+  color: #dc2626;
+}
 .section-hdr {
   font-size: .72rem; font-weight: 700; color: var(--muted);
   text-transform: uppercase; letter-spacing: .08em;
@@ -481,6 +487,41 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem; }
 .empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
 .empty h3 { font-size: 1.05rem; margin-bottom: .5rem; color: var(--text); }
 
+/* PAID PRODUCT REMINDER */
+.ppr-banner {
+  background: #fefce8; border: 1px solid #fde047;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px; margin-bottom: 1rem; overflow: hidden;
+}
+.ppr-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .6rem 1rem; cursor: pointer; user-select: none;
+}
+.ppr-toggle:hover { background: #fef9c3; }
+.ppr-toggle-left { display: flex; align-items: center; gap: .55rem; }
+.ppr-label { font-weight: 700; font-size: .82rem; color: #92400e; }
+.ppr-sub   { font-size: .72rem; color: #a16207; }
+.ppr-chev  { font-size: .65rem; color: #a16207; transition: transform .2s; }
+.ppr-chev.open { transform: rotate(90deg); }
+.ppr-body  { padding: .1rem 1rem .75rem; }
+.ppr-note  { font-size: .75rem; color: #78350f; margin-bottom: .55rem; font-style: italic; }
+.ppr-options { display: flex; flex-direction: column; gap: .4rem; }
+.ppr-option {
+  display: flex; gap: .6rem; align-items: flex-start;
+  background: #fff; border: 1px solid #fde68a;
+  border-radius: 6px; padding: .45rem .7rem;
+}
+.ppr-opt-badge {
+  font-size: .68rem; font-weight: 800; padding: .18rem .5rem;
+  border-radius: 4px; white-space: nowrap; flex-shrink: 0; margin-top: .05rem;
+}
+.opt-a { background: #dbeafe; color: #1d4ed8; }
+.opt-b { background: #dcfce7; color: #166534; }
+.opt-c { background: #f3e8ff; color: #7e22ce; }
+.ppr-opt-text { font-size: .75rem; line-height: 1.4; color: #1e293b; }
+.ppr-opt-text strong { font-weight: 700; }
+.ppr-opt-meta { font-size: .68rem; color: var(--muted); margin-top: .1rem; }
+
 [hidden] { display: none !important; }
 </style>
 </head>
@@ -498,6 +539,43 @@ main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1rem; }
 
 <main>
   <div id="articles-view">
+
+    <div class="ppr-banner">
+      <div class="ppr-toggle" onclick="togglePPR()">
+        <div class="ppr-toggle-left">
+          <span class="ppr-label">&#127919; Next Priority: First Paid Product</span>
+          <span class="ppr-sub">Build audience first &rarr; then choose one of these</span>
+        </div>
+        <span class="ppr-chev" id="ppr-chev">&#9654;</span>
+      </div>
+      <div class="ppr-body" id="ppr-body" hidden>
+        <p class="ppr-note">No following yet = no lead magnet takers = no email list = no sales. Focus on LinkedIn content to build the audience. Once you have followers, pick one:</p>
+        <div class="ppr-options">
+          <div class="ppr-option">
+            <span class="ppr-opt-badge opt-a">A</span>
+            <div>
+              <div class="ppr-opt-text"><strong>AI-Era Sysadmin Field Manual</strong> &mdash; Expanded Steel guide + Brain Droppings war stories. Most content already drafted. The product Section 11 of your lead magnet explicitly promised.</div>
+              <div class="ppr-opt-meta">$37&ndash;67 &nbsp;&middot;&nbsp; 2&ndash;4 sessions &nbsp;&middot;&nbsp; Highest perceived value</div>
+            </div>
+          </div>
+          <div class="ppr-option">
+            <span class="ppr-opt-badge opt-b">B</span>
+            <div>
+              <div class="ppr-opt-text"><strong>14-Day Operator Proof Sprint Workbook</strong> &mdash; Standalone expansion of the sprint in Steel guide Section 10. Fillable worksheets, prompt library, day-by-day guides.</div>
+              <div class="ppr-opt-meta">$17&ndash;27 &nbsp;&middot;&nbsp; 1&ndash;2 sessions &nbsp;&middot;&nbsp; Fastest path to a real product</div>
+            </div>
+          </div>
+          <div class="ppr-option">
+            <span class="ppr-opt-badge opt-c">C</span>
+            <div>
+              <div class="ppr-opt-text"><strong>Sysadmin AI Prompt Pack</strong> &mdash; 15&ndash;20 production-ready prompts organized by use case: docs, incident response, risk communication, career evidence, change management.</div>
+              <div class="ppr-opt-meta">$9&ndash;17 &nbsp;&middot;&nbsp; 1 session &nbsp;&middot;&nbsp; Lowest friction first purchase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="stats-bar" id="stats-bar"></div>
     <div id="article-list"></div>
   </div>
@@ -548,9 +626,12 @@ function isOverdue(a) {
 }
 
 function renderArticles() {
-  const today    = toISO(new Date());
+  const today   = toISO(new Date());
+  const overdue = [...D.articles]
+    .filter(a => isOverdue(a))
+    .sort((a,b) => a.publish_date.localeCompare(b.publish_date));
   const upcoming = [...D.articles]
-    .filter(a => !a.publish_date || a.publish_date >= today)
+    .filter(a => !isOverdue(a) && (!a.publish_date || a.publish_date >= today))
     .sort((a,b) => {
       if (!a.publish_date && !b.publish_date) return 0;
       if (!a.publish_date) return 1;
@@ -558,12 +639,12 @@ function renderArticles() {
       return a.publish_date.localeCompare(b.publish_date);
     });
   const past = [...D.articles]
-    .filter(a => a.publish_date && a.publish_date < today)
+    .filter(a => !isOverdue(a) && a.publish_date && a.publish_date < today)
     .sort((a,b) => b.publish_date.localeCompare(a.publish_date));
 
-  renderStats([...upcoming, ...past]);
+  renderStats([...overdue, ...upcoming, ...past]);
 
-  if (!upcoming.length && !past.length) {
+  if (!overdue.length && !upcoming.length && !past.length) {
     document.getElementById("article-list").innerHTML =
       `<div class="empty"><h3>No articles found</h3>
        <p>Run the atomizer to generate content in pending/</p></div>`;
@@ -571,6 +652,10 @@ function renderArticles() {
   }
 
   let html = "";
+  if (overdue.length) {
+    html += `<div class="section-hdr overdue-hdr">⚠ Overdue — Needs Action (${overdue.length})</div>`;
+    html += overdue.map(a => cardHtml(a)).join("");
+  }
   if (upcoming.length) {
     html += `<div class="section-hdr">Upcoming &amp; Active (${upcoming.length})</div>`;
     html += upcoming.map(a => cardHtml(a)).join("");
@@ -582,6 +667,14 @@ function renderArticles() {
     html += `<div id="past-section" hidden>${past.map(a => cardHtml(a)).join("")}</div>`;
   }
   document.getElementById("article-list").innerHTML = html;
+}
+
+function togglePPR() {
+  const body = document.getElementById("ppr-body");
+  const chev = document.getElementById("ppr-chev");
+  if (!body) return;
+  body.hidden = !body.hidden;
+  chev.classList.toggle("open", !body.hidden);
 }
 
 function togglePast() {
@@ -642,7 +735,7 @@ function cardHtml(a) {
   const hookCls   = a.hook_type ? "tag-select set" : "tag-select";
 
   return `
-<div class="article-card" id="card-${id}">
+<div class="article-card${isOverdue(a) ? ' is-overdue' : ''}" id="card-${id}">
   <div class="card-header" onclick="toggleCard('${a.slug}')">
     ${num}${od}
     <span class="card-title">
