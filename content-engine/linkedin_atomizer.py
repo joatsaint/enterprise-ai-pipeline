@@ -136,6 +136,7 @@ def _build_prompt(
     voice: str,
     randy_voice: str,
     publish_date: str,
+    brief: str = "",
 ) -> str:
     preamble_parts = ["You are producing LinkedIn content for Randy Skiles.\n"]
     if voice:
@@ -144,6 +145,10 @@ def _build_prompt(
         preamble_parts.append(f"RANDY VOICE PROFILE:\n{randy_voice}\n")
     if rules:
         preamble_parts.append(f"LINKEDIN CONTENT RULES:\n{rules}\n")
+    if brief:
+        preamble_parts.append(
+            f"PERFORMANCE DATA — bias toward top-performing angles:\n{brief}\n"
+        )
     preamble = "\n".join(preamble_parts)
 
     headers = "\n".join(f"## {h}" for h in SECTION_MAP)
@@ -286,6 +291,11 @@ def main() -> None:
         required=True,
         help="Publish date YYYY-MM-DD (used in schedule block; slug if no --file)",
     )
+    parser.add_argument(
+        "--brief",
+        action="store_true",
+        help="Inject performance_brief.md into prompt to bias toward top-performing angles",
+    )
     args = parser.parse_args()
 
     slug    = _derive_slug(args)
@@ -302,7 +312,14 @@ def main() -> None:
     voice       = _read_optional(RULES_DIR / "voice.md")
     randy_voice = _read_optional(RULES_DIR / "RANDY_VOICE_SKILL.md")
 
-    prompt = _build_prompt(article, rules, voice, randy_voice, args.date)
+    brief = ""
+    if args.brief:
+        brief_path = HERE / "performance_brief.md"
+        brief = _read_optional(brief_path)
+        if brief:
+            print(f"[info] Performance brief loaded — biasing toward top-performing angles")
+
+    prompt = _build_prompt(article, rules, voice, randy_voice, args.date, brief=brief)
 
     print(f"[info] Calling Claude API - slug: {slug}")
     client = anthropic.Anthropic()
