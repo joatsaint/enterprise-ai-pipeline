@@ -51,6 +51,16 @@ Randy_Skiles_Voice_Profile_v2.gdoc
 # Sample images in ChatGPT prompt library — generated assets, not source
 docs/ChatGPT - LinkedIn Content Creation Prompts and Playbook/Sample Images/
 
+# Chrome extension reference files — used during development only
+docs/chrome_extensions/
+
+# Skool downloader debug artifacts
+skool_debug.py
+skool_debug_*.png
+skool_debug_*.html
+skool_lesson_*.png
+skool_*.json
+
 # docs/ — personal notes, marketing materials, session artifacts
 docs/Randys_Brain_Droppings.md
 docs/Randys Adventure Series/

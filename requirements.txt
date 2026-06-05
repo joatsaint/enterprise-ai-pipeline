@@ -10,3 +10,5 @@ anthropic
 pytest
 flask
 python-dotenv
+playwright
+faster-whisper
