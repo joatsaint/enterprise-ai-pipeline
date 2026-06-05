@@ -2,9 +2,12 @@
 """
 generate_carousel_images.py  — content-engine/
 
-Reads carousel.md for a given article, generates a per-slide visual
-storyboard + image prompts using the full brand bible, then calls
-Imagen 3 via the Gemini API to produce the images.
+Two-pass pipeline:
+  Pass 1 — Gemini 2.5 Flash builds a visual storyboard (scene archetypes,
+            operator actions, emotional jobs) using the full brand bible.
+  Pass 2 — gpt-image-1 generates clean cinematic scenes with NO embedded text.
+            Pillow adds the white border, lower-third gradient, and typography
+            deterministically so text is always crisp and consistent.
 
 Usage
 -----
@@ -15,6 +18,7 @@ Usage
 
 import argparse
 import base64
+import io
 import json
 import os
 import sys
@@ -22,7 +26,6 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-# Ensure the terminal handles Unicode on Windows
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -31,25 +34,49 @@ ROOT      = HERE.parent
 BRAND_DIR = ROOT / "docs" / "ChatGPT - LinkedIn Content Creation Prompts and Playbook"
 PENDING   = HERE / "pending"
 
-# Load by pattern — avoids fragile exact-name matching
-BRAND_KEYWORDS = ["master_linkedin_image_system", "sysadmin_ai_visual_brand_bible"]
+MASTER_STYLE_FILE = BRAND_DIR / "ChatGPT Prompt Image Generation for Claude Code.txt"
+
+# Windows system fonts — Impact is the canonical brand condensed face
+FONT_CANDIDATES = [
+    "C:\\Windows\\Fonts\\impact.ttf",
+    "C:\\Windows\\Fonts\\arialbd.ttf",
+    "C:\\Windows\\Fonts\\arial.ttf",
+]
 
 SLIDE_NAMES = {
     1: "hook", 2: "problem", 3: "mistake", 4: "operator",
     5: "turn",  6: "reveal", 7: "recognition", 8: "lesson_cta",
 }
 
+# LinkedIn carousel final dimensions
+CAROUSEL_W, CAROUSEL_H = 1080, 1350
+BORDER_PX = 36        # white documentary border
+FONT_SIZE_BASE = 52   # baseline — scales with image width
+
 
 # ---------------------------------------------------------------------------
-# Brand / article loading
+# Brand loading
 # ---------------------------------------------------------------------------
+
+def load_master_style() -> str:
+    if not MASTER_STYLE_FILE.exists():
+        sys.exit(f"[error] Master style file not found: {MASTER_STYLE_FILE}")
+    try:
+        with open(str(MASTER_STYLE_FILE), "r", encoding="utf-8", errors="replace") as fh:
+            content = fh.read()
+        print(f"  [style] Loaded: {MASTER_STYLE_FILE.name}")
+        return content.strip()
+    except OSError as e:
+        sys.exit(f"[error] Could not read master style file: {e}")
+
 
 def load_brand_context() -> str:
     parts = []
     if not BRAND_DIR.exists():
-        sys.exit(f"[error] Brand directory not found: {BRAND_DIR}")
+        return ""
     for f in sorted(BRAND_DIR.glob("*.md")):
-        if not any(kw in f.name.lower() for kw in BRAND_KEYWORDS):
+        kw = ["master_linkedin_image_system", "sysadmin_ai_visual_brand_bible"]
+        if not any(k in f.name.lower() for k in kw):
             continue
         try:
             with open(str(f), "r", encoding="utf-8", errors="replace") as fh:
@@ -57,8 +84,6 @@ def load_brand_context() -> str:
             print(f"  [brand] Loaded: {f.name}")
         except OSError as e:
             print(f"  [warn] Could not read {f.name}: {e}")
-    if not parts:
-        print(f"[warn] No brand files matched — generating with limited context")
     return "\n\n---\n\n".join(parts)
 
 
@@ -75,68 +100,75 @@ def load_carousel(slug: str) -> tuple[Path, str]:
     return article_dir, text
 
 
-def load_article(article_dir: Path) -> str:
-    for candidate in ["linkedin-article.md", "article.md"]:
-        f = article_dir / candidate
-        if f.exists():
-            return f.read_text("utf-8")
-    return ""
-
-
 # ---------------------------------------------------------------------------
-# Storyboard generation (Gemini text)
+# Storyboard (Gemini — scene selection + operator action only)
 # ---------------------------------------------------------------------------
 
 STORYBOARD_SYSTEM = """\
-You are the visual director for Randy Skiles' LinkedIn brand system. You have
-full knowledge of the brand bible provided below. Your job is to produce a
-complete image-generation storyboard for a LinkedIn carousel.
+You are the visual director for Randy Skiles' LinkedIn brand system.
 
-BRAND BIBLE:
+Your job: for each carousel slide, choose the strongest visual scene and output
+the slide-specific details used to build the image prompt. You do NOT write style
+rules, lighting, color grades, or character descriptions — those come from the
+master style block automatically.
+
+CRITICAL: Images will be generated WITHOUT embedded text. A separate post-processing
+step adds the text overlay. Your job is to design a scene that works WITHOUT any text
+on it — the visual metaphor must stand alone.
+
+The most important question for every slide:
+"What is The Operator DOING that proves experience matters?"
+He must always have a clear operational role: gatekeeper, reviewer, approver,
+diagnostician, stabilizer, translator, or controller.
+
+BRAND CONTEXT (for scene selection guidance):
 {brand_context}
 
-TASK:
-Given the carousel slide copy, output a JSON array — one object per slide.
+SCENE ARCHETYPES — choose the best fit for each slide:
+1. Hurricane Motel Command Center — Operator runs enterprise IT from a cheap motel during a storm
+2. Enterprise War Room — Conference room with dashboards, outage alerts, Operator calm amid chaos
+3. Jenga Dependency Collapse — Jenga tower of labeled enterprise dependencies collapsing (DNS, Active Directory, Change Control, Bob, Print Server, Backups, Service Account)
+4. Empty Bob Chair — AI command room frozen because Bob's institutional knowledge is absent
+5. Permission Gate — AI workflow waiting behind locked enterprise security checkpoint (PII, PROD, HR DATA, FINANCE, IDENTITY); Operator with clipboard and access badge
+6. Approval Console — Operator reviewing AI workflow screen with APPROVE / HOLD / ESCALATE / ROLLBACK / HUMAN REVIEW REQUIRED buttons
+7. Shadow AI Server Rack — Dark server room, open racks, unauthorized systems labeled Shadow AI / Data Leak / Hallucination / Prompt Injection
+8. Castle Moat / Trust Fortress — Secure grounded business fortress representing trust, accountability, expertise
 
-Each object must have these exact keys:
-  slide_number       (int)
-  slide_title        (string, 2-5 words)
-  emotional_objective (string, one word or short phrase)
-  image_style        (string: exactly "Cinematic Editorial Realism" or "Documentary Photograph Principle")
-  overlay_text       (string: short text overlay, 3-10 words — copy from the slide or sharpen it)
-  stapler_placement  (string: where the red stapler is hidden)
-  full_image_prompt  (string: complete Imagen-ready prompt — see rules below)
+APPROVED STAPLER LOCATIONS (choose one, write as a complete natural-language sentence):
+- half-hidden behind a coffee mug on the checkpoint desk
+- partly covered by printed approval forms on the far edge of the conference table
+- tucked beside a mechanical keyboard on the desk
+- nestled under the edge of an old runbook binder on the shelf
+- partly buried under fallen Jenga blocks near the corner
+- reflected faintly in server rack glass near floor level
+- tucked inside a cable bag on the floor beside the desk
+- on Bob's empty desk chair, half under a stack of printouts
 
-Rules for full_image_prompt:
-- The image generator is gpt-image-1 (OpenAI) which renders text ACCURATELY in images.
-  Include all text that should appear in the image directly in the prompt.
-- Open with: "Create a high-impact LinkedIn carousel image, vertical portrait format,
-  1024 x 1536 px, with a clean 1-inch white border around the entire image."
-- State the image style (Cinematic Editorial Realism OR Documentary Photograph Principle).
-- Include The Operator: "the recurring Operator character — a Gen-X enterprise IT veteran,
-  male, early-to-mid 50s, salt-and-pepper hair, slightly tired eyes, calm expression,
-  practical business-casual clothing, headset often present, coffee nearby, never panicking,
-  always the calmest person in the scene."
-- Include the specific scene description for this slide.
-- Include the stapler: "Hide a red Swingline-style stapler [placement] — never centered,
-  never highlighted, visible only on close inspection."
-- Include lighting: "Cinematic lighting: warm monitor glow, cool blue-gray ambient."
-- Include text to render: "Render the following text in the lower third of the image in
-  large bold clean sans-serif white typography with a subtle dark gradient behind it for
-  readability: '[overlay_text]'"
-- NEVER include: generic AI robots, glowing brains, holograms, neon cyberpunk,
-  Silicon Valley stock-photo polish, Canva-style over-design.
+OPTIONAL EASTER EGGS (use 0-2, only if they fit naturally):
+orange towel, rubber duck, old pager, floppy disk, CRT monitor, Cisco console cable,
+pizza box, Dr Pepper-style soda can, sticky note reading "Rollback Plan?",
+sticky note reading "Ask Bob", sticky note reading "Temporary since 2014",
+whiteboard reading "The Full Monty", coffee mug reading "Systems Don't Sleep",
+coffee mug reading "Caffeine / Sarcasm / Uptime"
 
-Use the metaphor library from the brand bible to select the strongest visual for each slide.
-Use Documentary Photograph Principle for war-story / real-incident slides.
-Use Cinematic Editorial Realism for concept / metaphor / governance slides.
+Output a JSON array — one object per slide — with EXACTLY these keys:
+  slide_number         (int)
+  slide_title          (string, 2-5 words)
+  emotional_job        (string: one word — curiosity, recognition, stress, validation, hope, etc.)
+  viewer_takeaway      (string: one sentence — what the viewer thinks after seeing this image)
+  scene_archetype      (string: name from list above, or "custom")
+  scene_description    (string: 4-6 sentences — who, what, where, story tension, what catches the eye)
+  operator_action      (string: one sentence — exactly what The Operator is doing that proves experience matters)
+  overlay_text         (string: 3-8 words, high-impact, drawn directly from slide copy — this will be added by code, NOT by the image generator)
+  stapler_placement    (string: complete natural-language sentence from approved list)
+  optional_easter_eggs (array of 0-2 strings)
+  text_placement       (string: "lower third", "left side", or "top third")
+  negative_space_note  (string: where in the image to leave clean dark area for the text overlay)
 
 Output ONLY the JSON array. No markdown fences. No explanation. Start with [ end with ]."""
 
 
 def generate_storyboard(client, brand_context: str, carousel_text: str) -> list[dict]:
-    from google import genai  # noqa: F401 (already imported at call site)
-
     prompt = STORYBOARD_SYSTEM.format(brand_context=brand_context)
     full_input = f"{prompt}\n\nCARROUSEL SLIDE COPY:\n{carousel_text}"
 
@@ -148,7 +180,6 @@ def generate_storyboard(client, brand_context: str, carousel_text: str) -> list[
     print("done")
 
     raw = response.text.strip()
-    # Strip markdown code fences if the model wraps the JSON anyway
     if raw.startswith("```"):
         lines = raw.split("\n")
         raw = "\n".join(lines[1:-1] if lines[-1] == "```" else lines[1:])
@@ -166,29 +197,239 @@ def generate_storyboard(client, brand_context: str, carousel_text: str) -> list[
 
 
 # ---------------------------------------------------------------------------
+# Prompt assembly — master style + scene details, NO text rendering
+# ---------------------------------------------------------------------------
+
+def build_image_prompt(master_style: str, scene: dict, portrait: bool = True) -> str:
+    """
+    Full production prompt = master style block + slide-specific scene direction.
+    Text overlay is NEVER asked of the image generator — handled by post_process_image.
+    """
+    parts = [master_style]
+
+    archetype      = scene.get("scene_archetype", "")
+    scene_desc     = scene.get("scene_description", "")
+    operator_action = scene.get("operator_action", "")
+    stapler        = scene.get("stapler_placement", "")
+    easter_eggs    = scene.get("optional_easter_eggs", [])
+    negative_space = scene.get("negative_space_note", "")
+    viewer_takeaway = scene.get("viewer_takeaway", "")
+    emotional_job  = scene.get("emotional_job", "")
+
+    parts.append("\n\n--- SCENE DIRECTION FOR THIS SLIDE ---")
+
+    if emotional_job:
+        parts.append(f"Emotional job: {emotional_job}.")
+    if viewer_takeaway:
+        parts.append(f"Viewer takeaway: {viewer_takeaway}")
+
+    if archetype and archetype.lower() != "custom":
+        parts.append(f"\nUse the '{archetype}' scene archetype as the visual foundation.")
+
+    if scene_desc:
+        parts.append(f"\nScene: {scene_desc}")
+
+    if operator_action:
+        parts.append(f"\nThe Operator's action: {operator_action}")
+
+    if stapler:
+        parts.append(
+            f"\nHide the red stapler: {stapler} — one stapler only, never centered, "
+            f"never spotlit, visible only on careful inspection."
+        )
+
+    if easter_eggs:
+        parts.append(f"\nInclude these details naturally if they fit: {', '.join(easter_eggs)}")
+
+    # Critical: NO text in the generated image
+    if negative_space:
+        parts.append(
+            f"\nLeave clean negative space — a dark uncluttered zone — in the {negative_space}. "
+            f"Text will be added in post-processing. Do NOT render any headline, overlay, "
+            f"or caption text in the generated image."
+        )
+    else:
+        parts.append(
+            "\nLeave clean negative space in the lower third of the image — a dark, "
+            "uncluttered zone free of faces, hands, or key props. "
+            "Text will be added in post-processing. Do NOT render any headline, overlay, "
+            "or caption text in the generated image."
+        )
+
+    size = "1024 x 1536 px vertical portrait" if portrait else "1536 x 1024 px landscape"
+    parts.append(f"\nFormat: {size}. No embedded text. Strong cinematic composition.")
+
+    return "\n".join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Post-processing — border + gradient + typography via Pillow
+# ---------------------------------------------------------------------------
+
+def _load_font(size: int):
+    try:
+        from PIL import ImageFont
+        for fp in FONT_CANDIDATES:
+            if Path(fp).exists():
+                try:
+                    return ImageFont.truetype(fp, size)
+                except Exception:
+                    continue
+        return ImageFont.load_default()
+    except ImportError:
+        return None
+
+
+def post_process_image(
+    img_bytes: bytes,
+    overlay_text: str,
+    placement: str = "lower third",
+    target_w: int = CAROUSEL_W,
+    target_h: int = CAROUSEL_H,
+    border: int = BORDER_PX,
+) -> bytes:
+    """
+    Add white border + dark gradient + bold text overlay.
+    Resize/crop to final LinkedIn carousel dimensions.
+    Returns PNG bytes.
+    """
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except ImportError:
+        print("[warn] Pillow not installed — skipping post-processing (pip install pillow)")
+        return img_bytes
+
+    img = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+
+    # --- Resize to fill target dimensions (cover, not stretch) ---
+    inner_w = target_w - border * 2
+    inner_h = target_h - border * 2
+    scale = max(inner_w / img.width, inner_h / img.height)
+    new_w = int(img.width * scale)
+    new_h = int(img.height * scale)
+    img = img.resize((new_w, new_h), Image.LANCZOS)
+
+    # Center crop
+    left = (new_w - inner_w) // 2
+    top  = (new_h - inner_h) // 2
+    img = img.crop((left, top, left + inner_w, top + inner_h))
+
+    # --- Add white border ---
+    canvas = Image.new("RGB", (target_w, target_h), (255, 255, 255))
+    canvas.paste(img, (border, border))
+
+    if not overlay_text:
+        out = io.BytesIO()
+        canvas.save(out, format="PNG")
+        return out.getvalue()
+
+    # --- Dark gradient in text zone ---
+    canvas_rgba = canvas.convert("RGBA")
+
+    # Determine text zone position
+    zone_height = target_h // 3
+    if placement == "top third":
+        zone_top = border
+    elif placement == "left side":
+        zone_top = border + (inner_h // 4)
+        zone_height = inner_h // 2
+    else:  # lower third (default)
+        zone_top = target_h - zone_height
+
+    gradient = Image.new("RGBA", (target_w, zone_height), (0, 0, 0, 0))
+    grad_draw = ImageDraw.Draw(gradient)
+    for y in range(zone_height):
+        if placement == "top third":
+            alpha = int(200 * (1 - y / zone_height))
+        else:
+            alpha = int(200 * (y / zone_height))
+        grad_draw.line([(0, y), (target_w, y)], fill=(0, 0, 0, alpha))
+
+    canvas_rgba.paste(gradient, (0, zone_top), gradient)
+    canvas = canvas_rgba.convert("RGB")
+
+    # --- Typography ---
+    font_size = int(target_w * FONT_SIZE_BASE / 1080)
+    font = _load_font(font_size)
+
+    draw = ImageDraw.Draw(canvas)
+
+    # Word-wrap
+    words = overlay_text.upper().split()
+    lines = []
+    current: list[str] = []
+    max_line_w = inner_w - border * 2
+    for word in words:
+        test = " ".join(current + [word])
+        if font and hasattr(font, "getbbox"):
+            bbox = font.getbbox(test)
+            line_w = bbox[2] - bbox[0]
+        else:
+            line_w = len(test) * font_size * 0.6
+        if line_w <= max_line_w:
+            current.append(word)
+        else:
+            if current:
+                lines.append(" ".join(current))
+            current = [word]
+    if current:
+        lines.append(" ".join(current))
+
+    line_h = font_size + 10
+    total_text_h = len(lines) * line_h
+    text_start_y = zone_top + (zone_height - total_text_h) // 2
+    text_start_y = max(text_start_y, zone_top + 12)
+
+    for line in lines:
+        if font and hasattr(font, "getbbox"):
+            bbox = font.getbbox(line)
+            text_w = bbox[2] - bbox[0]
+        else:
+            text_w = len(line) * font_size * 0.6
+        text_x = (target_w - text_w) // 2
+
+        # Drop shadow
+        draw.text((text_x + 2, text_start_y + 2), line, font=font, fill=(0, 0, 0))
+        # White text
+        draw.text((text_x, text_start_y), line, font=font, fill=(255, 255, 255))
+        text_start_y += line_h
+
+    out = io.BytesIO()
+    canvas.save(out, format="PNG")
+    return out.getvalue()
+
+
+# ---------------------------------------------------------------------------
 # Production sheet
 # ---------------------------------------------------------------------------
 
-def save_production_sheet(article_dir: Path, slides: list[dict], slug: str):
+def save_production_sheet(article_dir: Path, slides: list[dict], built_prompts: list[str], slug: str):
     lines = [
         f"# Carousel Production Sheet — {slug}",
         f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}",
         f"Slides: {len(slides)}",
         "",
     ]
-    for s in slides:
+    for s, prompt in zip(slides, built_prompts):
         n = s.get("slide_number", "?")
         lines += [
-            f"---",
+            "---",
             f"## Slide {n} — {s.get('slide_title', '')}",
-            f"**Emotion:** {s.get('emotional_objective', '')}",
-            f"**Style:** {s.get('image_style', '')}",
-            f"**Overlay:** _{s.get('overlay_text', '')}_",
+            f"**Emotional job:** {s.get('emotional_job', '')}",
+            f"**Viewer takeaway:** {s.get('viewer_takeaway', '')}",
+            f"**Archetype:** {s.get('scene_archetype', '')}",
+            f"**Operator action:** {s.get('operator_action', '')}",
+            f"**Overlay text:** _{s.get('overlay_text', '')}_",
+            f"**Text placement:** {s.get('text_placement', '')}",
             f"**Stapler:** {s.get('stapler_placement', '')}",
+            f"**Easter eggs:** {', '.join(s.get('optional_easter_eggs', [])) or 'none'}",
             "",
-            "**Image Prompt:**",
+            "**Scene:**",
+            s.get("scene_description", ""),
             "",
-            s.get("full_image_prompt", ""),
+            "**Full Image Prompt (sent to gpt-image-1):**",
+            "",
+            prompt,
             "",
         ]
     out = article_dir / "carousel_production_sheet.md"
@@ -197,47 +438,51 @@ def save_production_sheet(article_dir: Path, slides: list[dict], slug: str):
 
 
 # ---------------------------------------------------------------------------
-# Image generation (gpt-image-1 via OpenAI)
+# Image generation
 # ---------------------------------------------------------------------------
 
 def generate_image(openai_client, prompt: str, size: str = "1024x1536") -> bytes | None:
-    import openai
-
+    """
+    Use the Responses API with gpt-4o as orchestrator + image_generation tool.
+    gpt-4o interprets and enhances the prompt before calling the image generator —
+    the same internal path ChatGPT uses, producing the rich photorealistic quality.
+    """
     try:
-        response = openai_client.images.generate(
-            model="gpt-image-1",
-            prompt=prompt,
-            size=size,
-            quality="high",
-            n=1,
+        response = openai_client.responses.create(
+            model="gpt-4o",
+            input=prompt,
+            tools=[{
+                "type": "image_generation",
+                "quality": "high",
+                "size": size,
+            }],
         )
-        img_data = response.data[0].b64_json
-        if img_data:
-            return base64.b64decode(img_data)
+        for item in response.output:
+            if item.type == "image_generation_call":
+                return base64.b64decode(item.result)
+        print("failed — no image_generation_call in response")
         return None
     except Exception as e:
         print(f"failed — {e}")
         return None
 
 
-def generate_hero_image(gemini_client, openai_client, article_dir: Path, brand_context: str, carousel_text: str):
-    """Generate a single landscape article hero image (1536x1024)."""
+def generate_hero_image(gemini_client, openai_client, article_dir: Path,
+                        master_style: str, brand_context: str, carousel_text: str):
     print("\n[hero] Generating article hero image (landscape)...")
 
-    prompt_request = (
+    hero_request = (
         f"{STORYBOARD_SYSTEM.format(brand_context=brand_context)}\n\n"
-        "Generate ONE hero image prompt for this article. Output a single JSON object "
-        "(not an array) with keys: overlay_text, full_image_prompt.\n\n"
-        "The full_image_prompt must specify: landscape format, 1536 x 1024 px, "
-        "clean 1-inch white border, Cinematic Editorial Realism style. "
-        "Text will be rendered accurately by gpt-image-1 — include the headline text "
-        "to render directly in the prompt.\n\n"
+        "Generate ONE hero image scene for this article. Output a single JSON object "
+        "(not an array) with keys: scene_archetype, scene_description, operator_action, "
+        "overlay_text, stapler_placement, optional_easter_eggs, text_placement, "
+        "negative_space_note, emotional_job, viewer_takeaway.\n\n"
         f"CAROUSEL COPY FOR CONTEXT:\n{carousel_text}"
     )
 
     response = gemini_client.models.generate_content(
         model="gemini-2.5-flash",
-        contents=prompt_request,
+        contents=hero_request,
     )
     raw = response.text.strip()
     if raw.startswith("```"):
@@ -245,19 +490,27 @@ def generate_hero_image(gemini_client, openai_client, article_dir: Path, brand_c
         raw = "\n".join(lines[1:-1] if lines[-1] == "```" else lines[1:])
 
     try:
-        hero_data = json.loads(raw.strip())
-        prompt = hero_data.get("full_image_prompt", "")
+        hero_scene = json.loads(raw.strip())
     except Exception:
-        print("[warn] Could not parse hero prompt JSON — using raw response")
-        prompt = raw
+        print("[warn] Could not parse hero scene JSON — using minimal scene")
+        hero_scene = {"scene_description": raw}
+
+    prompt = build_image_prompt(master_style, hero_scene, portrait=False)
+    overlay = hero_scene.get("overlay_text", "")
+    placement = hero_scene.get("text_placement", "lower third")
 
     print(f"  Calling gpt-image-1 (1536x1024)...", end=" ", flush=True)
-    img_bytes = generate_image(openai_client, prompt, size="1536x1024")
+    raw_bytes = generate_image(openai_client, prompt, size="1536x1024")
 
-    if img_bytes:
+    if raw_bytes:
+        # Post-process to 1376x768 hero format
+        final_bytes = post_process_image(
+            raw_bytes, overlay, placement,
+            target_w=1376, target_h=768, border=28,
+        )
         out = article_dir / "images" / "00_hero.png"
-        out.write_bytes(img_bytes)
-        print(f"saved -> {out.name} ({len(img_bytes)//1024}KB)")
+        out.write_bytes(final_bytes)
+        print(f"saved -> {out.name} ({len(final_bytes)//1024}KB)")
     else:
         print("failed")
 
@@ -287,7 +540,8 @@ def run(slug: str, prompts_only: bool, hero: bool):
     images_dir = article_dir / "images"
 
     print(f"\n[carousel] Article: {slug}")
-    print(f"[carousel] Loading brand context...")
+    print(f"[carousel] Loading brand assets...")
+    master_style = load_master_style()
     brand_context = load_brand_context()
 
     slide_count = sum(1 for line in carousel_text.splitlines() if line.strip().startswith("Slide "))
@@ -295,7 +549,9 @@ def run(slug: str, prompts_only: bool, hero: bool):
 
     slides = generate_storyboard(gemini_client, brand_context, carousel_text)
     print(f"[carousel] Storyboard: {len(slides)} slides")
-    save_production_sheet(article_dir, slides, slug)
+
+    built_prompts = [build_image_prompt(master_style, s) for s in slides]
+    save_production_sheet(article_dir, slides, built_prompts, slug)
 
     if prompts_only:
         print("\n[carousel] --prompts-only: skipping image generation.")
@@ -303,28 +559,35 @@ def run(slug: str, prompts_only: bool, hero: bool):
         print("[carousel] Re-run without --prompts-only when ready.")
         return
 
+    # Verify Pillow is available before burning image credits
+    try:
+        from PIL import Image  # noqa: F401
+    except ImportError:
+        print("[warn] Pillow not installed — images will be saved without post-processing")
+        print("[warn] Run: pip install pillow")
+
     images_dir.mkdir(exist_ok=True)
 
     print(f"\n[carousel] Generating {len(slides)} carousel images via gpt-image-1...")
+    print(f"[carousel] Post-processing to {CAROUSEL_W}x{CAROUSEL_H} with border + text overlay")
     generated = 0
-    for i, slide in enumerate(slides, 1):
+
+    for i, (slide, prompt) in enumerate(zip(slides, built_prompts), 1):
         num = slide.get("slide_number", i)
         name = SLIDE_NAMES.get(num, f"slide_{num}")
         filename = f"{num:02d}_{name}.png"
         out_path = images_dir / filename
-        prompt = slide.get("full_image_prompt", "")
 
-        if not prompt:
-            print(f"  [{num:02d}] No prompt — skipping")
-            continue
+        overlay   = slide.get("overlay_text", "")
+        placement = slide.get("text_placement", "lower third")
 
-        overlay = slide.get("overlay_text", "")
         print(f"  [{num:02d}/{len(slides)}] {filename} — \"{overlay}\"...", end=" ", flush=True)
-        img_bytes = generate_image(openai_client, prompt, size="1024x1536")
+        raw_bytes = generate_image(openai_client, prompt, size="1024x1536")
 
-        if img_bytes:
-            out_path.write_bytes(img_bytes)
-            print(f"saved ({len(img_bytes)//1024}KB)")
+        if raw_bytes:
+            final_bytes = post_process_image(raw_bytes, overlay, placement)
+            out_path.write_bytes(final_bytes)
+            print(f"saved ({len(final_bytes)//1024}KB)")
             generated += 1
         else:
             print("failed")
@@ -333,17 +596,18 @@ def run(slug: str, prompts_only: bool, hero: bool):
             time.sleep(1)
 
     if hero:
-        generate_hero_image(gemini_client, openai_client, article_dir, brand_context, carousel_text)
+        generate_hero_image(gemini_client, openai_client, article_dir,
+                            master_style, brand_context, carousel_text)
 
     print(f"\n{'━'*40}")
     print(f" Carousel Complete — {slug}")
     print(f"{'━'*40}")
     print(f" ✓ Images generated:  {generated}/{len(slides)}")
+    print(f" ✓ Final size:        {CAROUSEL_W}x{CAROUSEL_H} with {BORDER_PX}px white border")
     print(f" ✓ Images folder:     content-engine/pending/{slug}/images/")
     print(f" ✓ Production sheet:  carousel_production_sheet.md")
     if generated < len(slides):
-        failed = len(slides) - generated
-        print(f" ✗ Failed:            {failed} (check prompts in production sheet)")
+        print(f" ✗ Failed:            {len(slides) - generated} (check prompts in production sheet)")
     print(f"{'━'*40}\n")
 
 
@@ -362,22 +626,13 @@ def load_dotenv_env():
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate LinkedIn carousel images via Gemini/Imagen 3"
+        description="Generate LinkedIn carousel images — Gemini storyboard + gpt-image-1 + Pillow post-processing"
     )
-    parser.add_argument(
-        "slug",
-        help="Article folder name under content-engine/pending/ (e.g. ART6-from-no-to-safe-enough-yes)",
-    )
-    parser.add_argument(
-        "--prompts-only",
-        action="store_true",
-        help="Generate storyboard and image prompts only — skip Imagen calls",
-    )
-    parser.add_argument(
-        "--hero",
-        action="store_true",
-        help="Also generate a 16:9 article hero image (saved as 00_hero.png)",
-    )
+    parser.add_argument("slug", help="Article folder name under content-engine/pending/")
+    parser.add_argument("--prompts-only", action="store_true",
+                        help="Build storyboard and prompts only — skip image generation")
+    parser.add_argument("--hero", action="store_true",
+                        help="Also generate a landscape article hero image (00_hero.png)")
     args = parser.parse_args()
     run(args.slug, prompts_only=args.prompts_only, hero=args.hero)
 
