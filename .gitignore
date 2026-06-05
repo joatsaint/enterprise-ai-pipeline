@@ -19,15 +19,66 @@ knowledge_base/index.json
 knowledge_base/reports/*.md
 knowledge_base/digests/*.md
 
-
-
 # Session logs and memory — internal working notes, never commit
 memory/
 
 # pytest cache
 .pytest_cache/
-d o c s / 3   E m a i l   S e q u e n c e * . p d f 
- 
- d o c s / T h e   A I   S k i l l s * . p d f 
- 
- 
+
+# Windows system files
+Thumbs.db
+**/Thumbs.db
+desktop.ini
+
+# Marketing skills library — external dependency, not project code
+marketing-skills/
+
+# Internal brand and personal knowledge assets — not for public repo
+knowledge/
+
+# Content drafts, LinkedIn posts, carousels, buffer schedules
+content-engine/articles/
+content-engine/pending/
+content-engine/CLAUDE.md
+content-engine/TASKS.md
+content-engine/LinkedIn_CONTENT_OS.md
+content-engine/dashboard_task.xml
+content-engine/start_dashboard.bat
+
+# Personal and brand files
+Randy_Skiles_Voice_Profile_v2.gdoc
+
+# Sample images in ChatGPT prompt library — generated assets, not source
+docs/ChatGPT - LinkedIn Content Creation Prompts and Playbook/Sample Images/
+
+# docs/ — personal notes, marketing materials, session artifacts
+docs/Randys_Brain_Droppings.md
+docs/Randys Adventure Series/
+docs/Randy_AI_Questions_YouTube_Scripts.md
+docs/Randy_Skiles_All_LinkedIn_Articles_5_31_2026.md
+docs/Open_to_Work_MD_file.md
+docs/council-transcript-*.md
+docs/council-report-*.html
+docs/SESSION_CONTEXT_*.md
+docs/nppBackup/
+docs/Julia McCoy*
+docs/LinkedIN_Ready-to-Publish*
+docs/LinkedIn - *
+docs/LINKEDIN_CONTENT_SKILL.md
+docs/LINKEDIN_SERIES_FRAMEWORK.md
+docs/old_LINKEDIN_SERIES_FRAMEWORK.md
+docs/CONTENT_ATOMIZATION_RULES.md
+docs/CONTENT_MARKETING_SYSTEM.md
+docs/ARTICLES.md
+docs/from_no_to_safe_enough_yes_article.md
+docs/Steel_Server_Room_LinkedIn_Content_Scheduling_Briefing_CORRECTED.md
+docs/Claude.md Enterprise Level Standards*
+docs/Platform_Agnostic_Prep_Guide.docx
+docs/Deepseek Enterprise Hardenting Guidelines/
+docs/steel_server_room_lead_magnet_final/
+docs/steel_server_room_lead_magnet_final.pdf.pdf
+docs/AI_Career_Roadmap_IT_to_AI_Guide_Step_By_Step.pdf
+docs/AI_For_Leaders_Paid_Products_after_signing_up_for_newsletter.txt
+docs/3 Email Sequence*.pdf
+docs/The AI Skills That Wont Be Replaced - Lead Magnet.pdf
+docs/Project Reports and Progress/*.docx
