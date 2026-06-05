@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>YouTube Transcript Knowledge Base — full daily pipeline. Runs at 07:00: incremental transcript + comment download for all groups, rebuilds index, generates digest, runs pain point analysis. Output: logs/daily_run_output.log. Errors: logs/error_log.json.</Description>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-06-06T07:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByDay>
+        <DaysInterval>1</DaysInterval>
+      </ScheduleByDay>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <UserId>HP-CAPCUT\joatsaint</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <ExecutionTimeLimit>PT1H</ExecutionTimeLimit>
+    <Hidden>true</Hidden>
+    <Priority>7</Priority>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\Python314\pythonw.exe</Command>
+      <Arguments>run_daily.py --scheduled</Arguments>
+      <WorkingDirectory>C:\Users\joatsaint\desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>
