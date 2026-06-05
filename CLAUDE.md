@@ -1,5 +1,5 @@
 # CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
-**Version: 1.6** — Orchestration layer, observability, idempotency, input validation, graceful shutdown, CCA-F best practices, business pipeline integrated, comment fetching added, randomized rate limiting. Knowledge base module specs added: indexer.py, query.py, digest.py.
+**Version: 1.7** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (868 transcripts, 42 channels, 3 groups). Windows Task Scheduler XML for digest automation is the only remaining Phase 4 item.
 
 ## Session Start Protocol
 
@@ -51,9 +51,9 @@ any written content for the audience:
 - [x] Full channel download (all videos from channel URL)
 - [x] Incremental download (new videos only since last run)
 - [x] Channel registry with group tagging
-- [ ] Knowledge base builder (index all transcripts) ← SPEC WRITTEN — ready to build
-- [ ] On-demand Q&A (ask Claude, it searches transcripts) ← SPEC WRITTEN — ready to build
-- [ ] Daily digest (scheduled summary of new content by group) ← SPEC WRITTEN — ready to build
+- [x] Knowledge base builder (index all transcripts) ← VERIFIED WORKING — 868 transcripts, 42 channels, 3 groups
+- [x] On-demand Q&A (ask Claude, it searches transcripts) ← VERIFIED WORKING
+- [x] Daily digest (scheduled summary of new content by group) ← BUILT — Windows Task Scheduler XML not yet configured
 
 ---
 
@@ -523,13 +523,13 @@ LOG_PATH=logs/download_log.json
 - Build channels.json registry
 - Populate registry with Randy's channel list
 
-### Phase 3 — Knowledge Base + Q&A ← BUILD NEXT
+### Phase 3 — Knowledge Base + Q&A ✅ COMPLETE
 - Build indexer.py to scan all .md transcripts
 - Build query.py for on-demand Claude Q&A
 - Test with bitcoin-macro group first
 - See specs below
 
-### Phase 4 — Daily Digest + Scheduler
+### Phase 4 — Daily Digest + Scheduler ✅ COMPLETE (digest.py built — scheduler pending)
 - Build digest.py to summarize new content by group
 - Add Windows Task Scheduler XML for daily automation
 - Test digest output format and quality
