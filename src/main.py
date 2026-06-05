@@ -14,10 +14,14 @@ Usage:
   python -m src.main ask "your question"        # Q&A against knowledge base (Sonnet)
   python -m src.main ask --fast "your question" # Q&A with Haiku (faster, cheaper)
   python -m src.main ask --group <name> "q"    # Q&A limited to a group
+  python -m src.main skool-download --community <slug> --group <name> [--limit N]
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM"  # schedule LinkedIn post via Buffer
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
 """
 import sys
+
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def _print_help():
@@ -189,6 +193,36 @@ def main():
             sys.exit(1)
         question = " ".join(remaining)
         run_query(question, group=group, top_n=top_n, fast=fast)
+        return
+
+    # ----------------------------------------------------------------
+    # skool-download — download videos from a Skool community classroom
+    # ----------------------------------------------------------------
+    if cmd == "skool-download":
+        community = None
+        group = None
+        limit = None
+        if "--community" in args:
+            idx = args.index("--community")
+            if idx + 1 < len(args):
+                community = args[idx + 1]
+        if "--group" in args:
+            idx = args.index("--group")
+            if idx + 1 < len(args):
+                group = args[idx + 1]
+        if "--limit" in args:
+            idx = args.index("--limit")
+            if idx + 1 < len(args):
+                try:
+                    limit = int(args[idx + 1])
+                except ValueError:
+                    print(f"--limit requires an integer, got: {args[idx + 1]}")
+                    sys.exit(1)
+        if not community or not group:
+            print('Usage: python -m src.main skool-download --community <slug> --group "Group Name" [--limit N]')
+            sys.exit(1)
+        from src.downloader.skool import run_skool_download
+        run_skool_download(community, group, limit=limit)
         return
 
     # ----------------------------------------------------------------
