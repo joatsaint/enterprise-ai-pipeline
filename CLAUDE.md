@@ -1,5 +1,5 @@
 # CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
-**Version: 1.7** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (868 transcripts, 42 channels, 3 groups). Windows Task Scheduler XML for digest automation is the only remaining Phase 4 item.
+**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (952 transcripts, 50 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 daily) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-07).
 
 ## Session Start Protocol
 
@@ -100,7 +100,7 @@ Routing is live in .env — respect these settings, do not override:
 - [x] Channel registry with group tagging
 - [x] Knowledge base builder (index all transcripts) ← VERIFIED WORKING — 868 transcripts, 42 channels, 3 groups
 - [x] On-demand Q&A (ask Claude, it searches transcripts) ← VERIFIED WORKING
-- [x] Daily digest (scheduled summary of new content by group) ← BUILT — Windows Task Scheduler XML not yet configured
+- [x] Daily digest (scheduled summary of new content by group) ← VERIFIED WORKING — "YouTube Transcript Digest" task runs daily at 07:00, confirmed successful (LastTaskResult: 0, verified live 2026-06-07)
 
 ---
 
@@ -607,10 +607,15 @@ LOG_PATH=logs/download_log.json
 - Test with bitcoin-macro group first
 - See specs below
 
-### Phase 4 — Daily Digest + Scheduler ✅ COMPLETE (digest.py built — scheduler pending)
-- Build digest.py to summarize new content by group
-- Add Windows Task Scheduler XML for daily automation
-- Test digest output format and quality
+### Phase 4 — Daily Digest + Scheduler ✅ COMPLETE
+- Build digest.py to summarize new content by group ✓
+- Add Windows Task Scheduler XML for daily automation ✓ — registered as "YouTube
+  Transcript Digest" (07:00 daily, runs `pythonw.exe run_daily.py --scheduled`)
+  and "YouTube Pipeline" (00:09 daily, runs `run_pipeline.bat`); both confirmed
+  Ready/enabled with LastTaskResult: 0 (verified live via Get-ScheduledTask 2026-06-07)
+- Test digest output format and quality ✓ — live 2026-06-07 digest inspected,
+  matches spec format exactly; found and fixed an incomplete 2026-05-29 digest
+  caused by an API usage-limit error (re-ran with --force, now complete)
 - See spec below
 
 ---
