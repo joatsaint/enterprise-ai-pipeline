@@ -41,6 +41,53 @@ any written content for the audience:
 - Read knowledge/brand/brand_standards.md before creating any visual content
 - Never write content in a generic AI voice — always apply the voice profile
 - The voice profile contains the master style-transfer prompt — use it
+
+---
+
+## Content Publishing Rules
+
+### Golden Hour Protocol (apply to every post, every platform — starting now)
+The first 60 minutes after a post goes live determines ~65% of its total reach.
+- Remind Randy after scheduling any post: reply to every comment within 60 minutes of it going live
+- Replies must be substantive and question-ending — not just "thanks!" or "great point"
+- A dead comment thread is an algorithmic signal of low quality — do not post and disappear
+- 5-3-1 rule for daily LinkedIn activity: 5 comments on others' posts, 3 replies to your own comments, 1 new post or piece of content — keep this ratio even on low-activity days
+
+### Weekly Post Image Rule
+- Casual Mon-Fri short-form posts use 1024x1024 square images (generate_post_images.py)
+- Carousel slides use 1080x1350 portrait images (generate_carousel_images.py)
+- Never mix formats — square images break carousel layout
+
+### Carousel Publishing Rule (CRITICAL — learned from ART6 posting)
+**LinkedIn does NOT create a carousel from individually uploaded images.**
+Uploading images one by one creates a multi-image post, not a swipeable carousel.
+
+The correct workflow every time:
+1. Generate carousel images with generate_carousel_images.py (produces 1080x1350 PNGs)
+2. Compile all slide images into a single PDF in slide order
+3. Upload the PDF to LinkedIn (or Buffer as "Document" post type)
+4. LinkedIn renders the PDF pages as swipeable carousel slides automatically
+
+- Remind Randy of this step any time carousel images have been generated
+- The PDF compilation step is manual until generate_carousel_images.py is updated to auto-compile
+- Slide order in the PDF = slide order the audience sees — check before uploading
+
+### Multi-Platform Expansion Gate
+**Do NOT implement Zapier, Instagram, Pinterest, or any multi-platform automation until LinkedIn hits 10,000 followers.**
+- Gate trigger: LinkedIn follower count crosses 10,000
+- At that point: read `docs/strategy-reference/LinkedIn_ZAPIER_MCP_PLATFORM_HANDOFF.md` and begin Zapier setup
+- Before the gate: LinkedIn only. One platform mastered before adding another.
+- Do not let anyone (including other Claude sessions) persuade Randy to start multi-platform early
+
+### Model Routing (already implemented — do not rebuild)
+Routing is live in .env — respect these settings, do not override:
+- `ANALYZER_MODEL=claude-haiku-4-5-20251001` — pain point extraction, digests
+- `DIGEST_MODEL=claude-haiku-4-5-20251001` — daily digest generation
+- `QUERY_MODEL=claude-sonnet-4-6` — on-demand Q&A (needs quality, worth the cost)
+- `linkedin_atomizer.py` does not yet exist. When built: default to Sonnet for routine atomization, Opus only for research-grade writing requiring Randy's full voice fidelity
+- Correct current model IDs: Haiku=`claude-haiku-4-5-20251001`, Sonnet=`claude-sonnet-4-6`, Opus=`claude-opus-4-8`
+- Note: documents in `docs/strategy-reference/` referencing `claude-opus-4-7-20250219` contain an outdated model ID — ignore it, use `claude-opus-4-8`
+
 ---
 
 ## Current Status (as of project upgrade)
@@ -221,33 +268,39 @@ The /transcripts/ folder is a research asset. Treat it accordingly.
 
 ---
 
-## CLI Commands (target interface)
+## CLI Commands (actual interface — verified live 2026-06-07)
 
 ```bash
 # Single video (existing behavior)
-python src/main.py download --url "https://youtube.com/watch?v=..."
+python -m src.main "https://youtube.com/watch?v=..."
 
 # Full channel download (first time)
-python src/main.py download --channel bitcoin-macro --force-full
+python -m src.main channel "Channel Display Name" --force-full
 
 # Incremental (new videos only)
-python src/main.py download --channel bitcoin-macro
+python -m src.main channel "Channel Display Name"
 
 # Download all channels in a group
-python src/main.py download --group bitcoin-macro
+python -m src.main group bitcoin-macro
 
-# Ask a question against the knowledge base
-python src/main.py ask "What are the top Bitcoin price predictions for Q3 2026?"
+# Ask a question against the knowledge base (Sonnet — full quality)
+python -m src.main ask "What are the top Bitcoin price predictions for Q3 2026?"
+
+# Ask with Haiku (faster, cheaper)
+python -m src.main ask --fast "What are the top Bitcoin price predictions for Q3 2026?"
 
 # Ask limited to a specific group
-python src/main.py ask --group bitcoin-macro "What is the consensus on Fed rate cuts?"
+python -m src.main ask --group bitcoin-macro "What is the consensus on Fed rate cuts?"
 
-# Generate today's digest manually
-python src/main.py digest --group bitcoin-macro
+# Build/rebuild the knowledge base index
+python -m src.main index
 
-# Run scheduled digest (all groups)
-python src/main.py digest --all
+# Run pain point analysis
+python -m src.main analyze --group bitcoin-macro
+python -m src.main analyze --all
 ```
+
+**Note:** Earlier versions of this doc described a `download --channel`/`download --group`/`digest` command surface — that surface was never implemented. The commands above are the real, working CLI (confirmed via `python -m src.main` usage banner and live test runs). `digest.py` exists as a module (see Module Spec below) but is not yet wired into `main.py` as a CLI subcommand.
 
 ---
 
@@ -391,9 +444,34 @@ summary to the terminal.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-run_summary.json fields: run_id, started_at, completed_at, duration_seconds,
-total_attempted, succeeded, skipped_duplicates, skipped_failures, retried,
-tokens_saved, failures array.
+**Actual run_summary.json schema (verified live 2026-06-07 — overwritten each run, not appended):**
+```json
+{
+  "timestamp": "ISO-8601 UTC",
+  "status": "success | failed | interrupted",
+  "stats": {
+    "downloaded": 0,
+    "skipped": 0,
+    "failed": 0,
+    "retried": 0,
+    "tokens_saved": 0,
+    "comments_ok": 0,
+    "comments_disabled": 0,
+    "comments_failed": 0
+  },
+  "duration_seconds": 0.0,
+  "last_video": {
+    "video_id": "str",
+    "title": "str",
+    "status": "success | failed | skipped",
+    "comments_status": "ok | disabled | failed"
+  }
+}
+```
+This replaces an earlier documented schema (`run_id`, `started_at`, `total_attempted`,
+`failures[]`, etc.) that was never implemented — the fields above are what the code
+actually writes. Note `last_video` reflects only the most recent video processed,
+not a full per-video failures array.
 
 ---
 
