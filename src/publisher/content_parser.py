@@ -1,10 +1,10 @@
 """
-Parser for docs/CONTENT_DRAFTS.md.
+Parser for the LinkedIn AI Skills Series content drafts file.
 Extracts post body text by post number and updates status lines after scheduling.
 """
 import re
 
-DRAFTS_PATH = "docs/CONTENT_DRAFTS.md"
+DRAFTS_PATH = "docs/LinkedIN_Ready-to-Publish Content — AI Skills Series_CONTENT_DRAFTS.md"
 
 # Matches from "### POST N —" up to the next post, section, or end of file
 _SECTION_RE = r"(### POST {n}(?!\d) —[^\n]*\n(?:.*\n)*?)(?=### POST \d+|## PUBLISHED|## WEDNESDAY|\Z)"

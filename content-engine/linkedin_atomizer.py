@@ -35,7 +35,7 @@ import anthropic
 
 # ── paths (always relative to this script — works regardless of CWD) ─────────
 HERE         = Path(__file__).parent
-RULES_DIR    = HERE / "rules"
+ROOT         = HERE.parent
 PENDING_DIR  = HERE / "pending"
 ARTICLES_DIR = HERE / "articles"
 
@@ -134,15 +134,12 @@ def _build_prompt(
     article: str,
     rules: str,
     voice: str,
-    randy_voice: str,
     publish_date: str,
     brief: str = "",
 ) -> str:
     preamble_parts = ["You are producing LinkedIn content for Randy Skiles.\n"]
     if voice:
         preamble_parts.append(f"VOICE AND STYLE:\n{voice}\n")
-    if randy_voice:
-        preamble_parts.append(f"RANDY VOICE PROFILE:\n{randy_voice}\n")
     if rules:
         preamble_parts.append(f"LINKEDIN CONTENT RULES:\n{rules}\n")
     if brief:
@@ -308,9 +305,8 @@ def main() -> None:
             candidate = ARTICLES_DIR / candidate.name
         article_source = candidate if candidate.exists() else None
 
-    rules       = _read_optional(RULES_DIR / "LINKEDIN_CONTENT_SKILL.md")
-    voice       = _read_optional(RULES_DIR / "voice.md")
-    randy_voice = _read_optional(RULES_DIR / "RANDY_VOICE_SKILL.md")
+    rules       = _read_optional(ROOT / "docs" / "LINKEDIN_CONTENT_SKILL.md")
+    voice       = _read_optional(ROOT / "knowledge" / "me" / "voice.md")
 
     brief = ""
     if args.brief:
@@ -319,7 +315,7 @@ def main() -> None:
         if brief:
             print(f"[info] Performance brief loaded — biasing toward top-performing angles")
 
-    prompt = _build_prompt(article, rules, voice, randy_voice, args.date, brief=brief)
+    prompt = _build_prompt(article, rules, voice, args.date, brief=brief)
 
     print(f"[info] Calling Claude API - slug: {slug}")
     client = anthropic.Anthropic()
