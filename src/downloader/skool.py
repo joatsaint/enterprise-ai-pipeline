@@ -301,6 +301,7 @@ class SkoolDownloader:
 
             md_content = f"""# {title}
 
+**Channel:** {self.community_slug}
 **Source:** Skool — {self.community_slug}
 **Group:** {self.group_dir}
 **Downloaded:** {date_str}
