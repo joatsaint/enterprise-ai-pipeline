@@ -92,7 +92,8 @@ def validate_input(url):
 
     if any(seg in path for seg in ("/@", "/channel/", "/c/", "/user/")):
         raise ValueError(
-            "That's a channel URL. Use --channel flag for channel downloads."
+            "That's a channel URL. Use the 'channel' command for channel downloads "
+            "(e.g. python -m src.main channel \"Channel Name\")."
         )
     if "/shorts/" in path:
         raise ValueError(
