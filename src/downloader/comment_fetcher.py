@@ -158,20 +158,36 @@ def fetch_comments(video_id):
     return comments, "ok"
 
 
-def save_comments_markdown(video_id, title, channel, comments, category_folder, downloaded_date=None):
+def save_comments_markdown(video_id, title, channel, comments, category_folder,
+                           downloaded_date=None, file_path=None, fetched_date=None):
     """
     Save comments list to a _comments.md file in the category folder.
+
+    Args:
+        downloaded_date: date used to derive the standard filename
+            (transcripts/<category>/<date>_<slug>_comments.md). Ignored if
+            file_path is given.
+        file_path: write directly to this path instead of deriving one —
+            used to refresh an existing comments file in place (see
+            comment_refresher.py) without creating a duplicate under a
+            slightly different slug.
+        fetched_date: date shown in the "Fetched:" header line. Defaults to
+            downloaded_date — pass a fresh date when refreshing so the file
+            reflects when the comments were actually re-pulled.
 
     Returns: file path (str)
     """
     if downloaded_date is None:
         downloaded_date = date.today().isoformat()
+    if fetched_date is None:
+        fetched_date = downloaded_date
 
-    slug = _slugify(title)
-    filename = f"{downloaded_date}_{slug}_comments.md"
-    output_dir = os.path.join("transcripts", category_folder)
-    os.makedirs(output_dir, exist_ok=True)
-    file_path = os.path.join(output_dir, filename)
+    if file_path is None:
+        slug = _slugify(title)
+        filename = f"{downloaded_date}_{slug}_comments.md"
+        output_dir = os.path.join("transcripts", category_folder)
+        os.makedirs(output_dir, exist_ok=True)
+        file_path = os.path.join(output_dir, filename)
 
     lines = [
         f"# Comments: {title}",
@@ -179,7 +195,7 @@ def save_comments_markdown(video_id, title, channel, comments, category_folder, 
         f"**Channel:** {channel}",
         f"**Video URL:** https://www.youtube.com/watch?v={video_id}",
         f"**Comments Fetched:** {len(comments)}",
-        f"**Fetched:** {downloaded_date}",
+        f"**Fetched:** {fetched_date}",
         "",
         "---",
         "",
