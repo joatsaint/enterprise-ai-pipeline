@@ -17,8 +17,17 @@ Usage:
   python -m src.main skool-download --community <slug> --group <name> [--limit N]
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM"  # schedule LinkedIn post via Buffer
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
+  python -m src.main trending                   # find a trending topic, draft a post to content-engine/pending/
+  python -m src.main trending --dry-run         # gather + score only, write nothing
+  python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
 """
 import sys
+
+# Force UTF-8 on Windows consoles so emoji in channel names / titles don't crash prints
+if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr.encoding and sys.stderr.encoding.lower() != "utf-8":
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -249,6 +258,45 @@ def main():
             sys.exit(1)
         from src.publisher.schedule import run_schedule_post
         run_schedule_post(post_num, date_str, dry_run=dry_run)
+        return
+
+    # ----------------------------------------------------------------
+    # refresh-comments — re-fetch comments for videos older than N days
+    # ----------------------------------------------------------------
+    if cmd == "refresh-comments":
+        days = 7
+        limit = None
+        if "--days" in args:
+            idx = args.index("--days")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main refresh-comments [--days N] [--limit N]")
+                sys.exit(1)
+            try:
+                days = int(args[idx + 1])
+            except ValueError:
+                print(f"--days requires an integer, got: {args[idx + 1]}")
+                sys.exit(1)
+        if "--limit" in args:
+            idx = args.index("--limit")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main refresh-comments [--days N] [--limit N]")
+                sys.exit(1)
+            try:
+                limit = int(args[idx + 1])
+            except ValueError:
+                print(f"--limit requires an integer, got: {args[idx + 1]}")
+                sys.exit(1)
+        from src.downloader.comment_refresher import refresh_old_comments
+        refresh_old_comments(days=days, limit=limit)
+        return
+
+    # ----------------------------------------------------------------
+    # trending — find a trending topic, draft a post to content-engine/pending/
+    # ----------------------------------------------------------------
+    if cmd == "trending":
+        dry_run = "--dry-run" in args
+        from src.trend_finder.orchestrator import run as run_trending
+        run_trending(dry_run=dry_run)
         return
 
     print(f"Unknown command: '{cmd}'")

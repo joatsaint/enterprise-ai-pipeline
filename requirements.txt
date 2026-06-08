@@ -12,3 +12,4 @@ flask
 python-dotenv
 playwright
 faster-whisper
+defusedxml
