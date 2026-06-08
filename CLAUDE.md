@@ -1,5 +1,5 @@
 # CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
-**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (952 transcripts, 50 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 daily) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-07).
+**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (1,014 transcripts, 52 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 daily) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-07).
 
 ## Session Start Protocol
 
@@ -98,7 +98,7 @@ Routing is live in .env — respect these settings, do not override:
 - [x] Full channel download (all videos from channel URL)
 - [x] Incremental download (new videos only since last run)
 - [x] Channel registry with group tagging
-- [x] Knowledge base builder (index all transcripts) ← VERIFIED WORKING — 868 transcripts, 42 channels, 3 groups
+- [x] Knowledge base builder (index all transcripts) ← VERIFIED WORKING — 1,014 transcripts, 52 channels, 4 groups
 - [x] On-demand Q&A (ask Claude, it searches transcripts) ← VERIFIED WORKING
 - [x] Daily digest (scheduled summary of new content by group) ← VERIFIED WORKING — "YouTube Transcript Digest" task runs daily at 07:00, confirmed successful (LastTaskResult: 0, verified live 2026-06-07)
 
