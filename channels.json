@@ -225,6 +225,27 @@
       "group": "ai-marketing",
       "active": true,
       "notes": "AI tools and automation for content creators and solopreneurs. LinkedIn content strategy, creator workflows. Previously analyzed 5 transcripts Apr 2026 — strong fit for content marketing research."
+    },
+    {
+      "name": "AI Savvy CEO",
+      "url": "https://www.youtube.com/@AISavvyCEO/videos",
+      "group": "ai-marketing",
+      "active": true,
+      "notes": "Tim George — AI side hustles, automation businesses, faceless YouTube, digital products. Tests methods himself, step-by-step. Study for: AI avatar usage, content production pipeline, how he structures teaching content with AI tools."
+    },
+    {
+      "name": "Tim Talks Finance",
+      "url": "https://www.youtube.com/@timtalksfinance/videos",
+      "group": "ai-marketing",
+      "active": true,
+      "notes": "25-yr mortgage finance veteran. Bitcoin, housing market, Fed, inflation, national debt, retirement — for people who want to understand the financial system. Study for: script flow, how a practitioner-as-creator packages deep domain expertise for a non-expert audience using AI production."
+    },
+    {
+      "name": "Julia McCoy",
+      "url": "https://www.youtube.com/@JuliaMcCoy/videos",
+      "group": "ai-marketing",
+      "active": true,
+      "notes": "First Movers founder — AI clone channel (AI avatar + AI-generated scripts). Non-hype AI news for career/job impact, AGI, post-labor economics. Study for: AI avatar implementation, how she replaced production skills with AI tools, content creation workflow at scale."
     }
   ],
   "groups": [

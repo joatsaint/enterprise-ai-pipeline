@@ -516,6 +516,50 @@ def generate_hero_image(gemini_client, openai_client, article_dir: Path,
 
 
 # ---------------------------------------------------------------------------
+# PDF compilation
+# ---------------------------------------------------------------------------
+
+def compile_carousel_pdf(images_dir: Path, article_dir: Path, slug: str) -> "Path | None":
+    try:
+        from PIL import Image
+    except ImportError:
+        print("[warn] Pillow not available — skipping PDF compilation")
+        return None
+
+    png_files = sorted(
+        [f for f in images_dir.glob("*.png") if not f.name.startswith("00_")],
+        key=lambda f: f.name,
+    )
+
+    if not png_files:
+        print("[warn] No slide images found for PDF compilation")
+        return None
+
+    images = []
+    for f in png_files:
+        try:
+            images.append(Image.open(f).convert("RGB"))
+        except Exception as e:
+            print(f"[warn] Could not open {f.name} for PDF: {e}")
+
+    if not images:
+        return None
+
+    pdf_path = article_dir / f"{slug}_carousel.pdf"
+    try:
+        images[0].save(
+            str(pdf_path),
+            format="PDF",
+            save_all=True,
+            append_images=images[1:],
+        )
+        return pdf_path
+    except Exception as e:
+        print(f"[error] PDF compilation failed: {e}")
+        return None
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -599,6 +643,15 @@ def run(slug: str, prompts_only: bool, hero: bool):
         generate_hero_image(gemini_client, openai_client, article_dir,
                             master_style, brand_context, carousel_text)
 
+    pdf_path = None
+    if generated > 0:
+        print(f"\n[pdf] Compiling {generated} slides into carousel PDF...")
+        pdf_path = compile_carousel_pdf(images_dir, article_dir, slug)
+        if pdf_path:
+            print(f"[pdf] Ready -> {pdf_path.name}")
+        else:
+            print("[pdf] PDF compilation failed — see warnings above")
+
     print(f"\n{'━'*40}")
     print(f" Carousel Complete — {slug}")
     print(f"{'━'*40}")
@@ -606,6 +659,10 @@ def run(slug: str, prompts_only: bool, hero: bool):
     print(f" ✓ Final size:        {CAROUSEL_W}x{CAROUSEL_H} with {BORDER_PX}px white border")
     print(f" ✓ Images folder:     content-engine/pending/{slug}/images/")
     print(f" ✓ Production sheet:  carousel_production_sheet.md")
+    if pdf_path:
+        print(f" ✓ Carousel PDF:      {pdf_path.name}  ← upload this to LinkedIn as a Document post")
+    else:
+        print(f" ✗ PDF:               not compiled — upload images manually as PDF")
     if generated < len(slides):
         print(f" ✗ Failed:            {len(slides) - generated} (check prompts in production sheet)")
     print(f"{'━'*40}\n")
