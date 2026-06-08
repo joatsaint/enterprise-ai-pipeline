@@ -51,8 +51,9 @@ content-engine/dashboard_state.json
 # Personal and brand files
 Randy_Skiles_Voice_Profile_v2.gdoc
 
-# Sample images in ChatGPT prompt library — generated assets, not source
-docs/ChatGPT - LinkedIn Content Creation Prompts and Playbook/Sample Images/
+# docs/ — entire folder local-only; too easy for private research assets to
+# slip through if managed file-by-file. Articles are published on LinkedIn anyway.
+docs/
 
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
