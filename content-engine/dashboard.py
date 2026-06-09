@@ -32,7 +32,8 @@ STAGES = ["pending", "approved", "scheduled", "published"]
 PIECES = [
     {"key": "linkedin-article",   "label": "LinkedIn Article",   "day": "Mon",      "manual": False, "tool": None, "task_overrides": {"scheduled": "Ready"}, "track_engagement": True},
     {"key": "article-hero-image", "label": "Article Hero Image", "day": "Mon",      "manual": True,  "tool": "ChatGPT — landscape hero (article header)",    "track_engagement": False},
-    {"key": "carousel",           "label": "Carousel",           "day": "Mon / Thu","manual": True,  "tool": "Canva — paste slide copy from carousel.md",    "track_engagement": True},
+    {"key": "carousel",           "label": "Carousel (PDF)",     "day": "Mon / Thu","manual": True,  "tool": "Canva — paste slide copy from carousel.md",    "track_engagement": True},
+    {"key": "animated-carousel",  "label": "Animated Carousel",  "day": "Tue",      "manual": True,  "tool": "CapCut — import slide PNGs → animated slideshow → export 9:16 → post LinkedIn + YouTube Shorts", "track_engagement": True},
     {"key": "text-post",          "label": "Text Feed Post",     "day": "Wed",      "manual": False, "tool": None, "track_engagement": True},
     {"key": "image-post",         "label": "Image Post",         "day": "Sat",      "manual": True,  "tool": "ChatGPT image generator",                      "track_engagement": True},
     {"key": "newsletter",         "label": "Newsletter",         "day": "Sun",      "manual": False, "tool": None, "track_engagement": True},
