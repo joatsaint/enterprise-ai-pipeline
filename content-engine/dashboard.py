@@ -39,6 +39,7 @@ PIECES = [
     {"key": "first-comments",     "label": "First Comments",     "day": "--",       "manual": False, "tool": None, "track_engagement": False},
     {"key": "poll",               "label": "Poll",               "day": "--",       "manual": False, "tool": None, "track_engagement": False},
     {"key": "buffer-schedule",    "label": "Buffer Schedule",    "day": "Plan",     "manual": False, "tool": None, "track_engagement": False},
+    {"key": "group-crosspost",    "label": "Group Cross-Post",   "day": "Mon+",     "manual": True,  "tool": "LinkedIn — share article to each of the 6 AI/tech groups manually", "track_engagement": False},
 ]
 
 TASKS = [
