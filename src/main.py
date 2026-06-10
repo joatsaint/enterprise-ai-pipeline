@@ -20,6 +20,7 @@ Usage:
   python -m src.main trending                   # find a trending topic, draft a post to content-engine/pending/
   python -m src.main trending --dry-run         # gather + score only, write nothing
   python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
+  python -m src.main curate-newsletters --discover [--days N]  # list inbox senders to build newsletter_sources.json
 """
 import sys
 
@@ -288,6 +289,26 @@ def main():
                 sys.exit(1)
         from src.downloader.comment_refresher import refresh_old_comments
         refresh_old_comments(days=days, limit=limit)
+        return
+
+    # ----------------------------------------------------------------
+    # curate-newsletters — discover/curate AI newsletters from Hotmail inbox
+    # ----------------------------------------------------------------
+    if cmd == "curate-newsletters":
+        discover = "--discover" in args
+        days = 7
+        if "--days" in args:
+            idx = args.index("--days")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main curate-newsletters --discover [--days N]")
+                sys.exit(1)
+            try:
+                days = int(args[idx + 1])
+            except ValueError:
+                print(f"--days requires an integer, got: {args[idx + 1]}")
+                sys.exit(1)
+        from src.curator.newsletter_curator import run_curate_newsletters
+        run_curate_newsletters(discover=discover, days=days)
         return
 
     # ----------------------------------------------------------------
