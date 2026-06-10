@@ -38,14 +38,14 @@ def extract_image_prompt(post_md: Path) -> str | None:
     return match.group(1).strip()
 
 
-def generate_image(client, prompt: str) -> bytes | None:
+def generate_image(client, prompt: str, quality: str = "medium") -> bytes | None:
     try:
         response = client.responses.create(
             model="gpt-4o",
             input=prompt,
             tools=[{
                 "type": "image_generation",
-                "quality": "high",
+                "quality": quality,
                 "size": "1024x1024",
             }],
         )
