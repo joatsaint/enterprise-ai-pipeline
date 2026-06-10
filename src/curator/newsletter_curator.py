@@ -29,7 +29,10 @@ def _decode(value: str) -> str:
             decoded += text.decode(enc or "utf-8", errors="replace")
         else:
             decoded += text
-    return decoded
+    # Email headers are attacker-controlled — strip control/escape characters
+    # (e.g. ANSI sequences) so they can't affect the terminal or files written
+    # from these values (newsletter_sources.json).
+    return "".join(c for c in decoded if c.isprintable())
 
 
 def _split_sender(from_header: str) -> tuple[str, str]:
