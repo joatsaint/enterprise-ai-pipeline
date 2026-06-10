@@ -1,5 +1,5 @@
 # CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
-**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (1,014 transcripts, 52 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 daily) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-07).
+**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (1,014 transcripts, 52 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 weekly, by design — refreshes comments on a 7-day cadence) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-09).
 
 ## Session Start Protocol
 
@@ -611,8 +611,9 @@ LOG_PATH=logs/download_log.json
 - Build digest.py to summarize new content by group ✓
 - Add Windows Task Scheduler XML for daily automation ✓ — registered as "YouTube
   Transcript Digest" (07:00 daily, runs `pythonw.exe run_daily.py --scheduled`)
-  and "YouTube Pipeline" (00:09 daily, runs `run_pipeline.bat`); both confirmed
-  Ready/enabled with LastTaskResult: 0 (verified live via Get-ScheduledTask 2026-06-07)
+  and "YouTube Pipeline" (00:09 weekly by design — comment refresh on a 7-day
+  cadence, runs `run_pipeline.bat`); both confirmed Ready/enabled with
+  LastTaskResult: 0 (re-verified live via Get-ScheduledTask 2026-06-09)
 - Test digest output format and quality ✓ — live 2026-06-07 digest inspected,
   matches spec format exactly; found and fixed an incomplete 2026-05-29 digest
   caused by an API usage-limit error (re-ran with --force, now complete)
