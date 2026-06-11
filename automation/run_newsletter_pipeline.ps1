@@ -18,7 +18,8 @@ $allowedTools = @(
     "Write(logs/error_log.json)",
     "Bash(python -m src.main curate-newsletters*)",
     "mcp__outlook-composio__COMPOSIO_GET_TOOL_SCHEMAS",
-    "mcp__outlook-composio__COMPOSIO_MULTI_EXECUTE_TOOL"
+    "mcp__outlook-composio__COMPOSIO_MULTI_EXECUTE_TOOL",
+    "mcp__outlook-composio__COMPOSIO_REMOTE_BASH_TOOL"
 ) -join ","
 
 "=== Newsletter pipeline started -- $(Get-Date) ===" | Out-File -Append -FilePath $LogFile -Encoding utf8
