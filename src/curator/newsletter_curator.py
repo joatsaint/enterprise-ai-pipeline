@@ -1,36 +1,42 @@
 """
-Newsletter curator — AI newsletter discovery + curation from Randy's Hotmail inbox.
+Newsletter curator — AI newsletter curation from Randy's Hotmail/Outlook inbox.
 
-Discovery mode connects read-only via IMAP and lists unique senders from the
-last N days, so the sender allowlist in newsletter_sources.json can be built
-from real inbox data instead of guesswork.
+Fetching is done by the headless Claude newsletter pipeline (see
+automation/newsletter_pipeline_prompt.md), which uses the Outlook Composio MCP
+connection to query the inbox and writes the raw results to
+logs/newsletter_fetch_cache.json. This module never talks to Outlook directly —
+it is a pure consumer of that cache file.
+
+Discovery mode reads the fetch cache and lists unique senders from it, so the
+sender allowlist in newsletter_sources.json can be built from real inbox data.
 
 Curation mode reads newsletter_sources.json for the active sender allowlist,
-fetches matching messages from the last N days via IMAP, and uses Claude to
-filter for relevance, summarize key AI topics, and explain why each item fits
-Randy's AI-career-focused content business. Output mirrors digest.py's format
-and is written to content-engine/newsletter_curation/YYYY-MM-DD_digest.md.
+matches messages in the fetch cache against it, and uses Claude to filter for
+relevance, summarize key AI topics, and explain why each item fits Randy's
+AI-career-focused content business. Output mirrors digest.py's format and is
+written to content-engine/newsletter_curation/YYYY-MM-DD_digest.md.
+
+Curation also writes logs/newsletter_move_candidates.json — the message IDs of
+every matched (active-sender) item — so the headless pipeline can move those
+messages to the "AI_News_Letters" Outlook folder after curation completes.
 
 Usage (via main.py):
   python -m src.main curate-newsletters --discover [--days N]
   python -m src.main curate-newsletters [--days N] [--force] [--scheduled]
 """
-import email
-import imaplib
 import json
 import os
 import re
 import sys
-from datetime import datetime, timedelta, timezone
-from email.header import decode_header
+from datetime import datetime, timezone
 from html import unescape
 
-IMAP_HOST = "outlook.office365.com"
-IMAP_PORT = 993
 SOURCES_PATH = "newsletter_sources.json"
 OUTPUT_DIR = "content-engine/newsletter_curation"
 CURATION_LOG_PATH = "logs/newsletter_curation_log.json"
 ERROR_LOG_PATH = "logs/error_log.json"
+FETCH_CACHE_PATH = "logs/newsletter_fetch_cache.json"
+MOVE_CANDIDATES_PATH = "logs/newsletter_move_candidates.json"
 
 MAX_BODY_CHARS = 6000
 
@@ -72,80 +78,69 @@ def _sanitize_digest_text(text: str) -> str:
     return _MD_LINK_RE.sub(r"\1", text).strip()
 
 
-def _decode(value: str) -> str:
-    if not value:
-        return ""
-    parts = decode_header(value)
-    decoded = ""
-    for text, enc in parts:
-        if isinstance(text, bytes):
-            decoded += text.decode(enc or "utf-8", errors="replace")
-        else:
-            decoded += text
-    # Email headers are attacker-controlled — strip control/escape characters
-    # (e.g. ANSI sequences) so they can't affect the terminal or files written
-    # from these values (newsletter_sources.json).
-    return "".join(c for c in decoded if c.isprintable())
+def _html_to_text(html: str) -> str:
+    text = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)
+    text = re.sub(r"(?i)<(br|/p|/div|/tr|/li|/h[1-6])\s*/?>", "\n", text)
+    text = _TAG_RE.sub(" ", text)
+    text = unescape(text)
+    text = _WS_RE.sub(" ", text)
+    text = _BLANKLINES_RE.sub("\n\n", text)
+    return text.strip()
 
 
-def _split_sender(from_header: str) -> tuple[str, str]:
-    if "<" in from_header and ">" in from_header:
-        name = from_header.split("<")[0].strip().strip('"')
-        addr = from_header.split("<")[1].split(">")[0].strip()
-        return name or addr, addr
-    return from_header, from_header
+# ---------------------------------------------------------------------------
+# Fetch cache (populated by the headless newsletter pipeline via Outlook MCP)
+# ---------------------------------------------------------------------------
 
+def _load_fetched_messages(cache_path: str = FETCH_CACHE_PATH):
+    """
+    Load raw messages written by the headless fetch step.
 
-def _imap_connect():
-    """Connect read-only to the Hotmail/Outlook inbox via IMAP. Exits on failure."""
-    email_addr = os.getenv("HOTMAIL_EMAIL")
-    app_password = os.getenv("HOTMAIL_APP_PASSWORD")
-    if not email_addr or not app_password:
-        print("ERROR: Set HOTMAIL_EMAIL and HOTMAIL_APP_PASSWORD in .env before running.")
-        print("Generate an app password at account.live.com > Security > Advanced security options > App passwords")
+    Expected schema:
+    {
+      "fetched_at": "YYYY-MM-DD HH:MM:SS",
+      "messages": [
+        {
+          "id": "<outlook message id>",
+          "from_name": "Sender Name",
+          "from_address": "sender@example.com",
+          "subject": "...",
+          "received": "YYYY-MM-DDTHH:MM:SSZ",
+          "body_content": "...",
+          "body_type": "html" or "text"
+        }
+      ]
+    }
+    """
+    if not os.path.isfile(cache_path):
+        print(f"ERROR: {cache_path} not found.")
+        print("Run the newsletter pipeline fetch step first "
+              "(see automation/newsletter_pipeline_prompt.md).")
         sys.exit(1)
-
     try:
-        mail = imaplib.IMAP4_SSL(IMAP_HOST, IMAP_PORT)
-        mail.login(email_addr, app_password)
-        mail.select("INBOX", readonly=True)
-    except imaplib.IMAP4.error as exc:
-        print(f"ERROR: IMAP login failed: {exc}")
+        with open(cache_path, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (json.JSONDecodeError, OSError) as exc:
+        print(f"ERROR: Could not read {cache_path}: {exc}")
         sys.exit(1)
+    return data.get("messages", [])
 
-    return mail, email_addr
 
+def run_discover(cache_path: str = FETCH_CACHE_PATH):
+    """List unique senders found in the fetch cache, to help build newsletter_sources.json."""
+    messages = _load_fetched_messages(cache_path)
+    if not messages:
+        print("No messages found in the fetch cache.")
+        return
 
-def run_discover(days: int = 7):
-    mail, email_addr = _imap_connect()
-    print(f"Connecting to {IMAP_HOST} as {email_addr} (read-only)...")
-
-    since_date = (datetime.now() - timedelta(days=days)).strftime("%d-%b-%Y")
-    status, data = mail.search(None, f"(SINCE {since_date})")
-    if status != "OK":
-        print("ERROR: IMAP search failed.")
-        mail.logout()
-        sys.exit(1)
-
-    ids = data[0].split()
-    print(f"\n{len(ids)} messages in the last {days} days.\n")
+    print(f"\n{len(messages)} messages in the fetch cache.\n")
 
     senders: dict[tuple[str, str], int] = {}
-    for msg_id in ids:
-        status, msg_data = mail.fetch(msg_id, "(BODY.PEEK[HEADER.FIELDS (FROM SUBJECT)])")
-        if status != "OK" or not msg_data or not msg_data[0]:
-            continue
-        raw_header = msg_data[0][1]
-        msg = email.message_from_bytes(raw_header)
-        from_header = _decode(msg.get("From", ""))
-        key = _split_sender(from_header)
+    for msg in messages:
+        addr = (msg.get("from_address") or "").strip()
+        name = (msg.get("from_name") or addr).strip()
+        key = (name, addr)
         senders[key] = senders.get(key, 0) + 1
-
-    mail.logout()
-
-    if not senders:
-        print("No messages found in this window.")
-        return
 
     print("Unique senders found (count  name <address>):\n")
     for (name, addr), count in sorted(senders.items(), key=lambda kv: -kv[1]):
@@ -173,100 +168,49 @@ def _load_sources():
     return [s for s in data.get("sources", []) if s.get("active")]
 
 
-def _html_to_text(html: str) -> str:
-    text = re.sub(r"(?is)<(script|style)[^>]*>.*?</\1>", " ", html)
-    text = re.sub(r"(?i)<(br|/p|/div|/tr|/li|/h[1-6])\s*/?>", "\n", text)
-    text = _TAG_RE.sub(" ", text)
-    text = unescape(text)
-    text = _WS_RE.sub(" ", text)
-    text = _BLANKLINES_RE.sub("\n\n", text)
-    return text.strip()
-
-
-def _extract_body(msg: "email.message.Message") -> str:
-    """Extract plain-text body from an email message, preferring text/plain."""
-    if msg.is_multipart():
-        plain_part, html_part = None, None
-        for part in msg.walk():
-            ctype = part.get_content_type()
-            disp = str(part.get("Content-Disposition") or "")
-            if "attachment" in disp:
-                continue
-            if ctype == "text/plain" and plain_part is None:
-                plain_part = part
-            elif ctype == "text/html" and html_part is None:
-                html_part = part
-        part = plain_part or html_part
-        if part is None:
-            return ""
-    else:
-        part = msg
-
-    try:
-        payload = part.get_payload(decode=True)
-        if payload is None:
-            return ""
-        charset = part.get_content_charset() or "utf-8"
-        text = payload.decode(charset, errors="replace")
-    except (LookupError, ValueError):
-        return ""
-
-    if part.get_content_type() == "text/html":
-        text = _html_to_text(text)
-
-    return text.strip()
-
-
-def _fetch_curatable_messages(mail, days: int, active_senders: dict[str, str]):
+def _match_active_messages(messages: list[dict], active_senders: dict[str, str]):
     """
-    Fetch messages from the last `days` days whose sender address is in
-    active_senders (lowercase address -> source name).
+    Filter cached messages down to those from active sender addresses.
 
-    Returns a list of dicts: source_name, sender_name, sender_address,
-    subject, date, body.
+    Returns a list of dicts: message_id, source_name, sender_name,
+    sender_address, subject, date, body.
     """
-    since_date = (datetime.now() - timedelta(days=days)).strftime("%d-%b-%Y")
-    status, data = mail.search(None, f"(SINCE {since_date})")
-    if status != "OK":
-        print("ERROR: IMAP search failed.")
-        sys.exit(1)
-
-    ids = data[0].split()
     matches = []
-    for msg_id in ids:
-        status, msg_data = mail.fetch(msg_id, "(BODY.PEEK[HEADER.FIELDS (FROM)])")
-        if status != "OK" or not msg_data or not msg_data[0]:
-            continue
-        header_msg = email.message_from_bytes(msg_data[0][1])
-        from_header = _decode(header_msg.get("From", ""))
-        sender_name, addr = _split_sender(from_header)
-
-        source_name = active_senders.get(addr.lower())
+    for msg in messages:
+        addr = (msg.get("from_address") or "").strip().lower()
+        source_name = active_senders.get(addr)
         if not source_name:
             continue
 
-        status, msg_data = mail.fetch(msg_id, "(BODY.PEEK[])")
-        if status != "OK" or not msg_data or not msg_data[0]:
-            continue
-        msg = email.message_from_bytes(msg_data[0][1])
+        body = msg.get("body_content") or ""
+        if (msg.get("body_type") or "").lower() == "html":
+            body = _html_to_text(body)
 
-        subject = _sanitize_digest_text(_decode(msg.get("Subject", "")))
-        try:
-            received = email.utils.parsedate_to_datetime(msg.get("Date", ""))
-            date_str = received.strftime("%Y-%m-%d")
-        except (TypeError, ValueError):
-            date_str = datetime.now().strftime("%Y-%m-%d")
+        subject = _sanitize_digest_text(msg.get("subject") or "")
+        received = msg.get("received") or ""
+        date_str = received[:10] if len(received) >= 10 else datetime.now().strftime("%Y-%m-%d")
 
         matches.append({
+            "message_id": msg.get("id", ""),
             "source_name": source_name,
-            "sender_name": sender_name,
-            "sender_address": addr,
+            "sender_name": msg.get("from_name") or source_name,
+            "sender_address": msg.get("from_address", ""),
             "subject": subject,
             "date": date_str,
-            "body": _extract_body(msg)[:MAX_BODY_CHARS],
+            "body": body[:MAX_BODY_CHARS],
         })
 
     return matches
+
+
+def _write_move_candidates(message_ids: list[str]):
+    """Write the message IDs the headless pipeline should move to AI_News_Letters."""
+    os.makedirs("logs", exist_ok=True)
+    with open(MOVE_CANDIDATES_PATH, "w", encoding="utf-8") as fh:
+        json.dump({
+            "date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "message_ids": [mid for mid in message_ids if mid],
+        }, fh, indent=2, ensure_ascii=False)
 
 
 _CURATE_SYSTEM_PROMPT = (
@@ -442,14 +386,16 @@ def _curation_already_run_today():
         return False
 
 
-def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
+def run_curate(days: int = 7, force: bool = False, scheduled: bool = False,
+                cache_path: str = FETCH_CACHE_PATH):
     """
-    Curate AI newsletter content from the last `days` days.
+    Curate AI newsletter content from logs/newsletter_fetch_cache.json.
 
     - Loads the active sender allowlist from newsletter_sources.json
-    - Fetches matching messages via read-only IMAP
+    - Matches cached messages whose sender address is on the allowlist
     - Uses Claude to filter for relevance, summarize, and explain "why this fits"
     - Writes content-engine/newsletter_curation/YYYY-MM-DD_digest.md (overwrite)
+    - Writes logs/newsletter_move_candidates.json with message IDs to move
     - Appends a run record to logs/newsletter_curation_log.json (always append)
     """
     import anthropic
@@ -461,6 +407,7 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
         msg = f"Newsletter curation already run for {today}. Use --force to regenerate."
         if not scheduled:
             print(msg)
+        _write_move_candidates([])
         return
 
     sources = _load_sources()
@@ -470,21 +417,17 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
             _append_error_log(msg)
         else:
             print(msg)
+        _write_move_candidates([])
         return
 
     active_senders = {s["sender"].lower(): s["name"] for s in sources}
 
-    mail, email_addr = _imap_connect()
-    if not scheduled:
-        print(f"Connecting to {IMAP_HOST} as {email_addr} (read-only)...")
-    try:
-        matches = _fetch_curatable_messages(mail, days, active_senders)
-    finally:
-        mail.logout()
+    messages = _load_fetched_messages(cache_path)
+    matches = _match_active_messages(messages, active_senders)
 
     if not matches:
         if not scheduled:
-            print(f"No new newsletter content found in the last {days} days.")
+            print("No newsletter content from active sources found in the fetch cache.")
         _append_curation_log({
             "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
             "date_curated": today,
@@ -494,6 +437,7 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
             "tokens_consumed": 0,
             "model": MODEL,
         })
+        _write_move_candidates([])
         return
 
     client = anthropic.Anthropic()
@@ -550,6 +494,8 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
         "model": MODEL,
     })
 
+    _write_move_candidates([it["message_id"] for it in matches])
+
     if not scheduled:
         print(
             f"Curation complete: {len(relevant_items)} relevant item(s) out of "
@@ -560,6 +506,6 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False):
 def run_curate_newsletters(discover: bool = False, days: int = 7,
                             force: bool = False, scheduled: bool = False):
     if discover:
-        run_discover(days=days)
+        run_discover()
         return
     run_curate(days=days, force=force, scheduled=scheduled)
