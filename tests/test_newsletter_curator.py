@@ -15,6 +15,9 @@ Covers:
 9. _curate_item wraps email content in untrusted delimiters and uses a system prompt
 10. run_discover lists unique senders from the fetch cache
 11. _load_fetched_messages exits if the cache file is missing
+12. _match_active_messages excludes messages already in the processed-ids log
+13. run_curate appends matched message IDs to the processed-ids log, and a
+    second run with the same cache finds nothing new to curate
 """
 import json
 import os
@@ -382,5 +385,70 @@ def test_load_fetched_messages_missing_cache_exits():
         try:
             with pytest.raises(SystemExit):
                 _load_fetched_messages()
+        finally:
+            os.chdir(orig)
+
+
+# ---------------------------------------------------------------------------
+# 12 — _match_active_messages excludes already-processed message IDs
+# ---------------------------------------------------------------------------
+
+def test_match_active_messages_excludes_processed_ids():
+    from src.curator.newsletter_curator import _match_active_messages
+
+    messages = [
+        _sample_message(message_id="msg-1", from_address="news@example.com",
+                         subject="Already Curated"),
+        _sample_message(message_id="msg-2", from_address="news@example.com",
+                         subject="New Item"),
+    ]
+    active_senders = {"news@example.com": "Test AI News"}
+
+    matches = _match_active_messages(messages, active_senders, processed_ids={"msg-1"})
+
+    assert [m["message_id"] for m in matches] == ["msg-2"]
+
+
+# ---------------------------------------------------------------------------
+# 13 — run_curate records processed IDs and skips them on a later run
+# ---------------------------------------------------------------------------
+
+def test_run_curate_records_and_skips_processed_ids():
+    from src.curator.newsletter_curator import run_curate
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        orig = os.getcwd()
+        os.chdir(tmpdir)
+        try:
+            _write_sources([
+                {"name": "Test AI News", "sender": "news@example.com", "active": True},
+            ])
+            _write_cache([
+                _sample_message(message_id="msg-1", subject="New AI Model Released"),
+            ])
+
+            with patch("src.curator.newsletter_curator._curate_item",
+                       return_value=(True, "Summary.", "Why it fits.", 100)), \
+                 patch("src.curator.newsletter_curator._synthesize_action_items",
+                       return_value=("Act on it.", 50)), \
+                 patch("anthropic.Anthropic", return_value=MagicMock()):
+                run_curate(days=7)
+
+            with open("logs/newsletter_processed_ids.json", encoding="utf-8") as fh:
+                processed = json.load(fh)
+            assert processed["message_ids"] == ["msg-1"]
+
+            # Second run (forced) with the same cache: msg-1 is already
+            # processed, so there's nothing new to curate.
+            with patch("src.curator.newsletter_curator._curate_item",
+                       return_value=(True, "Summary.", "Why it fits.", 100)), \
+                 patch("src.curator.newsletter_curator._synthesize_action_items",
+                       return_value=("Act on it.", 50)), \
+                 patch("anthropic.Anthropic", return_value=MagicMock()):
+                run_curate(days=7, force=True)
+
+            with open("logs/newsletter_curation_log.json", encoding="utf-8") as fh:
+                log = json.load(fh)
+            assert log["runs"][-1]["items_found"] == 0
         finally:
             os.chdir(orig)

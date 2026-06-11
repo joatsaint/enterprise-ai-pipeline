@@ -39,6 +39,7 @@ knowledge/
 # Content drafts, LinkedIn posts, carousels, buffer schedules
 content-engine/articles/
 content-engine/pending/
+content-engine/newsletter_curation/
 content-engine/CLAUDE.md
 content-engine/TASKS.md
 content-engine/LinkedIn_CONTENT_OS.md

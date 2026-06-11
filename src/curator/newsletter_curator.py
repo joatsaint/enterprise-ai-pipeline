@@ -18,7 +18,11 @@ written to content-engine/newsletter_curation/YYYY-MM-DD_digest.md.
 
 Curation also writes logs/newsletter_move_candidates.json — the message IDs of
 every matched (active-sender) item — so the headless pipeline can move those
-messages to the "AI_News_Letters" Outlook folder after curation completes.
+messages to the "AI_News_Letters/Processed" Outlook subfolder after curation
+completes. As a second safeguard against re-summarizing the same email in a
+future run, every matched message ID is also recorded in
+logs/newsletter_processed_ids.json and excluded from matching on subsequent
+runs.
 
 Usage (via main.py):
   python -m src.main curate-newsletters --discover [--days N]
@@ -37,6 +41,7 @@ CURATION_LOG_PATH = "logs/newsletter_curation_log.json"
 ERROR_LOG_PATH = "logs/error_log.json"
 FETCH_CACHE_PATH = "logs/newsletter_fetch_cache.json"
 MOVE_CANDIDATES_PATH = "logs/newsletter_move_candidates.json"
+PROCESSED_IDS_PATH = "logs/newsletter_processed_ids.json"
 
 MAX_BODY_CHARS = 6000
 
@@ -168,15 +173,44 @@ def _load_sources():
     return [s for s in data.get("sources", []) if s.get("active")]
 
 
-def _match_active_messages(messages: list[dict], active_senders: dict[str, str]):
+def _load_processed_ids() -> set:
+    """Return the set of message IDs already curated in a previous run."""
+    if not os.path.isfile(PROCESSED_IDS_PATH):
+        return set()
+    try:
+        with open(PROCESSED_IDS_PATH, "r", encoding="utf-8") as fh:
+            data = json.load(fh)
+    except (json.JSONDecodeError, OSError):
+        return set()
+    return set(data.get("message_ids", []))
+
+
+def _append_processed_ids(message_ids: list[str]):
+    """Add message IDs to the processed-ids log so they aren't re-curated."""
+    new_ids = {mid for mid in message_ids if mid}
+    if not new_ids:
+        return
+    existing = _load_processed_ids()
+    existing.update(new_ids)
+    os.makedirs("logs", exist_ok=True)
+    with open(PROCESSED_IDS_PATH, "w", encoding="utf-8") as fh:
+        json.dump({"message_ids": sorted(existing)}, fh, indent=2, ensure_ascii=False)
+
+
+def _match_active_messages(messages: list[dict], active_senders: dict[str, str],
+                            processed_ids: set = frozenset()):
     """
-    Filter cached messages down to those from active sender addresses.
+    Filter cached messages down to those from active sender addresses that
+    haven't been curated in a previous run.
 
     Returns a list of dicts: message_id, source_name, sender_name,
     sender_address, subject, date, body.
     """
     matches = []
     for msg in messages:
+        if msg.get("id") in processed_ids:
+            continue
+
         addr = (msg.get("from_address") or "").strip().lower()
         source_name = active_senders.get(addr)
         if not source_name:
@@ -293,7 +327,7 @@ def _synthesize_action_items(client, relevant_items: list[dict]):
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=400,
+        max_tokens=1024,
         system=_SYNTHESIZE_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_content}],
     )
@@ -396,6 +430,8 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False,
     - Uses Claude to filter for relevance, summarize, and explain "why this fits"
     - Writes content-engine/newsletter_curation/YYYY-MM-DD_digest.md (overwrite)
     - Writes logs/newsletter_move_candidates.json with message IDs to move
+    - Appends matched message IDs to logs/newsletter_processed_ids.json so they
+      are excluded from future runs
     - Appends a run record to logs/newsletter_curation_log.json (always append)
     """
     import anthropic
@@ -423,7 +459,8 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False,
     active_senders = {s["sender"].lower(): s["name"] for s in sources}
 
     messages = _load_fetched_messages(cache_path)
-    matches = _match_active_messages(messages, active_senders)
+    processed_ids = _load_processed_ids()
+    matches = _match_active_messages(messages, active_senders, processed_ids)
 
     if not matches:
         if not scheduled:
@@ -495,6 +532,7 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False,
     })
 
     _write_move_candidates([it["message_id"] for it in matches])
+    _append_processed_ids([it["message_id"] for it in matches])
 
     if not scheduled:
         print(
