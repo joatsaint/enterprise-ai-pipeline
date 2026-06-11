@@ -21,6 +21,8 @@ Usage:
   python -m src.main trending --dry-run         # gather + score only, write nothing
   python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
   python -m src.main curate-newsletters --discover [--days N]  # list inbox senders to build newsletter_sources.json
+  python -m src.main curate-newsletters [--days N] [--force]   # curate AI newsletters into content-engine/newsletter_curation/
+  python -m src.main curate-newsletters --scheduled             # silent mode for Task Scheduler
 """
 import sys
 
@@ -296,11 +298,13 @@ def main():
     # ----------------------------------------------------------------
     if cmd == "curate-newsletters":
         discover = "--discover" in args
+        force = "--force" in args
+        scheduled = "--scheduled" in args
         days = 7
         if "--days" in args:
             idx = args.index("--days")
             if idx + 1 >= len(args):
-                print("Usage: python -m src.main curate-newsletters --discover [--days N]")
+                print("Usage: python -m src.main curate-newsletters [--discover] [--days N] [--force] [--scheduled]")
                 sys.exit(1)
             try:
                 days = int(args[idx + 1])
@@ -308,7 +312,7 @@ def main():
                 print(f"--days requires an integer, got: {args[idx + 1]}")
                 sys.exit(1)
         from src.curator.newsletter_curator import run_curate_newsletters
-        run_curate_newsletters(discover=discover, days=days)
+        run_curate_newsletters(discover=discover, days=days, force=force, scheduled=scheduled)
         return
 
     # ----------------------------------------------------------------
