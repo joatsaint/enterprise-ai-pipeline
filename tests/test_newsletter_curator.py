@@ -4,19 +4,21 @@ Tests for src/curator/newsletter_curator.py — curation mode.
 Covers:
 1. _load_sources returns only active entries
 2. _html_to_text strips tags/entities into plain text
-3. _extract_body prefers text/plain over text/html in a multipart message
-4. run_curate with no matching messages -> no digest file, log records 0 items
-5. run_curate with a relevant + irrelevant item -> digest file with correct format
+3. _match_active_messages filters by sender and converts HTML bodies to text
+4. run_curate with no matching messages -> no digest file, log records 0 items,
+   empty move candidates
+5. run_curate with a relevant + irrelevant item -> digest file with correct
+   format and move candidates listing both message IDs
 6. Idempotency -> second run without --force is skipped, --force regenerates
 7. _sanitize_for_prompt strips untrusted-content delimiter tags
 8. _sanitize_digest_text strips markdown links/images
 9. _curate_item wraps email content in untrusted delimiters and uses a system prompt
+10. run_discover lists unique senders from the fetch cache
+11. _load_fetched_messages exits if the cache file is missing
 """
 import json
 import os
 import tempfile
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from unittest.mock import patch, MagicMock
 
 import pytest
@@ -27,8 +29,31 @@ def _write_sources(sources):
         json.dump({"sources": sources}, fh)
 
 
+def _write_cache(messages, cache_path="logs/newsletter_fetch_cache.json"):
+    os.makedirs(os.path.dirname(cache_path), exist_ok=True)
+    with open(cache_path, "w", encoding="utf-8") as fh:
+        json.dump({"fetched_at": "2026-06-10 12:00:00", "messages": messages}, fh)
+
+
+def _sample_message(message_id="msg-1", from_name="Test AI News",
+                     from_address="news@example.com", subject="Big AI News",
+                     received="2026-06-10T12:00:00Z",
+                     body_content="Some newsletter content about AI tools and careers.",
+                     body_type="text"):
+    return {
+        "id": message_id,
+        "from_name": from_name,
+        "from_address": from_address,
+        "subject": subject,
+        "received": received,
+        "body_content": body_content,
+        "body_type": body_type,
+    }
+
+
 def _sample_item(source_name="Test AI News", subject="Big AI News", date="2026-06-10"):
     return {
+        "message_id": "msg-1",
         "source_name": source_name,
         "sender_name": source_name,
         "sender_address": "news@example.com",
@@ -87,29 +112,30 @@ def test_html_to_text_strips_tags_and_entities():
 
 
 # ---------------------------------------------------------------------------
-# 3 — _extract_body prefers text/plain
+# 3 — _match_active_messages filters by sender and converts HTML bodies
 # ---------------------------------------------------------------------------
 
-def test_extract_body_prefers_plain_text():
-    from src.curator.newsletter_curator import _extract_body
+def test_match_active_messages_filters_and_converts_html():
+    from src.curator.newsletter_curator import _match_active_messages
 
-    msg = MIMEMultipart("alternative")
-    msg.attach(MIMEText("<p>HTML version</p>", "html"))
-    msg.attach(MIMEText("Plain version", "plain"))
+    messages = [
+        _sample_message(message_id="msg-1", from_address="news@example.com",
+                         subject="Relevant Newsletter",
+                         body_content="<p>Hello <b>AI</b> world</p>", body_type="html"),
+        _sample_message(message_id="msg-2", from_address="other@example.com",
+                         subject="Not Tracked"),
+    ]
+    active_senders = {"news@example.com": "Test AI News"}
 
-    body = _extract_body(msg)
-    assert body == "Plain version"
+    matches = _match_active_messages(messages, active_senders)
 
-
-def test_extract_body_falls_back_to_html():
-    from src.curator.newsletter_curator import _extract_body
-
-    msg = MIMEMultipart("alternative")
-    msg.attach(MIMEText("<p>Only HTML <b>here</b></p>", "html"))
-
-    body = _extract_body(msg)
-    assert "Only HTML" in body
-    assert "<" not in body
+    assert len(matches) == 1
+    item = matches[0]
+    assert item["message_id"] == "msg-1"
+    assert item["source_name"] == "Test AI News"
+    assert item["date"] == "2026-06-10"
+    assert "Hello" in item["body"] and "AI" in item["body"]
+    assert "<" not in item["body"]
 
 
 # ---------------------------------------------------------------------------
@@ -126,12 +152,11 @@ def test_run_curate_no_matches_writes_no_digest():
             _write_sources([
                 {"name": "Test AI News", "sender": "news@example.com", "active": True},
             ])
+            _write_cache([
+                _sample_message(message_id="msg-1", from_address="other@example.com"),
+            ])
 
-            with patch("src.curator.newsletter_curator._imap_connect",
-                       return_value=(MagicMock(), "user@hotmail.com")), \
-                 patch("src.curator.newsletter_curator._fetch_curatable_messages",
-                       return_value=[]):
-                run_curate(days=7)
+            run_curate(days=7)
 
             today = __import__("datetime").datetime.now(
                 __import__("datetime").timezone.utc
@@ -144,6 +169,10 @@ def test_run_curate_no_matches_writes_no_digest():
                 log = json.load(fh)
             assert log["runs"][-1]["items_found"] == 0
             assert log["runs"][-1]["output_file"] is None
+
+            with open("logs/newsletter_move_candidates.json", encoding="utf-8") as fh:
+                move = json.load(fh)
+            assert move["message_ids"] == []
         finally:
             os.chdir(orig)
 
@@ -162,9 +191,10 @@ def test_run_curate_produces_digest_with_relevant_items():
             _write_sources([
                 {"name": "Test AI News", "sender": "news@example.com", "active": True},
             ])
-
-            relevant_item = _sample_item(subject="New AI Model Released")
-            irrelevant_item = _sample_item(subject="Unrelated Promo")
+            _write_cache([
+                _sample_message(message_id="msg-1", subject="New AI Model Released"),
+                _sample_message(message_id="msg-2", subject="Unrelated Promo"),
+            ])
 
             def fake_curate_item(client, item):
                 if item["subject"] == "New AI Model Released":
@@ -172,11 +202,7 @@ def test_run_curate_produces_digest_with_relevant_items():
                         "Useful for AI tooling content.", 100
                 return False, "Promotional content unrelated to AI careers.", "N/A", 50
 
-            with patch("src.curator.newsletter_curator._imap_connect",
-                       return_value=(MagicMock(), "user@hotmail.com")), \
-                 patch("src.curator.newsletter_curator._fetch_curatable_messages",
-                       return_value=[relevant_item, irrelevant_item]), \
-                 patch("src.curator.newsletter_curator._curate_item",
+            with patch("src.curator.newsletter_curator._curate_item",
                        side_effect=fake_curate_item), \
                  patch("src.curator.newsletter_curator._synthesize_action_items",
                        return_value=("1. Cover the new AI model launch.", 75)), \
@@ -201,6 +227,10 @@ def test_run_curate_produces_digest_with_relevant_items():
             assert run["items_relevant"] == 1
             assert run["output_file"] == digest_path
             assert run["tokens_consumed"] == 225
+
+            with open("logs/newsletter_move_candidates.json", encoding="utf-8") as fh:
+                move = json.load(fh)
+            assert sorted(move["message_ids"]) == ["msg-1", "msg-2"]
         finally:
             os.chdir(orig)
 
@@ -219,23 +249,18 @@ def test_run_curate_idempotent_unless_forced():
             _write_sources([
                 {"name": "Test AI News", "sender": "news@example.com", "active": True},
             ])
+            _write_cache([
+                _sample_message(message_id="msg-1", from_address="other@example.com"),
+            ])
 
-            with patch("src.curator.newsletter_curator._imap_connect",
-                       return_value=(MagicMock(), "user@hotmail.com")), \
-                 patch("src.curator.newsletter_curator._fetch_curatable_messages",
-                       return_value=[]):
-                run_curate(days=7)
-                run_curate(days=7)  # not forced -> skipped, no second log entry
+            run_curate(days=7)
+            run_curate(days=7)  # not forced -> skipped, no second log entry
 
             with open("logs/newsletter_curation_log.json", encoding="utf-8") as fh:
                 log = json.load(fh)
             assert len(log["runs"]) == 1
 
-            with patch("src.curator.newsletter_curator._imap_connect",
-                       return_value=(MagicMock(), "user@hotmail.com")), \
-                 patch("src.curator.newsletter_curator._fetch_curatable_messages",
-                       return_value=[]):
-                run_curate(days=7, force=True)
+            run_curate(days=7, force=True)
 
             with open("logs/newsletter_curation_log.json", encoding="utf-8") as fh:
                 log = json.load(fh)
@@ -312,3 +337,50 @@ def test_curate_item_wraps_untrusted_content_with_system_prompt():
     assert "click here" in summary
     assert "http://evil.example" not in summary
     assert relevant is True
+
+
+# ---------------------------------------------------------------------------
+# 10 — run_discover lists unique senders from the fetch cache
+# ---------------------------------------------------------------------------
+
+def test_run_discover_lists_unique_senders(capsys):
+    from src.curator.newsletter_curator import run_discover
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        orig = os.getcwd()
+        os.chdir(tmpdir)
+        try:
+            _write_cache([
+                _sample_message(message_id="msg-1", from_name="Test AI News",
+                                 from_address="news@example.com"),
+                _sample_message(message_id="msg-2", from_name="Test AI News",
+                                 from_address="news@example.com"),
+                _sample_message(message_id="msg-3", from_name="Other Sender",
+                                 from_address="other@example.com"),
+            ])
+
+            run_discover()
+
+            out = capsys.readouterr().out
+            assert "Test AI News <news@example.com>" in out
+            assert "Other Sender <other@example.com>" in out
+            assert "2x" in out or "  2x" in out
+        finally:
+            os.chdir(orig)
+
+
+# ---------------------------------------------------------------------------
+# 11 — _load_fetched_messages exits if the cache file is missing
+# ---------------------------------------------------------------------------
+
+def test_load_fetched_messages_missing_cache_exits():
+    from src.curator.newsletter_curator import _load_fetched_messages
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        orig = os.getcwd()
+        os.chdir(tmpdir)
+        try:
+            with pytest.raises(SystemExit):
+                _load_fetched_messages()
+        finally:
+            os.chdir(orig)
