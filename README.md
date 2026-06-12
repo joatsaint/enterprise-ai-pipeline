@@ -163,6 +163,11 @@ pip install -r requirements.txt
 # Configure environment
 cp .env.example .env
 # Add: ANTHROPIC_API_KEY, YOUTUBE_API_KEY, WEBSHARE credentials
+
+# Configure the channel registry and (optional) newsletter sources
+cp channels.example.json channels.json
+cp newsletter_sources.example.json newsletter_sources.json
+# Then edit channels.json (and newsletter_sources.json) with your own entries
 ```
 
 ### Prerequisites
@@ -204,7 +209,7 @@ youtube-downloader/
 ├── CLAUDE.md                    # Architecture + Claude Code behavior rules
 ├── MASTER_PLAN.md               # Business pipeline and stage roadmap
 ├── PROJECT_CONTEXT.md           # ICP, offer definition, growth strategy
-├── channels.json                # Channel registry with group tags
+├── channels.example.json        # Template — copy to channels.json (your registry is git-ignored)
 ├── src/
 │   ├── main.py                  # CLI entry point
 │   ├── orchestrator.py          # Pipeline coordinator + state management
