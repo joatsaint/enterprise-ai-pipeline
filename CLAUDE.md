@@ -38,6 +38,38 @@ Content Publishing Rules — Golden Hour Protocol, Weekly Post Image Rule,
 Carousel Publishing Rule, Multi-Platform Expansion Gate, Model Routing). Read
 that file before any LinkedIn/content-engine work.
 
+### Next-Article Creation — Default Behavior
+
+When Randy asks any of the following, use the **create-next-article** skill
+(`.claude/skills/create-next-article/SKILL.md`) — do not wait for a pasted
+prompt, do not improvise a one-off workflow:
+- "what is the next priority article?"
+- "create the next article" / "go ahead and create it"
+- "draft the next scheduled article"
+- "use the callback system"
+- "continue the article schedule"
+
+Before that skill writes anything:
+1. Read `content-engine/CONTENT_PUBLISHING_RULES.md` (governs all content-engine work).
+2. Read `knowledge/me/voice.md` (the canonical Randy voice profile) and write to
+   that profile — not to proxy examples.
+3. Use the `output/` callback files when present (`callback_bank.csv`/`.md`,
+   `avoid_list.md`, `randy_style_adaptations.md`, `weekly_callback_report.md`).
+   Callbacks are trust signals, not punchlines: max 2–4 per article, one per
+   section, the practical lesson always stronger than the joke, nothing from
+   `avoid_list.md`.
+
+### Status-Change Safety (hard rules — no exceptions)
+
+Applies to `content-engine/dashboard_state.json` and every schedule/status file:
+- Creating a draft is NOT approval. A file existing is NOT approval.
+- A draft being created is NOT "reviewed."
+- Never set `reviewed`, `approved`, `scheduled`, or `published` (or any equivalent
+  status) to true unless Randy explicitly approves that exact change.
+- Never modify `dashboard_state.json` unless Randy approves the exact field change.
+- On conflict between any two rules/files, stop and report using the conflict
+  format in the create-next-article skill before changing anything.
+
 ---
 
 ## Current Status (as of project upgrade)
