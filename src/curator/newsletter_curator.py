@@ -327,7 +327,7 @@ def _synthesize_action_items(client, relevant_items: list[dict]):
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=1024,
+        max_tokens=2048,
         system=_SYNTHESIZE_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_content}],
     )
