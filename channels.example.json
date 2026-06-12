@@ -1,0 +1,28 @@
+{
+  "channels": [
+    {
+      "name": "Example Channel One",
+      "url": "https://www.youtube.com/@examplechannel/videos",
+      "group": "group-a",
+      "active": true,
+      "notes": "Optional free-text note about why this channel is tracked"
+    },
+    {
+      "name": "Example Channel Two",
+      "url": "https://www.youtube.com/@anotherexample/videos",
+      "group": "group-b",
+      "active": true,
+      "notes": "Optional note",
+      "max_videos": 20
+    }
+  ],
+  "groups": [
+    "group-a",
+    "group-b"
+  ],
+  "display_names": {
+    "group-a": "Group A — short human-readable label",
+    "group-b": "Group B — short human-readable label"
+  },
+  "notes": "Copy this file to channels.json and replace the example entries with your own channels and groups. Fields: name (display), url (channel /videos URL), group (must match an entry in groups[]), active (bool), notes (optional), max_videos (optional cap)."
+}

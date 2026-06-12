@@ -39,18 +39,30 @@ marketing-skills/
 # Internal brand and personal knowledge assets — not for public repo
 knowledge/
 
-# Content drafts, LinkedIn posts, carousels, buffer schedules
-content-engine/articles/
-content-engine/pending/
-content-engine/newsletter_curation/
-content-engine/CLAUDE.md
-content-engine/TASKS.md
-content-engine/LinkedIn_CONTENT_OS.md
-content-engine/dashboard_task.xml
-content-engine/start_dashboard.bat
-content-engine/dashboard_state.json
+# === PRIVATE: content-production & publishing infrastructure (entire folder) ===
+content-engine/
 .claude/scheduled_tasks.lock
 **/nppBackup/
+
+# === PRIVATE: research, automation, business, registries & backups ===
+# callback bank, avoid list, pain research, style adaptations
+output/
+# private newsletter/curation pipeline
+automation/
+# commercial business plan / roadmap
+MASTER_PLAN.md
+# populated channel registry (ship channels.example.json instead)
+channels.json
+# populated curation sender list (ship newsletter_sources.example.json instead)
+newsletter_sources.json
+# brand/social asset
+images/IT_to_AI_Newsletter.png
+# local CLAUDE.md / doc backups
+Backup_*.md
+# Google Docs pointer files (personal/brand)
+*.gdoc
+# private content-creation workflow
+.claude/skills/create-next-article/
 
 # Personal and brand files
 Randy_Skiles_Voice_Profile_v2.gdoc
