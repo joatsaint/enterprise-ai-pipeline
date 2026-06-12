@@ -25,6 +25,9 @@ memory/
 # pytest cache
 .pytest_cache/
 
+# Pre-restructure backup snapshots — local only
+backups/
+
 # Windows system files
 Thumbs.db
 **/Thumbs.db
