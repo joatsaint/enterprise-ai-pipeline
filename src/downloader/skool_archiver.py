@@ -63,6 +63,19 @@ def _find_ffmpeg_dir():
     return None
 
 
+def _ext(p):
+    """Windows extended-length path (\\?\ prefix) to bypass the 260-char MAX_PATH
+    limit, so long lesson titles don't overflow inside a deep project path. yt-dlp,
+    ffmpeg, and Python all accept this form. No-op on non-Windows."""
+    if os.name == "nt":
+        prefix = "\\\\?\\"
+        s = os.path.abspath(str(p))
+        if not s.startswith(prefix):
+            s = prefix + s
+        return Path(s)
+    return Path(p)
+
+
 # --------------------------------------------------------------------------
 # Rich-text (Skool "[v2]" desc) -> Markdown
 # --------------------------------------------------------------------------
@@ -195,8 +208,9 @@ class SkoolArchiver(SkoolDownloader):
         self.course_filter = (course_filter or "").lower() or None
         self.email = os.getenv("SKOOL_EMAIL")
         self.password = os.getenv("SKOOL_PASSWORD")
-        self.root = Path(base_dir) / community_slug
-        self.root.mkdir(parents=True, exist_ok=True)
+        self.display_root = Path(base_dir) / community_slug
+        self.display_root.mkdir(parents=True, exist_ok=True)
+        self.root = _ext(self.display_root)  # extended-length to bypass MAX_PATH
         self.archive_log = self.root / "_archive_log.json"
         self._done = self._load_done()
         self._whisper = None
@@ -231,12 +245,21 @@ class SkoolArchiver(SkoolDownloader):
 
     # ---- whisper (load once, reuse across lessons) ----
     def _transcribe(self, video_path):
-        if self._whisper is None:
-            from faster_whisper import WhisperModel
-            self._whisper = WhisperModel("base", device="cpu", compute_type="int8")
-        segments, info = self._whisper.transcribe(str(video_path), beam_size=5)
-        text = "\n".join(s.text.strip() for s in segments if s.text.strip())
-        return text, info
+        # Retry once with a fresh model — a reused faster-whisper model can
+        # intermittently raise (e.g. 'tuple index out of range') on some inputs.
+        last = None
+        for _ in range(2):
+            try:
+                if self._whisper is None:
+                    from faster_whisper import WhisperModel
+                    self._whisper = WhisperModel("base", device="cpu", compute_type="int8")
+                segments, info = self._whisper.transcribe(str(video_path), beam_size=5)
+                text = "\n".join(s.text.strip() for s in segments if s.text.strip())
+                return text, info
+            except Exception as exc:
+                last = exc
+                self._whisper = None  # drop possibly-bad model before retrying fresh
+        raise last
 
     def run(self):
         asyncio.run(self._run_async())
@@ -366,7 +389,12 @@ class SkoolArchiver(SkoolDownloader):
 
         if not video_url:
             return True  # text-only lesson is fully captured
-        video_path = self._download_video(video_url, lesson_dir)
+        existing = [p for p in lesson_dir.glob(f"{prefix}_video.*")
+                    if p.suffix not in (".part", ".ytdl")]
+        if existing and self._has_video_stream(existing[0]):
+            video_path = existing[0]  # reuse a video from a prior interrupted run
+        else:
+            video_path = self._download_video(video_url, lesson_dir)
         if not video_path:
             return False  # leave un-done so a re-run retries it
         text, info = self._transcribe(video_path)
@@ -463,7 +491,7 @@ class SkoolArchiver(SkoolDownloader):
         print(f"  Videos saved:     {self.stats['videos']}")
         print(f"  Skipped (resume): {self.stats['skipped']}")
         print(f"  Failed:           {self.stats['failed']}")
-        print(f"  Output:           {self.root}")
+        print(f"  Output:           {self.display_root}")
         print("=" * 44)
 
 
