@@ -23,6 +23,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 LOGS_DIR = Path("logs")
 ERROR_LOG = LOGS_DIR / "error_log.json"
@@ -243,6 +244,11 @@ class SkoolDownloader:
         # yt-dlp may choose extension; use template and find the result
         output_template = str(self.output_dir / f"{date_str}_{slug}.%(ext)s")
 
+        parsed = urlparse(url)
+        if parsed.scheme not in ("http", "https") or not parsed.netloc:
+            _log_error("download", f"refused non-http URL: {url[:80]!r}")
+            print(f"  Refused non-http URL: {url[:60]}")
+            return None
         print(f"  Downloading: {url[:70]}...")
         try:
             cmd = [
@@ -250,7 +256,7 @@ class SkoolDownloader:
                 "--no-playlist",
                 "--no-warnings",
                 "-o", output_template,
-                url,
+                "--", url,
             ]
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
             if result.returncode != 0:

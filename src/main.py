@@ -15,6 +15,7 @@ Usage:
   python -m src.main ask --fast "your question" # Q&A with Haiku (faster, cheaper)
   python -m src.main ask --group <name> "q"    # Q&A limited to a group
   python -m src.main skool-download --community <slug> --group <name> [--limit N]
+  python -m src.main skool-archive --community <slug> [--resolution 1080] [--course "Name"] [--limit N]  # full offline course archive
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM"  # schedule LinkedIn post via Buffer
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
   python -m src.main trending                   # find a trending topic, draft a post to content-engine/pending/
@@ -235,6 +236,47 @@ def main():
             sys.exit(1)
         from src.downloader.skool import run_skool_download
         run_skool_download(community, group, limit=limit)
+        return
+
+    # ----------------------------------------------------------------
+    # skool-archive — full offline archive of a Skool community course
+    # ----------------------------------------------------------------
+    if cmd == "skool-archive":
+        community = None
+        resolution = 1080
+        course_filter = None
+        limit = None
+        if "--community" in args:
+            idx = args.index("--community")
+            if idx + 1 < len(args):
+                community = args[idx + 1]
+        if "--resolution" in args:
+            idx = args.index("--resolution")
+            if idx + 1 < len(args):
+                try:
+                    resolution = int(args[idx + 1])
+                except ValueError:
+                    print(f"--resolution requires an integer, got: {args[idx + 1]}")
+                    sys.exit(1)
+        if "--course" in args:
+            idx = args.index("--course")
+            if idx + 1 < len(args):
+                course_filter = args[idx + 1]
+        if "--limit" in args:
+            idx = args.index("--limit")
+            if idx + 1 < len(args):
+                try:
+                    limit = int(args[idx + 1])
+                except ValueError:
+                    print(f"--limit requires an integer, got: {args[idx + 1]}")
+                    sys.exit(1)
+        if not community:
+            print('Usage: python -m src.main skool-archive --community <slug> '
+                  '[--resolution 1080] [--course "Name"] [--limit N]')
+            sys.exit(1)
+        from src.downloader.skool_archiver import run_skool_archive
+        run_skool_archive(community, resolution=resolution, limit=limit,
+                          course_filter=course_filter)
         return
 
     # ----------------------------------------------------------------
