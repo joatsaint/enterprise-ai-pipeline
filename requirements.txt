@@ -13,3 +13,8 @@ python-dotenv
 playwright
 faster-whisper
 defusedxml
+
+# System dependency (not pip): ffmpeg — required by skool-archive to merge
+# video+audio (Loom/YouTube 1080p). Install on Windows with:
+#   winget install Gyan.FFmpeg
+# The archiver auto-detects it on PATH or in the winget install dir.
