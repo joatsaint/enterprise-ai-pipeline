@@ -2,6 +2,9 @@
 transcripts/
 *.txt
 
+# Skool offline course archives — large video/binary content, local only
+courses/
+
 # Python cache
 __pycache__/
 *.py[cod]
