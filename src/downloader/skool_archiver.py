@@ -37,6 +37,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 from src.downloader.skool import (
     SkoolDownloader, SESSION_FILE, _slugify, _log_error,
@@ -398,6 +399,11 @@ class SkoolArchiver(SkoolDownloader):
         yt-dlp exit non-zero ('Did not get any data blocks') even when ffmpeg has
         already produced a valid merged file — so success is judged by probing the
         OUTPUT file for a video stream, not by yt-dlp's exit code."""
+        parsed = urlparse(url)
+        if parsed.scheme not in ("http", "https") or not parsed.netloc:
+            _log_error("archive-download", f"refused non-http URL: {url[:80]!r}")
+            print(f"    refused non-http URL: {url[:60]}")
+            return None
         prefix = lesson_dir.name
         out_tmpl = str(lesson_dir / f"{prefix}_video.%(ext)s")
         res = self.resolution
@@ -419,7 +425,7 @@ class SkoolArchiver(SkoolDownloader):
                 cmd += ["--ffmpeg-location", self.ffmpeg_dir]
             if fmt:
                 cmd += ["-f", fmt]
-            cmd += ["-o", out_tmpl, url]
+            cmd += ["-o", out_tmpl, "--", url]
             try:
                 r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
                 last_err = (r.stderr[-300:] or r.stdout[-300:] or "").strip()
