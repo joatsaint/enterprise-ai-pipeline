@@ -28,6 +28,8 @@ from datetime import datetime, timezone
 
 import anthropic
 
+from src.utils import ai
+
 COURSE_ROOT = os.path.join("courses", "buildroom")
 PHASEB_DIR = os.path.join(COURSE_ROOT, "_phaseB")
 CATALOG_PATH = os.path.join(PHASEB_DIR, "catalog.json")
@@ -100,18 +102,20 @@ LESSON TITLE: {title}
 LESSON TEXT:
 {body}"""
     try:
-        response = client.messages.create(
+        text, usage = ai.create(
+            client,
+            task="buildroom_catalog",
             model=model,
             max_tokens=600,
             system="Return ONLY valid minified JSON. No prose. No markdown.",
             messages=[{"role": "user", "content": content}],
         )
-        text = response.content[0].text.strip()
+        text = text.strip()
         if text.startswith("```"):
             text = text.split("```")[1]
             if text.startswith("json"):
                 text = text[4:]
-        tokens = response.usage.input_tokens + response.usage.output_tokens
+        tokens = usage["input_tokens"] + usage["output_tokens"]
         return json.loads(text), tokens
     except Exception as e:
         print(f"[WARN] extract failed: {e}")

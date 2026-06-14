@@ -13,6 +13,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# AI response cache — local, regenerable
+.cache/
+
 # Environment / secrets
 .env
 pipeline_secrets.env
