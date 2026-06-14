@@ -158,6 +158,14 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # status — one read-only at-a-glance summary of the whole pipeline
+    # ----------------------------------------------------------------
+    if cmd == "status":
+        from src.status import run_status
+        run_status()
+        return
+
+    # ----------------------------------------------------------------
     # digest — generate daily content digest
     # ----------------------------------------------------------------
     if cmd == "digest":
