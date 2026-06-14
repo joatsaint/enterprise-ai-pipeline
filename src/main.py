@@ -20,6 +20,10 @@ Usage:
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
   python -m src.main trending                   # find a trending topic, draft a post to content-engine/pending/
   python -m src.main trending --dry-run         # gather + score only, write nothing
+  python -m src.main loop                        # unified cycle: research -> draft -> review gate (status readout, no publish)
+  python -m src.main loop --dry-run              # run the cycle without writing a draft
+  python -m src.main status                      # at-a-glance pipeline summary
+  python -m src.main report [--days N]           # weekly AI cost report
   python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
   python -m src.main curate-newsletters --discover [--days N]  # list inbox senders to build newsletter_sources.json
   python -m src.main curate-newsletters [--days N] [--force]   # curate AI newsletters into content-engine/newsletter_curation/
@@ -418,6 +422,15 @@ def main():
         dry_run = "--dry-run" in args
         from src.trend_finder.orchestrator import run as run_trending
         run_trending(dry_run=dry_run)
+        return
+
+    # ----------------------------------------------------------------
+    # loop — unified content cycle: research -> draft -> review gate (no publish)
+    # ----------------------------------------------------------------
+    if cmd == "loop":
+        dry_run = "--dry-run" in args
+        from src.loop import run_loop
+        run_loop(dry_run=dry_run)
         return
 
     print(f"Unknown command: '{cmd}'")
