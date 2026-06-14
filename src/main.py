@@ -134,6 +134,22 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # analyze-buildroom — Phase B catalog pass over the Build Room corpus
+    # ----------------------------------------------------------------
+    if cmd == "analyze-buildroom":
+        from src.analyzer.buildroom_analyzer import run_catalog
+        limit = None
+        force = "--force" in args
+        if "--limit" in args:
+            idx = args.index("--limit")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main analyze-buildroom [--limit N] [--force]")
+                sys.exit(1)
+            limit = int(args[idx + 1])
+        run_catalog(limit=limit, force=force)
+        return
+
+    # ----------------------------------------------------------------
     # digest — generate daily content digest
     # ----------------------------------------------------------------
     if cmd == "digest":
