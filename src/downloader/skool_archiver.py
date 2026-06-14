@@ -76,6 +76,16 @@ def _ext(p):
     return Path(p)
 
 
+def _webshare_proxy_url():
+    """Webshare rotating residential proxy URL for yt-dlp (matches the format
+    transcript_fetcher.py uses). Returns None if creds aren't set."""
+    u = os.getenv("WEBSHARE_PROXY_USERNAME", "").strip()
+    p = os.getenv("WEBSHARE_PROXY_PASSWORD", "").strip()
+    if u and p:
+        return f"http://{u}-rotate:{p}@p.webshare.io:80"
+    return None
+
+
 # --------------------------------------------------------------------------
 # Rich-text (Skool "[v2]" desc) -> Markdown
 # --------------------------------------------------------------------------
@@ -215,6 +225,8 @@ class SkoolArchiver(SkoolDownloader):
         self._done = self._load_done()
         self._whisper = None
         self.ffmpeg_dir = _find_ffmpeg_dir()
+        self.proxy_url = _webshare_proxy_url()  # YouTube downloads only
+        self.yt_cookies = os.getenv("YTDLP_COOKIES_FILE", "youtube_cookies.txt")
         self.stats = {"videos": 0, "lessons": 0, "skipped": 0, "failed": 0}
 
     # ---- resume bookkeeping ----
@@ -318,6 +330,9 @@ class SkoolArchiver(SkoolDownloader):
                 try:
                     if self._process_lesson(lesson, lesson_dir, course_title):
                         self._mark_done(lesson.get("id"))
+                    elif lesson.get("video_link") or lesson.get("video_stream"):
+                        self.stats["failed"] += 1  # video lesson with no transcript = real failure
+                        print(f"  FAILED (download/transcribe): {lesson['title']}")
                 except Exception as exc:
                     self.stats["failed"] += 1
                     _log_error("archive", f"lesson '{lesson['title']}': {exc}")
@@ -358,9 +373,42 @@ class SkoolArchiver(SkoolDownloader):
             print("  Course data unavailable — skipping.")
             return []
         lessons = _extract_lessons_full(node)
+        # Skool serves a lesson's full `desc` only on its own page, not in the
+        # course tree — so fetch each lesson page to recover the written content.
+        for L in lessons:
+            await self._fetch_lesson_content(page, course_name, L)
         nv = sum(1 for l in lessons if l.get("video_link") or l.get("video_stream"))
-        print(f"  {len(lessons)} lessons ({nv} with video).")
+        nt = sum(1 for l in lessons if l.get("desc"))
+        print(f"  {len(lessons)} lessons ({nv} with video, {nt} with text).")
         return lessons
+
+    async def _fetch_lesson_content(self, page, course_name, lesson):
+        """Navigate to a lesson's own page to recover its full desc/resources
+        (and video, if the course tree missed it)."""
+        lid = lesson.get("id")
+        if not lid:
+            return
+        await self._apause(2.5, 5.5)  # randomized per-lesson pacing
+        try:
+            await page.goto(f"{self.BASE_URL}/{self.community_slug}/classroom/{course_name}?md={lid}")
+            await page.wait_for_load_state("domcontentloaded", timeout=15000)
+        except Exception:
+            return
+        await self._apause(2.0, 3.5)
+        nd = await page.evaluate("() => window.__NEXT_DATA__ || null")
+        node = (nd or {}).get("props", {}).get("pageProps", {}).get("course")
+        if not node:
+            return
+        for L2 in _extract_lessons_full(node):
+            if L2.get("id") == lid:
+                if L2.get("desc"):
+                    lesson["desc"] = L2["desc"]
+                if L2.get("resources"):
+                    lesson["resources"] = L2["resources"]
+                if not (lesson.get("video_link") or lesson.get("video_stream")):
+                    lesson["video_link"] = L2.get("video_link")
+                    lesson["video_stream"] = L2.get("video_stream")
+                break
 
     def _process_lesson(self, lesson, lesson_dir, course_title):
         lesson_dir.mkdir(parents=True, exist_ok=True)
@@ -451,6 +499,11 @@ class SkoolArchiver(SkoolDownloader):
                    "--fragment-retries", "10", "--retries", "5"]
             if self.ffmpeg_dir:
                 cmd += ["--ffmpeg-location", self.ffmpeg_dir]
+            is_yt = "youtube.com" in url or "youtu.be" in url
+            if self.proxy_url and is_yt:
+                cmd += ["--proxy", self.proxy_url]  # rotating residential IPs vs YT bot-block
+            if is_yt and self.yt_cookies and os.path.isfile(self.yt_cookies):
+                cmd += ["--cookies", self.yt_cookies]  # authenticate to bypass YT bot-check
             if fmt:
                 cmd += ["-f", fmt]
             cmd += ["-o", out_tmpl, "--", url]
@@ -466,6 +519,8 @@ class SkoolArchiver(SkoolDownloader):
                 vid = sorted(vids, key=lambda p: p.stat().st_mtime, reverse=True)[0]
                 if self._has_video_stream(vid):
                     return vid  # valid video, regardless of yt-dlp's exit code
+        if self.proxy_url and last_err:
+            last_err = last_err.replace(self.proxy_url, "<proxy>")  # never log creds
         _log_error("archive-download", f"{url[:60]}: {last_err}")
         print(f"    download failed: {last_err or 'no valid video produced'}")
         return None
