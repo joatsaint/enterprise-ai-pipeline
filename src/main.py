@@ -166,6 +166,21 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # report — weekly AI cost report from the ledger
+    # ----------------------------------------------------------------
+    if cmd == "report":
+        from src.report import run_report
+        days = 7
+        if "--days" in args:
+            idx = args.index("--days")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main report [--days N]")
+                sys.exit(1)
+            days = int(args[idx + 1])
+        run_report(days=days)
+        return
+
+    # ----------------------------------------------------------------
     # digest — generate daily content digest
     # ----------------------------------------------------------------
     if cmd == "digest":
