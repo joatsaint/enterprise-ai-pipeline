@@ -211,11 +211,14 @@ def _extract_lessons_full(node):
 
 class SkoolArchiver(SkoolDownloader):
     def __init__(self, community_slug, resolution=1080, limit=None,
-                 course_filter=None, base_dir="courses"):
+                 course_filter=None, base_dir="courses", community_only=False,
+                 author_filter=None):
         self.community_slug = community_slug
         self.resolution = int(resolution)
         self.limit = limit
         self.course_filter = (course_filter or "").lower() or None
+        self.community_only = community_only
+        self.author_filter = (author_filter or "").lower() or None  # community posts by this handle/userId
         self.email = os.getenv("SKOOL_EMAIL")
         self.password = os.getenv("SKOOL_PASSWORD")
         self.display_root = Path(base_dir) / community_slug
@@ -227,7 +230,7 @@ class SkoolArchiver(SkoolDownloader):
         self.ffmpeg_dir = _find_ffmpeg_dir()
         self.proxy_url = _webshare_proxy_url()  # YouTube downloads only
         self.yt_cookies = os.getenv("YTDLP_COOKIES_FILE", "youtube_cookies.txt")
-        self.stats = {"videos": 0, "lessons": 0, "skipped": 0, "failed": 0}
+        self.stats = {"videos": 0, "lessons": 0, "posts": 0, "skipped": 0, "failed": 0}
 
     # ---- resume bookkeeping ----
     def _load_done(self):
@@ -336,6 +339,13 @@ class SkoolArchiver(SkoolDownloader):
                     SESSION_FILE.unlink(missing_ok=True)
                     await self._login(page, context)
 
+            if self.community_only:
+                posts = await self._crawl_community(page)
+                await browser.close()
+                self._save_community(posts)
+                self._print_summary()
+                return
+
             courses = await self._get_accessible_courses(page)
             if self.course_filter:
                 courses = [
@@ -350,6 +360,10 @@ class SkoolArchiver(SkoolDownloader):
                 lessons = await self._get_course_lessons_full(page, course)
                 structure.append((title, lessons))
                 await self._apause(3, 8)  # randomized delay between course pages
+
+            community_posts = []
+            if not self.course_filter:  # full run also captures the community feed
+                community_posts = await self._crawl_community(page)
             await browser.close()
 
         # ---- process (download + write); browser is closed, downloads hit CDNs ----
@@ -379,6 +393,8 @@ class SkoolArchiver(SkoolDownloader):
             if self.limit and processed >= self.limit:
                 break
 
+        if community_posts:
+            self._save_community(community_posts)
         self._write_index(structure)
         self._print_summary()
 
@@ -455,6 +471,7 @@ class SkoolArchiver(SkoolDownloader):
         print(f"  Lesson: {title}")
 
         body = richtext_to_markdown(lesson.get("desc"))
+        body = self._download_images(body, lesson_dir)
         resources = parse_resources(lesson.get("resources"))
         dur_s = int((lesson.get("duration_ms") or 0) / 1000)
         md = [f"# {title}", "",
@@ -522,6 +539,36 @@ class SkoolArchiver(SkoolDownloader):
                 except Exception:
                     pass
         return path.stat().st_size > 200_000  # fallback heuristic
+
+    def _fetch_image(self, url, img_dir, idx):
+        try:
+            import requests
+            r = requests.get(url, timeout=30)
+            if r.status_code != 200 or not r.content:
+                return None
+            ext = os.path.splitext(urlparse(url).path)[1].lower()
+            if ext not in (".jpg", ".jpeg", ".png", ".gif", ".webp"):
+                ext = ".jpg"
+            path = img_dir / f"img_{idx:02d}{ext}"
+            path.write_bytes(r.content)
+            return path
+        except Exception as exc:
+            _log_error("archive-image", f"{url[:60]}: {str(exc)[:120]}")
+            return None
+
+    def _download_images(self, markdown, dest_dir):
+        """Download remote images referenced in the markdown to dest_dir/images/
+        and rewrite the links to local paths, so the lesson is self-contained offline."""
+        urls = list(dict.fromkeys(re.findall(r'!\[[^\]]*\]\((https?://[^)\s]+)\)', markdown)))
+        if not urls:
+            return markdown
+        img_dir = dest_dir / "images"
+        img_dir.mkdir(exist_ok=True)
+        for i, url in enumerate(urls, 1):
+            local = self._fetch_image(url, img_dir, i)
+            if local:
+                markdown = markdown.replace(url, f"images/{local.name}")
+        return markdown
 
     def _download_video(self, url, lesson_dir):
         """Download capped at the resolution, with fallbacks. Loom HLS can make
@@ -596,14 +643,103 @@ class SkoolArchiver(SkoolDownloader):
         print("\n" + "=" * 44)
         print(" Skool archive complete")
         print(f"  Lessons written:  {self.stats['lessons']}")
+        print(f"  Community posts:  {self.stats['posts']}")
         print(f"  Videos saved:     {self.stats['videos']}")
         print(f"  Skipped (resume): {self.stats['skipped']}")
         print(f"  Failed:           {self.stats['failed']}")
         print(f"  Output:           {self.display_root}")
         print("=" * 44)
 
+    # ---- community feed crawl ----
+    async def _crawl_community(self, page):
+        """Crawl the whole community feed (paginated) and return all post dicts."""
+        base = f"{self.BASE_URL}/{self.community_slug}"
+        seen, posts, total = set(), [], None
+        pg = 1
+        while pg <= 300:  # safety cap
+            url = base if pg == 1 else f"{base}?page={pg}"
+            try:
+                await page.goto(url)
+                await page.wait_for_load_state("domcontentloaded", timeout=15000)
+            except Exception:
+                break
+            await self._apause(2.5, 5.5)
+            pp = ((await page.evaluate("() => window.__NEXT_DATA__ || null") or {})
+                  .get("props", {}).get("pageProps", {}))
+            if total is None:
+                total = pp.get("total")
+            fresh = [t.get("post") for t in (pp.get("postTrees") or [])
+                     if t.get("post", {}).get("id") and t["post"]["id"] not in seen]
+            if not fresh:
+                break
+            kept = 0
+            for post in fresh:
+                seen.add(post["id"])
+                if self._author_match(post):
+                    posts.append(post)
+                    kept += 1
+            print(f"  community page {pg}: scanned {len(fresh)}, kept {kept} ({len(posts)} total)")
+            pg += 1
+        print(f"  community crawl done: {len(posts)} posts (feed total: {total})")
+        return posts
 
-def run_skool_archive(community_slug, resolution=1080, limit=None, course_filter=None):
+    def _author_match(self, post):
+        if not self.author_filter:
+            return True
+        return (post.get("user", {}).get("name", "").lower() == self.author_filter
+                or (post.get("userId") or "").lower() == self.author_filter)
+
+    @staticmethod
+    def _post_attachments(meta):
+        """Image URLs from a post's attachmentsData JSON."""
+        raw = meta.get("attachmentsData")
+        if not raw:
+            return []
+        try:
+            data = json.loads(raw) if isinstance(raw, str) else raw
+        except Exception:
+            return []
+        urls = []
+        for a in (data if isinstance(data, list) else []):
+            m = a.get("metadata", {}) if isinstance(a, dict) else {}
+            u = m.get("image_lg_url") or m.get("image_md_url") or m.get("url")
+            if u:
+                urls.append(u)
+        return urls
+
+    def _save_community(self, posts):
+        root = self.root / "_community"
+        root.mkdir(parents=True, exist_ok=True)
+        index = [f"# {self.community_slug} — Community Posts", "",
+                 f"_{len(posts)} posts, archived {datetime.now().strftime('%Y-%m-%d')}_", ""]
+        for i, post in enumerate(posts, 1):
+            meta = post.get("metadata", {})
+            slug = _slugify(post.get("name") or f"post-{i}")
+            pdir = root / f"{i:04d}_{slug}"
+            pdir.mkdir(parents=True, exist_ok=True)
+            content = meta.get("content") or ""
+            body = richtext_to_markdown(content) if content.lstrip().startswith("[v") else content
+            md = [f"# {post.get('name', slug)}", "",
+                  f"**Post URL:** {self.BASE_URL}/{self.community_slug}/{post.get('name', '')}",
+                  f"**Comments:** {meta.get('comments', 0)}", "", "---", "",
+                  body or "_(no text)_"]
+            atts = self._post_attachments(meta)
+            if atts:
+                md += ["", "## Attachments", ""]
+                imgdir = pdir / "images"
+                imgdir.mkdir(exist_ok=True)
+                for j, aurl in enumerate(atts, 1):
+                    local = self._fetch_image(aurl, imgdir, j)
+                    md.append(f"![](images/{local.name})" if local else f"- {aurl}")
+            (pdir / f"{i:04d}_{slug}_post.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+            self.stats["posts"] += 1
+            index.append(f"- [{post.get('name', slug)}]({i:04d}_{slug}/{i:04d}_{slug}_post.md)")
+        (root / "community_index.md").write_text("\n".join(index) + "\n", encoding="utf-8")
+
+
+def run_skool_archive(community_slug, resolution=1080, limit=None, course_filter=None,
+                      community_only=False, author_filter=None):
     """Entry point called from main.py."""
     SkoolArchiver(community_slug, resolution=resolution, limit=limit,
-                  course_filter=course_filter).run()
+                  course_filter=course_filter, community_only=community_only,
+                  author_filter=author_filter).run()
