@@ -150,6 +150,14 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # kit-sync — pull Steel lead-magnet cohort from Kit into a tiered warm-list
+    # ----------------------------------------------------------------
+    if cmd == "kit-sync":
+        from src.funnel.kit_sync import run_sync
+        run_sync()
+        return
+
+    # ----------------------------------------------------------------
     # digest — generate daily content digest
     # ----------------------------------------------------------------
     if cmd == "digest":
