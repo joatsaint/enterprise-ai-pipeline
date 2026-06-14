@@ -5,6 +5,9 @@ transcripts/
 # Skool offline course archives — large video/binary content, local only
 courses/
 
+# Exported YouTube cookies for yt-dlp (secret — never commit)
+youtube_cookies.txt
+
 # Python cache
 __pycache__/
 *.py[cod]
