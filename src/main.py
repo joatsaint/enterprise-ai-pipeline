@@ -274,9 +274,16 @@ def main():
             print('Usage: python -m src.main skool-archive --community <slug> '
                   '[--resolution 1080] [--course "Name"] [--limit N]')
             sys.exit(1)
+        community_only = "--community-only" in args
+        author_filter = None
+        if "--author" in args:
+            idx = args.index("--author")
+            if idx + 1 < len(args):
+                author_filter = args[idx + 1]
         from src.downloader.skool_archiver import run_skool_archive
         run_skool_archive(community, resolution=resolution, limit=limit,
-                          course_filter=course_filter)
+                          course_filter=course_filter, community_only=community_only,
+                          author_filter=author_filter)
         return
 
     # ----------------------------------------------------------------
