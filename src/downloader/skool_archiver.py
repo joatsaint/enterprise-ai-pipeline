@@ -273,6 +273,43 @@ class SkoolArchiver(SkoolDownloader):
                 self._whisper = None  # drop possibly-bad model before retrying fresh
         raise last
 
+    def _youtube_transcript(self, url):
+        """Fetch YouTube's own captions via the proxy-aware transcript API
+        (no video download — sidesteps YouTube's video bot-checks / n-challenge)."""
+        try:
+            from src.downloader.transcript_fetcher import (
+                extract_video_id, fetch_transcript, clean_transcript,
+            )
+            snippets = fetch_transcript(extract_video_id(url))
+            text, _, _ = clean_transcript(snippets)
+            return text or None
+        except Exception as exc:
+            _log_error("archive-yt-transcript", f"{url[:60]}: {str(exc)[:160]}")
+            print(f"    youtube transcript failed: {str(exc)[:120]}")
+            return None
+
+    def _youtube_comments(self, url, lesson_dir, prefix, title):
+        """Fetch top YouTube comments (Data API) into {prefix}_comments.md.
+        Best-effort — never raises; skips silently on disabled/quota/none."""
+        try:
+            from src.downloader.transcript_fetcher import extract_video_id
+            from src.downloader.comment_fetcher import fetch_comments
+            comments, status = fetch_comments(extract_video_id(url))
+            if not comments:
+                return
+            lines = [f"# {title} — Comments", "",
+                     f"**Source:** {url}",
+                     f"**Comments:** {len(comments)} (status: {status})", "", "---", ""]
+            for c in comments:
+                lines.append(c.get("text", ""))
+                lines.append(f"— {c.get('author', '?')} | {c.get('like_count', 0)} likes "
+                             f"| {c.get('published_at', '')}")
+                lines += ["", "---", ""]
+            (lesson_dir / f"{prefix}_comments.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+            print(f"    youtube comments ({len(comments)})")
+        except Exception as exc:
+            _log_error("archive-yt-comments", f"{url[:60]}: {str(exc)[:160]}")
+
     def run(self):
         asyncio.run(self._run_async())
 
@@ -437,6 +474,22 @@ class SkoolArchiver(SkoolDownloader):
 
         if not video_url:
             return True  # text-only lesson is fully captured
+
+        # YouTube: fetch captions via the proxy-aware transcript API (no video
+        # download — sidesteps YouTube's video bot-checks). Other hosts (Loom,
+        # Vimeo, Skool/Mux): download the video + Whisper-transcribe it.
+        if "youtube.com" in video_url or "youtu.be" in video_url:
+            yt_text = self._youtube_transcript(video_url)
+            if not yt_text:
+                return False  # leave un-done so a re-run retries it
+            tmd = [f"# {title} — Transcript (YouTube captions)", "",
+                   f"**Source:** {video_url}", "", "---", "", yt_text]
+            (lesson_dir / f"{prefix}_transcript.md").write_text("\n".join(tmd) + "\n", encoding="utf-8")
+            self.stats["videos"] += 1
+            print(f"    youtube transcript ({len(yt_text.split())} words)")
+            self._youtube_comments(video_url, lesson_dir, prefix, title)
+            return True
+
         existing = [p for p in lesson_dir.glob(f"{prefix}_video.*")
                     if p.suffix not in (".part", ".ytdl")]
         if existing and self._has_video_stream(existing[0]):
