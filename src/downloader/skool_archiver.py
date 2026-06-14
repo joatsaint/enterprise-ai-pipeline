@@ -64,7 +64,7 @@ def _find_ffmpeg_dir():
 
 
 def _ext(p):
-    """Windows extended-length path (\\?\ prefix) to bypass the 260-char MAX_PATH
+    r"""Windows extended-length path (\\?\ prefix) to bypass the 260-char MAX_PATH
     limit, so long lesson titles don't overflow inside a deep project path. yt-dlp,
     ffmpeg, and Python all accept this form. No-op on non-Windows."""
     if os.name == "nt":
