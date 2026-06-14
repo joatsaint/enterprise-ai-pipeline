@@ -455,6 +455,7 @@ class SkoolArchiver(SkoolDownloader):
         print(f"  Lesson: {title}")
 
         body = richtext_to_markdown(lesson.get("desc"))
+        body = self._download_images(body, lesson_dir)
         resources = parse_resources(lesson.get("resources"))
         dur_s = int((lesson.get("duration_ms") or 0) / 1000)
         md = [f"# {title}", "",
@@ -522,6 +523,36 @@ class SkoolArchiver(SkoolDownloader):
                 except Exception:
                     pass
         return path.stat().st_size > 200_000  # fallback heuristic
+
+    def _fetch_image(self, url, img_dir, idx):
+        try:
+            import requests
+            r = requests.get(url, timeout=30)
+            if r.status_code != 200 or not r.content:
+                return None
+            ext = os.path.splitext(urlparse(url).path)[1].lower()
+            if ext not in (".jpg", ".jpeg", ".png", ".gif", ".webp"):
+                ext = ".jpg"
+            path = img_dir / f"img_{idx:02d}{ext}"
+            path.write_bytes(r.content)
+            return path
+        except Exception as exc:
+            _log_error("archive-image", f"{url[:60]}: {str(exc)[:120]}")
+            return None
+
+    def _download_images(self, markdown, dest_dir):
+        """Download remote images referenced in the markdown to dest_dir/images/
+        and rewrite the links to local paths, so the lesson is self-contained offline."""
+        urls = list(dict.fromkeys(re.findall(r'!\[[^\]]*\]\((https?://[^)\s]+)\)', markdown)))
+        if not urls:
+            return markdown
+        img_dir = dest_dir / "images"
+        img_dir.mkdir(exist_ok=True)
+        for i, url in enumerate(urls, 1):
+            local = self._fetch_image(url, img_dir, i)
+            if local:
+                markdown = markdown.replace(url, f"images/{local.name}")
+        return markdown
 
     def _download_video(self, url, lesson_dir):
         """Download capped at the resolution, with fallbacks. Loom HLS can make
