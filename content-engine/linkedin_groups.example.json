@@ -1,8 +1,8 @@
 {
-  "_README": "TEMPLATE. Copy this file to linkedin_groups.json (which is gitignored / local-only) and replace the examples with your real groups. tier: A = proven engager (strongest hook every time), B = new/testing, C = low/no engagement. active:false skips it. The prep generator sorts A->B->C and rotates a different hook to each group.",
+  "_README": "TEMPLATE. Copy this file to linkedin_groups.json (which is gitignored / local-only) and replace the examples with your real groups. tier: A = proven engager (strongest hook every time), B = new/testing, C = low/no engagement. active:false skips it. url is optional (the sheet links straight to the group). The prep generator sorts A->B->C and rotates a different hook to each group.",
   "groups": [
-    { "name": "Example Group — AI & Machine Learning Professionals", "tier": "A", "active": true, "notes": "" },
-    { "name": "Example Group — IT Professionals Network", "tier": "B", "active": true, "notes": "holds for moderation" },
-    { "name": "Example Group — Career Development in Tech", "tier": "C", "active": true, "notes": "low engagement so far" }
+    { "name": "Example Group — AI & Machine Learning Professionals", "url": "https://www.linkedin.com/groups/0000001/", "tier": "A", "active": true, "notes": "" },
+    { "name": "Example Group — IT Professionals Network", "url": "https://www.linkedin.com/groups/0000002/", "tier": "B", "active": true, "notes": "holds for moderation" },
+    { "name": "Example Group — Career Development in Tech", "url": "https://www.linkedin.com/groups/0000003/", "tier": "C", "active": true, "notes": "low engagement so far" }
   ]
 }

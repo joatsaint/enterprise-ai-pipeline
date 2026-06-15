@@ -103,9 +103,11 @@ def build_sheet(url: str, title: str, groups: list[dict], hooks: list[str]) -> s
             lines += [f"## {label}", ""]
         hook = hooks[i % len(hooks)]
         note = g.get("notes", "")
+        lines.append(f"### [ ] {g['name']}" + (f"  _( {note} )_" if note else ""))
+        lines.append("")
+        if g.get("url"):
+            lines += [f"**Open the group:** {g['url']}", ""]
         lines += [
-            f"### [ ] {g['name']}" + (f"  _( {note} )_" if note else ""),
-            "",
             "**Hook (paste above the link):**",
             "",
             f"> {hook}",
