@@ -425,6 +425,21 @@ def main():
         return
 
     # ----------------------------------------------------------------
+    # spiceworks-hangouts — mine Spiceworks for where the ICP hangs out
+    # ----------------------------------------------------------------
+    if cmd == "spiceworks-hangouts":
+        from src.trend_finder.icp_hangouts import run_hangouts
+        per_tag = 12
+        if "--per-tag" in args:
+            idx = args.index("--per-tag")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main spiceworks-hangouts [--per-tag N]")
+                sys.exit(1)
+            per_tag = int(args[idx + 1])
+        run_hangouts(per_tag=per_tag)
+        return
+
+    # ----------------------------------------------------------------
     # loop — unified content cycle: research -> draft -> review gate (no publish)
     # ----------------------------------------------------------------
     if cmd == "loop":
