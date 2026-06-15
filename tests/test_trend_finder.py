@@ -308,18 +308,20 @@ def test_scan_knowledge_base_makes_no_network_calls():
     assert "How sysadmins are using Claude Code daily" in [c["title"] for c in candidates]
 
 
-def test_gather_candidates_combines_all_three_sources():
+def test_gather_candidates_combines_all_sources():
     from src.trend_finder import source_scanner
 
     with patch("src.trend_finder.source_scanner.scan_reddit", return_value=[{"title": "r"}]) as mock_reddit, \
+         patch("src.trend_finder.source_scanner.scan_spiceworks", return_value=[{"title": "s"}]) as mock_spice, \
          patch("src.trend_finder.source_scanner.scan_rss", return_value=[{"title": "f"}]) as mock_rss, \
          patch("src.trend_finder.source_scanner.scan_knowledge_base", return_value=[{"title": "k"}]) as mock_kb:
         candidates = source_scanner.gather_candidates()
 
     mock_reddit.assert_called_once()
+    mock_spice.assert_called_once()
     mock_rss.assert_called_once()
     mock_kb.assert_called_once()
-    assert [c["title"] for c in candidates] == ["r", "f", "k"]
+    assert [c["title"] for c in candidates] == ["r", "s", "f", "k"]
 
 
 # ---------------------------------------------------------------------------
