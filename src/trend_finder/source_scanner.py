@@ -6,6 +6,10 @@ Sources (curated registry — same philosophy as channels.json: an intentional
 list, not an open crawl):
   - A handful of subreddits via Reddit's public read-only JSON endpoints
   - A handful of RSS feeds from sysadmin/AI-industry blogs
+  - A handful of Spiceworks (Discourse) tags via the public /tag/<slug>.json
+    endpoint — direct connection first, proxy only as a fallback on 403/429
+    (a stable IP + low frequency looks like a normal reader; rotating IPs can
+    read as more bot-like to detection — so we don't proxy by default here)
   - The existing transcript knowledge base (recurring themes, zero new calls)
 
 Anti-throttling design (mirrors CLAUDE.md's existing rate-limiting rules):
@@ -48,10 +52,22 @@ RSS_FEEDS = [
     {"name": "MarkTechPost", "url": "https://www.marktechpost.com/feed/"},
 ]
 
+# Spiceworks Community (Discourse) tag slugs — curated 2026-06-14 from the full
+# tag list, ranked by ICP fit + activity. Add/remove tags here.
+SPICEWORKS_TAGS = [
+    "artificial-intelligence",
+    "process-automation",
+    "powershell",
+    "it-jobs-careers",
+    "general-it-security",
+]
+SPICEWORKS_BASE = "https://community.spiceworks.com"
+
 USER_AGENT = "randy-trend-scanner/1.0 (personal research tool; contact via project owner)"
 
 REDDIT_PAUSE = (2.0, 5.0)     # randomized seconds between Reddit requests
 RSS_PAUSE = (1.0, 3.0)        # randomized seconds between RSS requests
+SPICEWORKS_PAUSE = (2.0, 5.0)  # randomized seconds between Spiceworks requests
 RATE_LIMIT_PAUSE = 60         # seconds to wait on HTTP 429 before one retry
 
 _LAST_FETCH_LOG = "logs/trend_source_last_fetch.json"
@@ -122,6 +138,24 @@ def _get(url, headers=None, timeout=15):
     return resp
 
 
+def _get_direct_first(url, headers=None, timeout=15):
+    """
+    GET a public endpoint DIRECTLY (no proxy) first. Only on a 403/429 does it
+    pause and retry once through the proxy. This is the Spiceworks ban-resistance
+    stance: a stable IP making a low-frequency, honest request looks like a
+    normal feed reader; rotating residential IPs can read as more evasive. Direct
+    is the polite default; the proxy is the fallback if the IP ever gets limited.
+    """
+    resp = requests.get(url, headers=headers, proxies=None, timeout=timeout)
+    if resp.status_code in (403, 429):
+        print(f"[RATE] {resp.status_code} from {url} (direct) — pausing "
+              f"{RATE_LIMIT_PAUSE}s, retrying once via proxy...")
+        time.sleep(RATE_LIMIT_PAUSE)
+        resp = requests.get(url, headers=headers, proxies=_get_proxies(), timeout=timeout)
+    resp.raise_for_status()
+    return resp
+
+
 # ---------------------------------------------------------------------------
 # Reddit — public read-only JSON endpoints
 # ---------------------------------------------------------------------------
@@ -171,6 +205,64 @@ def scan_reddit():
         if i < len(SUBREDDITS) - 1:
             delay = random.uniform(*REDDIT_PAUSE)
             time.sleep(delay)
+
+    return all_candidates
+
+
+# ---------------------------------------------------------------------------
+# Spiceworks (Discourse) — public /tag/<slug>.json, direct-first/proxy-fallback
+# ---------------------------------------------------------------------------
+
+def _fetch_spiceworks_tag(slug, limit=10):
+    """
+    Fetch recent topics for one Spiceworks tag via the public Discourse JSON
+    endpoint (no login/API key). Carries engagement metrics (posts, views) into
+    the summary so relevance_scorer sees the same signal it uses elsewhere.
+    Returns a list of candidate dicts, or [] on failure.
+    """
+    url = f"{SPICEWORKS_BASE}/tag/{slug}.json"
+    headers = {"User-Agent": USER_AGENT}
+
+    try:
+        resp = _get_direct_first(url, headers=headers)
+        data = resp.json()
+    except Exception as e:
+        print(f"[WARN] Spiceworks fetch failed for tag '{slug}': {e}")
+        return []
+
+    candidates = []
+    for topic in (data.get("topic_list", {}) or {}).get("topics", [])[:limit]:
+        title = (topic.get("title") or "").strip()
+        if not title:
+            continue
+        tid = topic.get("id")
+        tslug = topic.get("slug")
+        topic_url = f"{SPICEWORKS_BASE}/t/{tslug}/{tid}" if tid and tslug else None
+        posts = topic.get("posts_count")
+        views = topic.get("views")
+        candidates.append({
+            "title": title,
+            "summary": f"Spiceworks discussion tagged #{slug} — {posts} posts, {views} views.",
+            "source": f"spiceworks:{slug}",
+            "url": topic_url,
+        })
+    return candidates
+
+
+def scan_spiceworks():
+    """
+    Scan the curated Spiceworks tags for candidate topics, with a randomized
+    pause between each request. Returns a flat list of candidate dicts.
+    """
+    all_candidates = []
+    for i, slug in enumerate(SPICEWORKS_TAGS):
+        print(f"[SCAN] spiceworks #{slug} ...", end=" ", flush=True)
+        found = _fetch_spiceworks_tag(slug)
+        all_candidates.extend(found)
+        print(f"{len(found)} candidate(s)")
+
+        if i < len(SPICEWORKS_TAGS) - 1:
+            time.sleep(random.uniform(*SPICEWORKS_PAUSE))
 
     return all_candidates
 
@@ -314,6 +406,7 @@ def gather_candidates():
     """
     candidates = []
     candidates.extend(scan_reddit())
+    candidates.extend(scan_spiceworks())
     candidates.extend(scan_rss())
     candidates.extend(scan_knowledge_base())
     return candidates
