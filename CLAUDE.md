@@ -98,20 +98,45 @@ youtube-downloader/
 ├── channels.json                    ← channel registry (names, URLs, groups)
 ├── src/
 │   ├── downloader/
-│   │   ├── single.py                ← single video by URL (existing, working)
 │   │   ├── channel.py               ← full channel + incremental download
 │   │   ├── transcript_fetcher.py    ← core transcript logic, token-optimized
-│   │   └── comment_fetcher.py       ← pulls top-level comments via YouTube Data API v3
+│   │   ├── comment_fetcher.py       ← pulls top-level comments via YouTube Data API v3
+│   │   ├── comment_refresher.py     ← re-fetches comments on videos older than N days
+│   │   ├── skool.py                 ← downloads videos from a Skool community classroom
+│   │   └── skool_archiver.py        ← full offline archive of a Skool course
 │   ├── converter/
 │   │   └── to_markdown.py           ← converts raw transcript → clean .md
+│   ├── classifier/
+│   │   └── category.py              ← suggests a category from a video's title/channel
 │   ├── knowledge_base/
 │   │   ├── indexer.py               ← scans /transcripts, builds search index
 │   │   ├── query.py                 ← on-demand Q&A against indexed content
-│   │   └── digest.py               ← daily summary generator by channel group
+│   │   └── digest.py                ← daily summary generator by channel group
 │   ├── analyzer/
-│   │   └── pain_point_extractor.py  ← scans transcripts, outputs ranked questions/pain points
+│   │   ├── pain_point_extractor.py  ← scans transcripts, outputs ranked questions/pain points
+│   │   └── buildroom_analyzer.py    ← catalog/analysis pass over a downloaded course corpus
 │   ├── channels/
 │   │   └── registry.py              ← loads channels.json, filters by group
+│   ├── trend_finder/
+│   │   ├── orchestrator.py          ← research → draft pipeline for a trending topic
+│   │   ├── source_scanner.py        ← gathers candidate items from configured sources
+│   │   ├── relevance_scorer.py      ← scores candidate topics against the target audience
+│   │   ├── post_drafter.py          ← drafts a post from a selected topic
+│   │   └── icp_hangouts.py          ← mines Spiceworks for audience discussion hubs
+│   ├── curator/
+│   │   └── newsletter_curator.py    ← curates newsletters from an inbox into a digest
+│   ├── publisher/
+│   │   ├── buffer_publisher.py      ← posts/schedules via the Buffer API
+│   │   ├── content_parser.py        ← parses a draft into publishable post fields
+│   │   └── schedule.py              ← schedule-post command implementation
+│   ├── funnel/
+│   │   └── kit_sync.py              ← pulls a Kit (ConvertKit) cohort into a tiered warm-list
+│   ├── utils/
+│   │   ├── ai.py                    ← shared Claude API helper + cost ledger
+│   │   └── atomic.py                ← atomic file-write helpers
+│   ├── loop.py                      ← unified research → draft → review-gate cycle
+│   ├── report.py                    ← weekly AI cost report from the ledger
+│   ├── status.py                    ← at-a-glance read-only pipeline summary
 │   ├── orchestrator.py              ← pipeline orchestrator (owns state + sequencing)
 │   └── main.py                      ← CLI entry point (thin — delegates to orchestrator)
 ├── transcripts/
@@ -250,39 +275,54 @@ The /transcripts/ folder is a research asset. Treat it accordingly.
 
 ---
 
-## CLI Commands (actual interface — verified live 2026-06-07)
+## CLI Commands (actual interface — reflects the dispatch in `src/main.py`)
 
 ```bash
-# Single video (existing behavior)
+# Single video
 python -m src.main "https://youtube.com/watch?v=..."
 
-# Full channel download (first time)
+# Channel download — incremental (default) or full
+python -m src.main channel "Channel Display Name"
 python -m src.main channel "Channel Display Name" --force-full
 
-# Incremental (new videos only)
-python -m src.main channel "Channel Display Name"
+# All channels in a group
+python -m src.main group <group-name> [--force-full]
 
-# Download all channels in a group
-python -m src.main group bitcoin-macro
+# Channel registry
+python -m src.main add-channel
+python -m src.main list-channels
 
-# Ask a question against the knowledge base (Sonnet — full quality)
-python -m src.main ask "What are the top Bitcoin price predictions for Q3 2026?"
+# Knowledge base
+python -m src.main index [--group <name>] [--verbose]
+python -m src.main ask [--group <name>] [--top N] [--fast] "your question"
+python -m src.main digest [--group <name>] [--date YYYY-MM-DD] [--since YYYY-MM-DD] [--force] [--scheduled]
 
-# Ask with Haiku (faster, cheaper)
-python -m src.main ask --fast "What are the top Bitcoin price predictions for Q3 2026?"
-
-# Ask limited to a specific group
-python -m src.main ask --group bitcoin-macro "What is the consensus on Fed rate cuts?"
-
-# Build/rebuild the knowledge base index
-python -m src.main index
-
-# Run pain point analysis
-python -m src.main analyze --group bitcoin-macro
+# Analysis
+python -m src.main analyze --group <name>
 python -m src.main analyze --all
+python -m src.main analyze-buildroom [--limit N] [--force]
+
+# Comments
+python -m src.main refresh-comments [--days N] [--limit N]
+
+# Skool
+python -m src.main skool-download --community <slug> --group "Group Name" [--limit N]
+python -m src.main skool-archive --community <slug> [--resolution 1080] [--course "Name"] [--limit N]
+
+# Content pipeline
+python -m src.main trending [--dry-run]
+python -m src.main spiceworks-hangouts [--per-tag N]
+python -m src.main loop [--dry-run]
+python -m src.main curate-newsletters [--discover] [--days N] [--force] [--scheduled]
+python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" [--dry-run]
+
+# Funnel / reporting
+python -m src.main kit-sync
+python -m src.main status
+python -m src.main report [--days N]
 ```
 
-**Note:** Earlier versions of this doc described a `download --channel`/`download --group`/`digest` command surface — that surface was never implemented. The commands above are the real, working CLI (confirmed via `python -m src.main` usage banner and live test runs). `digest.py` exists as a module (see Module Spec below) but is not yet wired into `main.py` as a CLI subcommand.
+**Note:** This list mirrors the command dispatch in `src/main.py`. `digest` **is** wired into the CLI (the `digest` subcommand above) — an earlier version of this doc incorrectly stated it was module-only. An older documented `download --channel`/`download --group` surface was never implemented and has been dropped.
 
 ---
 
