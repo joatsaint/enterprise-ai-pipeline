@@ -4,7 +4,8 @@ of sources for relevance_scorer.py to rank.
 
 Sources (curated registry — same philosophy as channels.json: an intentional
 list, not an open crawl):
-  - A handful of subreddits via Reddit's public read-only JSON endpoints
+  - A handful of subreddits via Reddit's public Atom RSS feeds (their *.json
+    endpoints are OAuth-gated/403 now; the /top/.rss feed is still open)
   - A handful of RSS feeds from sysadmin/AI-industry blogs
   - A handful of Spiceworks (Discourse) tags via the public /tag/<slug>.json
     endpoint — direct connection first, proxy only as a fallback on 403/429
@@ -29,6 +30,7 @@ Anti-throttling design (mirrors CLAUDE.md's existing rate-limiting rules):
 """
 import os
 import random
+import re
 import time
 from email.utils import format_datetime
 from datetime import datetime, timezone
@@ -160,33 +162,53 @@ def _get_direct_first(url, headers=None, timeout=15):
 # Reddit — public read-only JSON endpoints
 # ---------------------------------------------------------------------------
 
+# Reddit 403s its public *.json endpoints (OAuth-gated since ~2024) but still
+# serves Atom RSS at /r/<sub>/top/.rss — our read-only, no-key access path. A
+# browser User-Agent is required (Reddit blocks bot-like UAs even on RSS).
+REDDIT_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+)
+_ATOM = "{http://www.w3.org/2005/Atom}"
+
+
 def _fetch_subreddit(name, limit=10):
     """
-    Fetch top posts from a subreddit's public JSON endpoint (read-only,
-    no login/API key). Returns a list of candidate dicts, or [] on failure.
+    Fetch top posts from a subreddit via its public Atom RSS feed (read-only,
+    no login/API key). Reddit's *.json endpoints return 403 now; the /top/.rss
+    feed is still open. Returns a list of candidate dicts, or [] on failure.
     """
-    url = f"https://www.reddit.com/r/{name}/top.json?limit={limit}&t=day"
-    headers = {"User-Agent": USER_AGENT}
+    url = f"https://www.reddit.com/r/{name}/top/.rss?t=day&limit={limit}"
+    headers = {"User-Agent": REDDIT_UA}
 
     try:
-        resp = _get(url, headers=headers)
-        data = resp.json()
+        resp = _get_direct_first(url, headers=headers)
+        root = ET.fromstring(resp.content)
     except Exception as e:
         print(f"[WARN] Reddit fetch failed for r/{name}: {e}")
         return []
 
     candidates = []
-    for child in data.get("data", {}).get("children", []):
-        post = child.get("data", {})
-        title = post.get("title", "").strip()
+    for entry in root.iter(f"{_ATOM}entry"):
+        title_el = entry.find(f"{_ATOM}title")
+        title = (title_el.text or "").strip() if title_el is not None else ""
         if not title:
             continue
+        link_el = entry.find(f"{_ATOM}link")
+        link = link_el.get("href") if link_el is not None else None
+        content_el = entry.find(f"{_ATOM}content")
+        summary = ""
+        if content_el is not None and content_el.text:
+            summary = re.sub(r"<[^>]+>", " ", content_el.text)        # strip HTML
+            summary = re.sub(r"\s+", " ", summary).strip()[:500]
         candidates.append({
             "title": title,
-            "summary": (post.get("selftext", "") or "")[:500].strip(),
+            "summary": summary,
             "source": f"reddit:r/{name}",
-            "url": f"https://reddit.com{post.get('permalink', '')}" if post.get("permalink") else None,
+            "url": link,
         })
+        if len(candidates) >= limit:
+            break
     return candidates
 
 
