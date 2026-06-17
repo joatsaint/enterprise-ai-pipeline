@@ -207,13 +207,28 @@ RSS_XML = b"""<?xml version="1.0"?>
 </item>
 </channel></rss>"""
 
+# Reddit serves Atom (not RSS 2.0); /r/<sub>/top/.rss returns a <feed> of <entry>s.
+REDDIT_ATOM = b"""<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <entry>
+    <title>AI is replacing tier-1 helpdesk roles, sysadmins say</title>
+    <link href="https://www.reddit.com/r/sysadmin/comments/abc/ai_helpdesk/"/>
+    <content type="html">&lt;div&gt;Long thread about automation anxiety.&lt;/div&gt;</content>
+  </entry>
+  <entry>
+    <title></title>
+    <link href="https://www.reddit.com/r/sysadmin/x"/>
+    <content type="html">no title, should be skipped</content>
+  </entry>
+</feed>"""
+
 
 def test_scan_reddit_returns_candidates_and_skips_blank_titles():
     from src.trend_finder import source_scanner
 
     with patch("src.trend_finder.source_scanner.requests.get") as mock_get, \
          patch("src.trend_finder.source_scanner.time.sleep"):
-        mock_get.return_value = _fake_http_response(200, json_data=REDDIT_PAGE)
+        mock_get.return_value = _fake_http_response(200, content=REDDIT_ATOM)
 
         candidates = source_scanner.scan_reddit()
 
@@ -223,7 +238,7 @@ def test_scan_reddit_returns_candidates_and_skips_blank_titles():
     assert "" not in titles
     first = next(c for c in candidates if c["title"].startswith("AI is replacing"))
     assert first["source"] == "reddit:r/sysadmin"
-    assert first["url"] == "https://reddit.com/r/sysadmin/comments/abc/ai_helpdesk/"
+    assert first["url"] == "https://www.reddit.com/r/sysadmin/comments/abc/ai_helpdesk/"
 
 
 def test_scan_reddit_handles_fetch_failure_gracefully(capsys):
