@@ -22,6 +22,9 @@ Usage:
   python -m src.main trending --dry-run         # gather + score only, write nothing
   python -m src.main loop                        # unified cycle: research -> draft -> review gate (status readout, no publish)
   python -m src.main loop --dry-run              # run the cycle without writing a draft
+  python -m src.main shadow-score <slug>         # autonomy L1: predict+log a ship/fix/kill verdict for a pending asset
+  python -m src.main shadow-verdict <slug> ship|fix|kill [--note "..."]  # record your real call
+  python -m src.main shadow-report               # AI-vs-Randy agreement scorecard
   python -m src.main status                      # at-a-glance pipeline summary
   python -m src.main report [--days N]           # weekly AI cost report
   python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
@@ -446,6 +449,48 @@ def main():
         dry_run = "--dry-run" in args
         from src.loop import run_loop
         run_loop(dry_run=dry_run)
+        return
+
+    # ----------------------------------------------------------------
+    # shadow-score — autonomy L1: predict + log a verdict for a pending asset
+    # ----------------------------------------------------------------
+    if cmd == "shadow-score":
+        if len(args) < 2:
+            print("Usage: python -m src.main shadow-score <slug> [content_type]")
+            sys.exit(1)
+        content_type = args[2] if len(args) > 2 and not args[2].startswith("-") else None
+        from src.autonomy.shadow import run_shadow_score
+        run_shadow_score(args[1], content_type=content_type)
+        return
+
+    # ----------------------------------------------------------------
+    # shadow-verdict — autonomy L1: record Randy's real ship/fix/kill call
+    # ----------------------------------------------------------------
+    if cmd == "shadow-verdict":
+        if len(args) < 3:
+            print('Usage: python -m src.main shadow-verdict <slug> ship|fix|kill [--type T] [--note "..."]')
+            sys.exit(1)
+        slug, verdict = args[1], args[2]
+        note = ""
+        content_type = None
+        if "--note" in args:
+            idx = args.index("--note")
+            if idx + 1 < len(args):
+                note = args[idx + 1]
+        if "--type" in args:
+            idx = args.index("--type")
+            if idx + 1 < len(args):
+                content_type = args[idx + 1]
+        from src.autonomy.shadow import run_shadow_verdict
+        run_shadow_verdict(slug, verdict, note=note, content_type=content_type)
+        return
+
+    # ----------------------------------------------------------------
+    # shadow-report — autonomy L1: AI-vs-Randy agreement scorecard
+    # ----------------------------------------------------------------
+    if cmd == "shadow-report":
+        from src.autonomy.shadow import run_shadow_report
+        run_shadow_report()
         return
 
     print(f"Unknown command: '{cmd}'")
