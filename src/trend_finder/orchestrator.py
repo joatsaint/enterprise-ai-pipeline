@@ -153,5 +153,17 @@ def run(dry_run=False):
     print(f"[DONE] Draft written -> content-engine/pending/{slug}/ ({', '.join(written)})")
     print("       Review, edit, and approve before scheduling to Buffer.")
 
+    # Autonomy L1 — log a shadow verdict for this draft (non-fatal: vetting must
+    # never break the draft pipeline). See src/autonomy/shadow.py.
+    try:
+        from src.autonomy.shadow import score_and_log
+        pred = score_and_log(slug, "text-post", draft["post_text"])
+        if pred.get("ok"):
+            summary["shadow_verdict"] = pred["verdict"]
+            print(f"       [shadow] Predicted verdict: {pred['verdict'].upper()} "
+                  f"(record your call: python -m src.main shadow-verdict {slug} ship|fix|kill)")
+    except Exception as e:  # noqa: BLE001
+        print(f"       [shadow] verdict logging skipped: {e}")
+
     _append_log(summary)
     return summary
