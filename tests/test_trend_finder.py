@@ -369,8 +369,11 @@ def test_run_writes_draft_to_pending_and_logs_run(tmp_path, monkeypatch):
 
     with patch.object(orchestrator, "gather_candidates", return_value=[{"title": "x"}]) as mock_gather, \
          patch.object(orchestrator, "score_topics", return_value=(TOP_RANKED, 150)) as mock_score, \
-         patch.object(orchestrator, "draft_post", return_value=(DRAFT_RESULT, 320)) as mock_draft:
+         patch.object(orchestrator, "draft_post", return_value=(DRAFT_RESULT, 320)) as mock_draft, \
+         patch("src.autonomy.shadow.score_and_log", return_value={"ok": False}) as mock_shadow:
         summary = orchestrator.run()
+    # Autonomy L1 hook must be invoked but must never hit the network in tests
+    mock_shadow.assert_called_once()
 
     mock_gather.assert_called_once()
     mock_score.assert_called_once()
