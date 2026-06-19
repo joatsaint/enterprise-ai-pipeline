@@ -21,6 +21,19 @@ Most market research tools tell you what people are saying. This system tells yo
 
 **Result:** Market research that would take a human 40+ hours manually, completed in minutes.
 
+### Beyond research — the full pipeline
+
+The research engine now feeds a complete, orchestrated content pipeline:
+
+- **On-demand Q&A** — ask natural-language questions against the indexed transcript library, with citations
+- **Daily digest** — scheduled summaries of new content by topic group (Windows Task Scheduler)
+- **Newsletter curation** — pulls subscribed AI newsletters from an email inbox via an MCP integration, relevance-filters and summarizes them with Claude into a daily digest, then auto-archives processed mail to a dedicated label
+- **Multi-format content generation** — turns a source piece into post/article/carousel/newsletter drafts in a configured voice profile
+- **Trend mining & scheduling** — scores trending topics against a target audience and prepares posts for a social scheduler (Buffer) behind a human approval gate
+- **Observability** — at-a-glance pipeline `status` plus a weekly AI-cost `report` from a usage ledger
+
+Every stage flows through a single orchestrator and stops at a human review gate before anything is published.
+
 ---
 
 ## Architecture
@@ -140,13 +153,14 @@ channels.json    transcripts/    index.json  Claude   pain_points.md
 
 | Metric | Value |
 |---|---|
-| Channels registered | 9 |
-| Transcripts downloaded | 159 |
-| Comment files analyzed | 29 |
-| Test coverage | 39/39 passing |
-| Cost per full analysis run | ~$0.10 |
-| Pain point reports generated | 3+ |
-| API calls handled | YouTube Data API v3 + Anthropic |
+| Channels registered | 52 |
+| Topic groups | 4 |
+| Transcripts indexed | 1,014 |
+| Audience comments analyzed | 47,000+ |
+| Test coverage | 45 passing |
+| Cost per full analysis run | ~$0.10 (Haiku) |
+| Scheduled jobs | Daily digest + weekly comment refresh + weekly newsletter curation (Task Scheduler) |
+| External integrations | YouTube Data API v3 · Anthropic · Buffer · Kit · Gmail (MCP) |
 
 ---
 
@@ -181,23 +195,36 @@ cp newsletter_sources.example.json newsletter_sources.json
 ## Usage
 
 ```bash
-# Add a channel to registry
+# Add a channel to the registry
 python -m src.main add-channel
 
-# Download single video
-python -m src.main download "https://youtube.com/watch?v=..."
+# Download a single video (URL is positional)
+python -m src.main "https://youtube.com/watch?v=..."
 
-# Batch download entire channel
+# Batch download a channel (incremental by default; --force-full for everything)
 python -m src.main channel "Channel Name"
 
-# Rebuild knowledge base index
+# Download every channel in a group
+python -m src.main group claude-code
+
+# Rebuild the knowledge base index
 python -m src.main index
 
 # Run pain point extraction
-python -m src.main analyze --group ai-and-claude-code
+python -m src.main analyze --group claude-code
 
-# Query the knowledge base
-python -m src.main query "what skills do IT professionals need for AI roles"
+# Ask the knowledge base a question (cited answers)
+python -m src.main ask "what skills do IT professionals need for AI roles"
+
+# Generate the daily digest
+python -m src.main digest
+
+# Curate subscribed AI newsletters into a digest
+python -m src.main curate-newsletters
+
+# Pipeline status + weekly AI-cost report
+python -m src.main status
+python -m src.main report
 ```
 
 ---
@@ -206,42 +233,45 @@ python -m src.main query "what skills do IT professionals need for AI roles"
 
 ```
 youtube-downloader/
-├── CLAUDE.md                    # Architecture + Claude Code behavior rules
-├── MASTER_PLAN.md               # Business pipeline and stage roadmap
-├── PROJECT_CONTEXT.md           # ICP, offer definition, growth strategy
-├── channels.example.json        # Template — copy to channels.json (your registry is git-ignored)
+├── CLAUDE.md                     # Architecture + Claude Code behavior rules
+├── channels.example.json         # Template — copy to channels.json (real registry is git-ignored)
+├── newsletter_sources.example.json # Template — copy to newsletter_sources.json (real list git-ignored)
 ├── src/
-│   ├── main.py                  # CLI entry point
-│   ├── orchestrator.py          # Pipeline coordinator + state management
+│   ├── main.py                   # Thin CLI entry point — delegates to the orchestrator
+│   ├── orchestrator.py           # Pipeline coordinator + state management
 │   ├── downloader/
-│   │   ├── channel.py           # Batch channel download + incremental mode
+│   │   ├── channel.py            # Batch channel download + incremental mode
 │   │   ├── transcript_fetcher.py # Proxy-enabled transcript extraction
-│   │   └── comment_fetcher.py   # YouTube Data API comment fetcher
-│   ├── converter/
-│   │   └── to_markdown.py       # Raw transcript → structured Markdown
+│   │   ├── comment_fetcher.py    # YouTube Data API comment fetcher
+│   │   └── comment_refresher.py  # Re-fetches comments on older videos
+│   ├── converter/to_markdown.py  # Raw transcript → structured Markdown
+│   ├── classifier/category.py    # Suggests a category from title/channel
 │   ├── analyzer/
 │   │   └── pain_point_extractor.py # Two-pass Claude AI analysis
 │   ├── knowledge_base/
-│   │   ├── indexer.py           # Flat-file JSON index builder
-│   │   ├── query.py             # On-demand Q&A against transcript library
-│   │   └── digest.py            # Daily summary generator
-│   └── channels/
-│       └── registry.py          # Channel registry management
-├── knowledge/
-│   └── me/
-│       └── voice.md             # Brand voice + content generation rules
-├── docs/
-│   ├── DECISIONS.md             # 8 architectural decision records
-│   ├── CODE_REVIEW_CHECKLIST.md # AI code review protocol
-│   ├── CONTENT_DRAFTS.md        # Ready-to-publish content
-│   └── [scaffold prompts]       # Claude Code implementation prompts
-├── transcripts/                 # Downloaded content library
-│   └── [group]/[channel]/       # Organized by group and channel
+│   │   ├── indexer.py            # Flat-file JSON index builder
+│   │   ├── query.py              # On-demand cited Q&A
+│   │   └── digest.py             # Daily summary generator
+│   ├── curator/
+│   │   └── newsletter_curator.py # Inbox → relevance-filtered newsletter digest
+│   ├── trend_finder/             # Source scan → relevance score → post draft
+│   ├── publisher/                # Buffer scheduling + draft parsing
+│   ├── funnel/kit_sync.py        # Pulls a Kit cohort into a tiered warm-list
+│   ├── channels/registry.py      # Channel registry management
+│   ├── utils/                    # Shared Claude helper + cost ledger + atomic writes
+│   ├── loop.py                   # Unified research → draft → review-gate cycle
+│   ├── status.py                 # Read-only pipeline summary
+│   └── report.py                 # Weekly AI-cost report from the ledger
+├── automation/                   # Headless scheduled-pipeline runners (git-ignored — local ops)
 ├── knowledge_base/
-│   ├── index.json               # Searchable transcript index
-│   └── reports/                 # Pain point intelligence reports
-└── tests/                       # 39/39 passing
+│   ├── index.json                # Searchable transcript index
+│   └── reports/                  # Pain point intelligence reports
+└── tests/                        # 45 passing
 ```
+
+> Note: operational and content directories (`automation/`, `content-engine/`, `transcripts/`,
+> `logs/`, `docs/`) and real config (`channels.json`, `newsletter_sources.json`) are git-ignored —
+> the repository ships the code and `.example` templates, not private data.
 
 ---
 
