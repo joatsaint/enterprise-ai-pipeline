@@ -28,7 +28,7 @@ def build_filename(title, downloaded_date=None):
     return f"{downloaded_date}_{slug}.md"
 
 
-def convert_to_markdown(cleaned_text, metadata, category_display, url, downloaded_date=None):
+def convert_to_markdown(cleaned_text, metadata, category_display, url, downloaded_date=None, folder=None):
     """
     Write cleaned transcript to a categorized .md file.
 
@@ -38,6 +38,9 @@ def convert_to_markdown(cleaned_text, metadata, category_display, url, downloade
         category_display: Human-readable category string.
         url: Original YouTube URL.
         downloaded_date: ISO date string (YYYY-MM-DD). Defaults to today.
+        folder: Explicit destination folder slug (the channel's registered
+                group). When given it is authoritative; otherwise the folder is
+                derived from category_display (legacy ad-hoc path).
 
     Returns:
         Absolute file path of the written file.
@@ -50,7 +53,9 @@ def convert_to_markdown(cleaned_text, metadata, category_display, url, downloade
     published = metadata.get("published") or "Unknown"
     word_count = metadata.get("word_count_after", len(cleaned_text.split()))
 
-    folder = DISPLAY_TO_FOLDER.get(category_display, "uncategorized")
+    # Trust an explicit folder (the channel's registered group) when provided;
+    # otherwise derive it from the display name (legacy ad-hoc single-URL path).
+    folder = folder or DISPLAY_TO_FOLDER.get(category_display, "uncategorized")
     output_dir = os.path.join("transcripts", folder)
     os.makedirs(output_dir, exist_ok=True)
 
