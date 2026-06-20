@@ -302,7 +302,7 @@ def run(url, pre_suggestion=None):
         for attempt in range(2):
             try:
                 file_path = convert_to_markdown(
-                    cleaned_text, metadata, display, url, today
+                    cleaned_text, metadata, display, url, today, folder=folder
                 )
                 break
             except Exception as e:
