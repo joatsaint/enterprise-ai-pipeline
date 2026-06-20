@@ -264,6 +264,49 @@ def test_classify_no_override_when_user_confirms():
     assert was_overridden is False
 
 
+def test_classify_routes_registered_group_without_prompt():
+    """A registered channel's group routes straight to that folder — no keyword
+    guess, no prompt — even for a group outside the 3 keyword categories.
+    Regression: off-niche channels were landing in ai-and-claude-code."""
+    from src.classifier.category import classify
+
+    # Title keyword-scores to ai-and-claude-code, but the channel is registered
+    # under 'teaching-styles'. The registered group must win, and _timed_input
+    # must never be called (no prompt).
+    with patch("src.classifier.category._timed_input") as mock_input:
+        folder, display, was_overridden = classify(
+            "How to use Claude and ChatGPT prompts", "Cal Hyslop",
+            pre_suggestion="teaching-styles",
+        )
+
+    assert folder == "teaching-styles"
+    assert display == "Teaching Styles"
+    assert was_overridden is False
+    mock_input.assert_not_called()
+
+
+def test_markdown_explicit_folder_overrides_display_derivation():
+    """convert_to_markdown trusts an explicit folder (the registered group)
+    instead of re-deriving it from the display via the 3-entry whitelist."""
+    from src.converter.to_markdown import convert_to_markdown
+
+    metadata = {"title": "T", "channel": "C", "published": "2024-01-01",
+                "word_count_after": 5}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        orig_dir = os.getcwd()
+        os.chdir(tmpdir)
+        try:
+            file_path = convert_to_markdown(
+                "transcript", metadata, "Teaching Styles",
+                "https://youtu.be/test1234567", "2024-04-12",
+                folder="teaching-styles",
+            )
+        finally:
+            os.chdir(orig_dir)
+
+    assert os.path.join("transcripts", "teaching-styles") in file_path
+
+
 # ---------------------------------------------------------------------------
 # Test 10 — Existing single-URL download produces output in correct category folder
 # ---------------------------------------------------------------------------

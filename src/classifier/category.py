@@ -26,6 +26,15 @@ FOLDER_TO_DISPLAY = {
 DISPLAY_TO_FOLDER = {v: k for k, v in FOLDER_TO_DISPLAY.items()}
 
 
+def slug_to_display(folder):
+    """Human-readable label for a group/category folder slug.
+
+    Known folders use their curated label; any other registered group (e.g.
+    'teaching-styles') is title-cased from its slug ('Teaching Styles').
+    """
+    return FOLDER_TO_DISPLAY.get(folder, folder.replace("-", " ").title())
+
+
 def _score(text, keywords):
     """Count how many keywords appear in text (case-insensitive, multi-word aware)."""
     text_lower = text.lower()
@@ -79,10 +88,20 @@ def classify(title, channel, video_id=None, pre_suggestion=None):
 
     Returns: (folder_name, display_name, was_overridden)
     """
-    if pre_suggestion and pre_suggestion in FOLDER_TO_DISPLAY:
-        suggested_folder = pre_suggestion
-    else:
-        suggested_folder = suggest_category(title, channel)
+    # Registered-channel download: the channel has a group in channels.json.
+    # Route straight to that group's folder — no keyword guess, no prompt. This
+    # is the source of truth for grouping, and it also stops non-interactive /
+    # scheduled runs from auto-accepting a wrong keyword guess (the bug that put
+    # off-niche channels into ai-and-claude-code).
+    if pre_suggestion:
+        folder = pre_suggestion
+        display = slug_to_display(folder)
+        print(f'\nVideo: "{title}"')
+        print(f'Channel: {channel}')
+        print(f'[category] Routed to registered group: {display}')
+        return folder, display, False
+
+    suggested_folder = suggest_category(title, channel)
     suggested_display = FOLDER_TO_DISPLAY[suggested_folder]
 
     print(f'\nVideo: "{title}"')
