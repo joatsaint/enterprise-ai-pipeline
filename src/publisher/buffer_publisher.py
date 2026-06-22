@@ -69,13 +69,16 @@ def _graphql(query, variables):
     return data["data"]
 
 
-def schedule_post(text, due_at_utc):
+def schedule_post(text, due_at_utc, assets=None):
     """
     Schedule a LinkedIn post via Buffer.
 
     Args:
         text:        Post body string.
         due_at_utc:  datetime (UTC) for when Buffer should publish.
+        assets:      Optional list of AssetInput dicts, e.g.
+                     [{"image": {"url": "https://..."}}] or
+                     [{"document": {"url": ..., "title": ..., "thumbnailUrl": ...}}]
 
     Returns dict with keys: id, status, dueAt.
     """
@@ -90,7 +93,7 @@ def schedule_post(text, due_at_utc):
             "schedulingType": "automatic",
             "mode": "customScheduled",
             "dueAt": due_at_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "assets": [],
+            "assets": assets or [],
         }
     })
     post = (data.get("createPost") or {}).get("post")
