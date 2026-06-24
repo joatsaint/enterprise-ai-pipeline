@@ -28,8 +28,8 @@ DIGEST_LOG_PATH = "logs/digest_log.json"
 ERROR_LOG_PATH = "logs/error_log.json"
 DIGESTS_DIR = "knowledge_base/digests"
 
-MAX_TRANSCRIPT_CHARS = 8_000
-MAX_COMMENTS_CHARS = 2_000
+MAX_TRANSCRIPT_CHARS = 60_000  # covers a full ~1-hour transcript at typical speaking pace
+MAX_COMMENTS_CHARS = 8_000
 
 
 def _load_env():
