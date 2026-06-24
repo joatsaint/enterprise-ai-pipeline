@@ -27,7 +27,24 @@ Project path: C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Clau
 
 Claude is the primary architect and code generator.
 The human operator (Randy) reviews, approves, and deploys.
-Before writing any code, state assumptions explicitly and ask Randy for confirmation if anything is ambiguous.
+Before writing any code for a build of meaningful size (a new module, pipeline, or
+skill — not a one-line fix), interview Randy instead of guessing and waiting for a
+correction: work through the core problem, who it's for and who it's explicitly
+not for, and the key decisions at each step, then summarize that back as a short
+plan before writing code. For small/obvious edits, the lighter "state assumptions
+explicitly" version is still fine.
+
+---
+
+## Skill Maintenance — Gotchas Section
+
+Every skill under `.claude/skills/*/SKILL.md` carries a `## Gotchas` section at
+the bottom. When a real session surfaces an edge case, a stylistic quirk, or
+anything that took back-and-forth to get right, append it there immediately
+(don't wait to be asked) so the same skill doesn't make the same mistake twice.
+Keep entries short — one bullet, the situation and the fix — not a postmortem.
+This applies to existing skills retroactively as gotchas are found, not just
+new ones.
 
 ---
 

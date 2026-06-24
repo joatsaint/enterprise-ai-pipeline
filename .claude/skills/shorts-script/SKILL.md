@@ -154,3 +154,8 @@ That's [unit] N.
 ## Quick reference — what this skill produces
 1 source → ONE approved sample → batch of N clean teleprompter shorts + intro + outro +
 `_PRODUCTION-NOTES.md` + `_STITCH-PLAN.md`, delivered to Google Drive + repo. Drafts only.
+
+## Gotchas
+
+- Google Docs API reports `fileSize: 1` for a freshly uploaded doc even when it's fully
+  populated — read the doc back after upload to confirm content, don't trust the size field.
