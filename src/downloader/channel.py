@@ -80,7 +80,7 @@ def run_channel(channel_name_or_url, force_full=False, pre_suggestion=None):
     # ----------------------------------------------------------------
     # Cloud environment warning
     # ----------------------------------------------------------------
-    if "CLAUDE" in os.environ or not sys.stdin.isatty():
+    if "CLAUDE" in os.environ or sys.stdin is None or not sys.stdin.isatty():
         print(
             "[WARNING] Possible cloud environment detected. YouTube may block "
             "transcript requests from cloud IPs. If downloads fail with IP "
