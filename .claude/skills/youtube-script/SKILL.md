@@ -122,3 +122,7 @@ _Source: <article/slug> · Voice: youtube-voice.md · Draft for review_
 - **[VISUAL]:** end screen with the resource link
 - **[AUDIO]:** "...My challenge for your next shift is ... " + one-sentence CTA from the Steel list
 ```
+
+## Gotchas
+
+- (none logged yet — append here as real sessions surface edge cases)

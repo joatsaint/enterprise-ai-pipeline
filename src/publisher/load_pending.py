@@ -27,6 +27,7 @@ PENDING_ITEMS = {
         "file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/text-post.md",
         "body_between": ("## TEXT FEED POST", None),
         "label": "Wed 6/24 12:15 — ART8 text teaser",
+        "image_file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/images/00_hero_vertical.png",
     },
     "fri-art8-image": {
         "file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/image-post.md",

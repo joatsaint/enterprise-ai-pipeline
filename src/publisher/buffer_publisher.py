@@ -23,12 +23,8 @@ mutation CreatePost($input: CreatePostInput!) {
 _DELETE_POST = """
 mutation DeletePost($input: DeletePostInput!) {
   deletePost(input: $input) {
-    ... on PostActionSuccess {
-      post { id }
-    }
-    ... on RestProxyError { message }
-    ... on InvalidInputError { message }
-    ... on UnexpectedError { message }
+    ... on DeletePostSuccess { id }
+    ... on VoidMutationError { message }
   }
 }
 """
@@ -142,10 +138,10 @@ def add_image(post_id, image_url, due_at_utc):
 
 
 def delete_post(post_id):
-    """Delete a scheduled Buffer post by ID. Returns the deleted post dict."""
-    data = _graphql(_DELETE_POST, {"input": {"postId": post_id}})
+    """Delete a scheduled Buffer post by ID. Returns the deleted post ID."""
+    data = _graphql(_DELETE_POST, {"input": {"id": post_id}})
     result = data.get("deletePost") or {}
-    post = result.get("post")
-    if not post:
+    deleted_id = result.get("id")
+    if not deleted_id:
         raise RuntimeError(f"Buffer deletePost failed: {result.get('message', result)}")
-    return post
+    return deleted_id
