@@ -31,6 +31,8 @@ Usage:
   python -m src.main curate-newsletters --discover [--days N]  # list inbox senders to build newsletter_sources.json
   python -m src.main curate-newsletters [--days N] [--force]   # curate AI newsletters into content-engine/newsletter_curation/
   python -m src.main curate-newsletters --scheduled             # silent mode for Task Scheduler
+  python -m src.main audience-radar [--dry-run] [--top N]       # Daily Audience Radar: find conversations, draft comments
+  python -m src.main radar-status <rank> approve|edit|skip|posted|needs_reply [--note "..."] [--date YYYY-MM-DD]
 """
 import sys
 
@@ -491,6 +493,48 @@ def main():
     if cmd == "shadow-report":
         from src.autonomy.shadow import run_shadow_report
         run_shadow_report()
+        return
+
+    # ----------------------------------------------------------------
+    # audience-radar — Daily Audience Radar v1: find conversations, draft comments
+    # ----------------------------------------------------------------
+    if cmd == "audience-radar":
+        dry_run = "--dry-run" in args
+        top_n = 10
+        if "--top" in args:
+            idx = args.index("--top")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main audience-radar [--dry-run] [--top N]")
+                sys.exit(1)
+            top_n = int(args[idx + 1])
+        from src.radar.daily_radar import run as run_radar
+        run_radar(dry_run=dry_run, top_n=top_n)
+        return
+
+    # ----------------------------------------------------------------
+    # radar-status — record Randy's approval-gate call on a radar item
+    # ----------------------------------------------------------------
+    if cmd == "radar-status":
+        if len(args) < 3:
+            print('Usage: python -m src.main radar-status <rank> approve|edit|skip|posted|needs_reply [--note "..."] [--date YYYY-MM-DD]')
+            sys.exit(1)
+        rank, status = args[1], args[2]
+        note = ""
+        date_str = None
+        if "--note" in args:
+            idx = args.index("--note")
+            if idx + 1 < len(args):
+                note = args[idx + 1]
+        if "--date" in args:
+            idx = args.index("--date")
+            if idx + 1 < len(args):
+                date_str = args[idx + 1]
+        from src.radar.daily_radar import set_status
+        try:
+            set_status(rank, status, note=note, date_str=date_str)
+        except (ValueError, FileNotFoundError) as e:
+            print(f"Error: {e}")
+            sys.exit(1)
         return
 
     print(f"Unknown command: '{cmd}'")

@@ -63,3 +63,7 @@ as a second, higher-signal data source.
 8. classify_category(title, channel) → category confirmation
 9. log_download(video_id, metadata, category)
 10. update_run_summary()
+
+## Gotchas
+
+- (none logged yet — append here as real sessions surface edge cases)

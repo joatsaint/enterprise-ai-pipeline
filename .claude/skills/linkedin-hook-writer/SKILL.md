@@ -319,3 +319,7 @@ TOP 3 PICKS:
 #[X] - [one line reason]
 #[X] - [one line reason]
 #[X] - [one line reason]
+
+## Gotchas
+
+- (none logged yet — append here as real sessions surface edge cases)
