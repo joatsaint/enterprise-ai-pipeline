@@ -37,6 +37,9 @@ memory/
 # Pre-restructure backup snapshots — local only
 backups/
 
+# Remotion video-render scratch/output — large local-only test artifacts
+remotion-test/
+
 # Windows system files
 Thumbs.db
 **/Thumbs.db
