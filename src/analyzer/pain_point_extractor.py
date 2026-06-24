@@ -267,8 +267,8 @@ def _run_for_group(client, model, max_files, group_name, files):
         transcript_path = entry.get("path", "")
         comments_path = entry.get("comments_path")
 
-        transcript_chunk = _read_file(transcript_path, max_chars=5000)
-        comments_chunk = _read_file(comments_path, max_chars=3000) if comments_path else ""
+        transcript_chunk = _read_file(transcript_path, max_chars=60_000)  # covers a full ~1-hour transcript
+        comments_chunk = _read_file(comments_path, max_chars=8_000) if comments_path else ""
 
         if comments_chunk:
             comment_files_count += 1

@@ -79,12 +79,14 @@ def _score_file(entry, keywords):
             if kw_lower in field:
                 score += 2
 
-    # Also scan first 3,000 chars of file content for keyword hits
+    # Scan first 60,000 chars of file content for keyword hits — covers a
+    # full ~1-hour transcript at typical speaking pace so relevant content
+    # later in a long video isn't missed during scoring.
     path = entry.get("file_path", "")
     if os.path.isfile(path):
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as fh:
-                content = fh.read(3000).lower()
+                content = fh.read(60_000).lower()
             for kw in keywords:
                 score += content.count(kw.lower())
         except OSError:
