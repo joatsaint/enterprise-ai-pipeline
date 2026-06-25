@@ -125,3 +125,4 @@ docs/3 Email Sequence*.pdf
 docs/The AI Skills That Wont Be Replaced - Lead Magnet.pdf
 docs/Project Reports and Progress/*.docx
 .claude/settings.local.json
+.claude/claude-security-guidance.md
