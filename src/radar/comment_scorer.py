@@ -98,7 +98,9 @@ def score_candidates(candidates, top_n=10, model=None):
     prompt = _build_prompt(candidates, top_n)
 
     try:
-        response = client.messages.create(
+        from src.utils.ai import call_with_retry
+        response = call_with_retry(
+            client,
             model=model,
             max_tokens=3072,
             system="You are an audience-engagement analyst scoring comment opportunities. Return ONLY valid JSON. No prose.",

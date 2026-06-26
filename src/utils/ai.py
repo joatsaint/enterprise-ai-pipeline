@@ -16,6 +16,7 @@ Pricing is approximate (USD per 1M tokens) — good enough for a spend estimate.
 import hashlib
 import json
 import os
+import time
 from datetime import datetime, timezone
 
 from src.utils.atomic import atomic_write_json
@@ -90,6 +91,29 @@ def record_usage(task, model, input_tokens, output_tokens, cached=False, ledger_
     return cost
 
 
+def call_with_retry(client, *, model, max_tokens, system, messages, max_attempts=3):
+    """
+    Drop-in for client.messages.create with rate-limit retry.
+    On 429 RateLimitError: waits 60s (first), 120s (second), then raises.
+    """
+    import anthropic as _anthropic
+    wait = 60
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return client.messages.create(
+                model=model, max_tokens=max_tokens,
+                system=system, messages=messages,
+            )
+        except _anthropic.RateLimitError as exc:
+            if attempt == max_attempts:
+                raise
+            print(f"[ai] Rate limit hit (attempt {attempt}/{max_attempts}). Waiting {wait}s...")
+            time.sleep(wait)
+            wait *= 2
+        except Exception:
+            raise
+
+
 def create(client, *, task, model, max_tokens, system, messages, use_cache=True):
     """
     Drop-in for client.messages.create that caches responses and ledgers cost.
@@ -104,7 +128,7 @@ def create(client, *, task, model, max_tokens, system, messages, use_cache=True)
             record_usage(task, model, it, ot, cached=True)
             return hit["text"], {"input_tokens": it, "output_tokens": ot, "cost": 0.0, "cached": True}
 
-    resp = client.messages.create(model=model, max_tokens=max_tokens, system=system, messages=messages)
+    resp = call_with_retry(client, model=model, max_tokens=max_tokens, system=system, messages=messages)
     text = resp.content[0].text
     it = resp.usage.input_tokens
     ot = resp.usage.output_tokens
