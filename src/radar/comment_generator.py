@@ -107,7 +107,9 @@ def generate_comment(item, voice_profile=None, pain_map=None, story_bank=None, m
     client = anthropic.Anthropic()
 
     try:
-        response = client.messages.create(
+        from src.utils.ai import call_with_retry
+        response = call_with_retry(
+            client,
             model=model,
             max_tokens=600,
             system=_SYSTEM_PROMPT,
