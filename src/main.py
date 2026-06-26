@@ -33,6 +33,9 @@ Usage:
   python -m src.main curate-newsletters --scheduled             # silent mode for Task Scheduler
   python -m src.main audience-radar [--dry-run] [--top N]       # Daily Audience Radar: find conversations, draft comments
   python -m src.main radar-status <rank> approve|edit|skip|posted|needs_reply [--note "..."] [--date YYYY-MM-DD]
+
+  # YouTube Shorts pipeline
+  python -m src.main shorts [--pain-point "..."] [--variant a|b|both] [--dry-run]
 """
 import sys
 
@@ -535,6 +538,32 @@ def main():
         except (ValueError, FileNotFoundError) as e:
             print(f"Error: {e}")
             sys.exit(1)
+        return
+
+    # ----------------------------------------------------------------
+    # shorts — YouTube Shorts pipeline
+    # ----------------------------------------------------------------
+    if cmd == "shorts":
+        pain_point = None
+        variant = "both"
+        dry_run = "--dry-run" in args
+        if "--pain-point" in args:
+            idx = args.index("--pain-point")
+            if idx + 1 >= len(args):
+                print('Usage: python -m src.main shorts [--pain-point "..."] [--variant a|b|both] [--dry-run]')
+                sys.exit(1)
+            pain_point = args[idx + 1]
+        if "--variant" in args:
+            idx = args.index("--variant")
+            if idx + 1 >= len(args):
+                print('Usage: python -m src.main shorts [--variant a|b|both]')
+                sys.exit(1)
+            variant = args[idx + 1]
+            if variant not in ("a", "b", "both"):
+                print(f"--variant must be a, b, or both. Got: {variant}")
+                sys.exit(1)
+        from src.shorts.orchestrator import run as run_shorts
+        run_shorts(manual_pain_point=pain_point, variant=variant, dry_run=dry_run)
         return
 
     print(f"Unknown command: '{cmd}'")
