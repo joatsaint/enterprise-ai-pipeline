@@ -1,19 +1,19 @@
 # AI Orchestrator for Multi-Source Data Automation
 
-> **Automated intelligence pipeline** that scrapes YouTube transcripts and audience comments at scale, extracts market intelligence using Claude AI, and generates actionable research reports — without human intervention.
+> **End-to-end AI pipeline** that scrapes YouTube transcripts and audience comments at scale, extracts market intelligence using Claude AI, generates short-form video with voice cloning and motion graphics, and surfaces daily audience engagement opportunities — without human intervention.
 
-[![Tests](https://github.com/joatsaint/youtube-downloader/actions/workflows/test-suite.yml/badge.svg)](https://github.com/joatsaint/youtube-downloader/actions)
+[![Tests](https://github.com/joatsaint/enterprise-ai-pipeline/actions/workflows/test-suite.yml/badge.svg)](https://github.com/joatsaint/enterprise-ai-pipeline/actions)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)
-[![Claude](https://img.shields.io/badge/AI-Claude%20Haiku-orange)](https://anthropic.com)
+[![Claude](https://img.shields.io/badge/AI-Claude%20Sonnet%20%2F%20Haiku-orange)](https://anthropic.com)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 ---
 
 ## What This Does
 
-Most market research tools tell you what people are saying. This system tells you what they're **actually asking** — extracted from real audience behavior at scale.
+Most market research tools tell you what people are saying. This system tells you what they're **actually asking** — extracted from real audience behavior at scale, then turned into content automatically.
 
-**In one command**, this system:
+**In one command**, the research engine:
 - Downloads transcripts and top comments from any YouTube channel
 - Classifies and indexes content by topic category
 - Runs AI analysis to extract the most repeated questions, pain points, and desired outcomes
@@ -21,16 +21,17 @@ Most market research tools tell you what people are saying. This system tells yo
 
 **Result:** Market research that would take a human 40+ hours manually, completed in minutes.
 
-### Beyond research — the full pipeline
+### The full pipeline — research to published content
 
-The research engine now feeds a complete, orchestrated content pipeline:
-
-- **On-demand Q&A** — ask natural-language questions against the indexed transcript library, with citations
-- **Daily digest** — scheduled summaries of new content by topic group (Windows Task Scheduler)
-- **Newsletter curation** — pulls subscribed AI newsletters from an email inbox via an MCP integration, relevance-filters and summarizes them with Claude into a daily digest, then auto-archives processed mail to a dedicated label
-- **Multi-format content generation** — turns a source piece into post/article/carousel/newsletter drafts in a configured voice profile
-- **Trend mining & scheduling** — scores trending topics against a target audience and prepares posts for a social scheduler (Buffer) behind a human approval gate
-- **Observability** — at-a-glance pipeline `status` plus a weekly AI-cost `report` from a usage ledger
+| Stage | What it does |
+|---|---|
+| **Research** | Scrapes YouTube transcripts + comments → AI pain-point extraction → ranked intelligence reports |
+| **Daily Radar** | Scans Reddit and Spiceworks daily → scores threads for audience fit → drafts on-voice comments for human approval |
+| **Content generation** | Source piece → article / carousel / newsletter / LinkedIn post in a configured voice profile |
+| **YouTube Shorts** | Pain point → Claude script → HeyGen voice-clone avatar → Whisper timestamps → Remotion motion graphics → FFmpeg composite → captioned 9:16 Short |
+| **Newsletter curation** | Gmail inbox → relevance-filtered AI newsletter digest via MCP integration |
+| **Scheduling** | Buffer API integration → posts queue behind a human approval gate |
+| **Observability** | At-a-glance `status` + weekly AI-cost `report` from a per-call usage ledger |
 
 Every stage flows through a single orchestrator and stops at a human review gate before anything is published.
 
@@ -49,90 +50,72 @@ Every stage flows through a single orchestrator and stops at a human review gate
 │                   Orchestrator                              │
 │                 src/orchestrator.py                         │
 │  • URL validation    • State management                     │
-│  • Pipeline sequencing  • Error handling + retry logic      │
-│  • Run statistics    • Graceful shutdown                    │
-└──────┬──────────────┬───────────────┬───────────────────────┘
-       │              │               │
-       ▼              ▼               ▼
-┌──────────┐  ┌──────────────┐  ┌───────────────┐
-│Transcript│  │   Comment    │  │   Markdown    │
-│ Fetcher  │  │   Fetcher    │  │  Converter    │
-│          │  │              │  │               │
-│Webshare  │  │YouTube Data  │  │ Structured    │
-│Rotating  │  │API v3        │  │ output with   │
-│Proxy     │  │Top 100/video │  │ headers +     │
-│          │  │              │  │ timestamps    │
-└──────────┘  └──────────────┘  └───────────────┘
-       │              │               │
-       └──────────────┴───────────────┘
-                       │
+│  • Pipeline sequencing  • Retry + rate-limit backoff        │
+│  • Run statistics    • Graceful shutdown (Ctrl-C safe)       │
+└──────┬──────────────┬───────────┬──────────┬────────────────┘
+       │              │           │          │
+       ▼              ▼           ▼          ▼
+┌──────────┐  ┌──────────┐  ┌────────┐  ┌──────────────────┐
+│Transcript│  │ Comment  │  │Markdown│  │  Knowledge Base  │
+│ Fetcher  │  │ Fetcher  │  │Converter│  │                  │
+│          │  │          │  │        │  │ Indexer · Query  │
+│Rotating  │  │YouTube   │  │Struct- │  │ Digest · Extract │
+│Proxy     │  │Data API  │  │ured .md│  │                  │
+└──────────┘  └──────────┘  └────────┘  └──────────────────┘
+                                                │
+                       ┌────────────────────────┘
                        ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                  Knowledge Base                             │
+│              Downstream Pipelines                           │
 │                                                             │
-│  ┌─────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │   Indexer   │  │Pain Point    │  │  Query Engine    │  │
-│  │             │  │Extractor     │  │                  │  │
-│  │Flat-file    │  │              │  │On-demand Q&A     │  │
-│  │JSON index   │  │Two-pass AI   │  │against indexed   │  │
-│  │159+ files   │  │analysis      │  │transcript library│  │
-│  │             │  │~$0.10/run    │  │                  │  │
-│  └─────────────┘  └──────────────┘  └──────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                       │
-                       ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Intelligence Reports                           │
-│   knowledge_base/reports/pain_points_YYYY-MM-DD.md         │
-│                                                             │
-│   • Top questions ranked by frequency                       │
-│   • Top pain points with mention counts                     │
-│   • Desired outcomes analysis                               │
-│   • PDF product opportunities identified                    │
+│  ┌─────────────────┐      ┌──────────────────────────────┐  │
+│  │  Daily Radar    │      │    YouTube Shorts Pipeline   │  │
+│  │                 │      │                              │  │
+│  │ Reddit/Spice-   │      │ Pain point selector          │  │
+│  │ works scan      │      │   → Claude script writer     │  │
+│  │   → AI scoring  │      │   → HeyGen voice-clone avatar│  │
+│  │   → Comment     │      │   → Whisper word timestamps  │  │
+│  │     drafts      │      │   → Remotion motion graphics │  │
+│  │   → Human gate  │      │   → FFmpeg chromakey/overlay │  │
+│  └─────────────────┘      │   → Captioned 9:16 Short     │  │
+│                           └──────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Real-World Use Cases
+## YouTube Shorts Pipeline — Multi-Modal AI
 
-### 1. Market Intelligence & Scraping
+The Shorts pipeline chains six distinct AI systems into a single command:
+
 ```bash
-# Download all content from a channel
-python -m src.main channel "Matt Wolfe"
-
-# Run across entire channel group
-python -m src.main analyze --group ai-and-claude-code
-```
-**Output:** Ranked list of the most asked questions and pain points across 9 channels, 159 transcripts, and 2,900+ audience comments — updated in minutes.
-
-### 2. Automated Monitoring
-The system runs on Windows Task Scheduler during US market hours, continuously expanding the transcript library without manual intervention.
-
-```
-Task: Daily channel scan
-Schedule: Weekdays 9 AM CST
-Action: python -m src.main channel [channel-name]
-Alert: New pain point reports generated automatically
+python -m src.main shorts --pain-point "IT pros are terrified of being replaced"
 ```
 
-### 3. Alert System — Pain Point Detection
-```python
-# Two-pass extraction identifies emerging pain points
-# Pass 1: Questions audiences are asking
-# Pass 2: Frustrations and blockers expressed
-
-# Output flags HIGH/MEDIUM/LOW demand signals
-# for content and product decisions
+```
+Step 1  Pain point selector   reads Daily Radar state, picks highest-priority sysadmin topic
+Step 2  Script writer         Claude Sonnet → 5-section script (~150 words, ~75 sec) + screen hook
+Step 3  HeyGen renderer       voice-clone avatar render via HeyGen v2 API (1080×1920, 9:16)
+                              → tracks credit spend per render (measured: 0.34 credits/sec)
+Step 4  Whisper transcriber   word-level timestamps, 2-word caption chunks, section frame mapping
+Step 5  Remotion graphics     animated text-card composition (brand colors, section transitions)
+Step 6  FFmpeg stitcher       chromakey composite + drawtext captions + hook overlay → final MP4
 ```
 
-### 4. Intelligence Workflows
+**Output:** `content-engine/pending/_video/shorts/{slug}/final_a.mp4` — ready to review and post.
+
+---
+
+## Daily Audience Radar
+
+Runs every morning. Scans Reddit (`r/sysadmin`, `r/ITCareerQuestions`) and Spiceworks for threads where Randy's audience is active:
+
 ```
-Channel Registry → Batch Download → Index → Extract → Report
-     ↓                  ↓             ↓         ↓        ↓
-channels.json    transcripts/    index.json  Claude   pain_points.md
-9 channels       159 files       searchable  Haiku    ranked insights
+Gather candidates → Score 5 dimensions (Audience Fit, Pain Level, Comment Opportunity,
+Freshness, Sales Risk) → Rank by priority score → Draft on-voice comments → Human approves
 ```
+
+Nothing auto-posts. Every comment draft goes through a human gate before Randy pastes it manually.
 
 ---
 
@@ -140,12 +123,15 @@ channels.json    transcripts/    index.json  Claude   pain_points.md
 
 | Decision | Choice | Reasoning |
 |---|---|---|
-| AI Model | Claude Haiku | ~$0.10/run vs $0.40 Sonnet — adequate for classification tasks |
-| Proxy | Webshare Rotating Residential | YouTube blocks cloud IPs — rotating residential avoids detection |
-| Index | Flat-file JSON | Vector DB overhead not justified at <500 transcripts |
-| Rate limiting | `random.uniform(2-7s)` | Fixed intervals create bot signature — randomized mimics human behavior |
-| Error handling | Retry-once-then-skip | Never abort batch on single failure — idempotent by design |
+| AI models | Claude Sonnet (scripts) · Haiku (scoring/digest) | Right model for the task — quality where it matters, cost where it doesn't |
+| Rate-limit handling | Exponential backoff in `ai.call_with_retry()` | 429s were crashing the radar silently — now retries at 60s → 120s across all callers |
+| Video avatar | HeyGen v2 API, transparent/greenscreen bg | Voice-clone avatar renders without manual recording; chromakey composited in FFmpeg |
+| Motion graphics | Remotion (React-based) | Programmatic animation tied to Whisper timestamps; brand-consistent without a designer |
+| Transcription | OpenAI Whisper (local, word-level) | Word timestamps enable 2-word caption sync and section-frame matching |
+| Index | Flat-file JSON | Vector DB overhead not justified at <1,500 transcripts |
+| Rate limiting | `random.uniform(2-7s)` between requests | Fixed intervals create bot signature — randomized mimics human behavior |
 | Credentials | `.env` + `os.environ.setdefault()` | System env vars take precedence — cloud-deployment ready |
+| Idempotency | Check logs before every fetch/write | Safe to re-run any step; partial files cleaned up on failure |
 
 ---
 
@@ -157,10 +143,11 @@ channels.json    transcripts/    index.json  Claude   pain_points.md
 | Topic groups | 4 |
 | Transcripts indexed | 1,014 |
 | Audience comments analyzed | 47,000+ |
-| Test coverage | 45 passing |
+| Test coverage | **129 passing** |
 | Cost per full analysis run | ~$0.10 (Haiku) |
-| Scheduled jobs | Daily digest + weekly comment refresh + weekly newsletter curation (Task Scheduler) |
-| External integrations | YouTube Data API v3 · Anthropic · Buffer · Kit · Gmail (MCP) |
+| Cost per YouTube Short | ~16 HeyGen credits (~$0.50) |
+| Scheduled jobs | Daily digest · Daily radar · Weekly comment refresh · Weekly newsletter curation |
+| External integrations | YouTube Data API v3 · Anthropic · HeyGen · OpenAI Whisper · Remotion · Buffer · Kit · Gmail MCP |
 
 ---
 
@@ -168,63 +155,57 @@ channels.json    transcripts/    index.json  Claude   pain_points.md
 
 ```bash
 # Clone repository
-git clone https://github.com/joatsaint/youtube-downloader.git
-cd youtube-downloader
+git clone https://github.com/joatsaint/enterprise-ai-pipeline.git
+cd enterprise-ai-pipeline
 
 # Install dependencies
 pip install -r requirements.txt
 
+# Install Whisper (for Shorts pipeline)
+pip install openai-whisper
+
+# Install Remotion (for motion graphics)
+cd remotion/shorts && npm install && cd ../..
+
 # Configure environment
 cp .env.example .env
-# Add: ANTHROPIC_API_KEY, YOUTUBE_API_KEY, WEBSHARE credentials
-
-# Configure the channel registry and (optional) newsletter sources
-cp channels.example.json channels.json
-cp newsletter_sources.example.json newsletter_sources.json
-# Then edit channels.json (and newsletter_sources.json) with your own entries
+# Add: ANTHROPIC_API_KEY, YOUTUBE_API_KEY, HEYGEN_API_KEY, OPENAI_API_KEY
 ```
 
 ### Prerequisites
 - Python 3.10+
-- Anthropic API key (console.anthropic.com)
-- YouTube Data API v3 key (console.cloud.google.com)
-- Webshare proxy account (webshare.io — $3.50/month)
+- Node.js 18+ (for Remotion motion graphics)
+- FFmpeg on PATH
+- Anthropic API key
+- YouTube Data API v3 key
+- HeyGen account (Creator plan, ~$29/mo — for Shorts avatar rendering)
 
 ---
 
 ## Usage
 
 ```bash
-# Add a channel to the registry
-python -m src.main add-channel
+# Research pipeline
+python -m src.main channel "Channel Name"        # incremental download
+python -m src.main group claude-code             # all channels in a group
+python -m src.main index                         # rebuild knowledge base
+python -m src.main analyze --group claude-code   # pain point extraction
+python -m src.main ask "what skills do IT pros need for AI roles"
 
-# Download a single video (URL is positional)
-python -m src.main "https://youtube.com/watch?v=..."
+# YouTube Shorts
+python -m src.main shorts --dry-run              # script only, no API calls
+python -m src.main shorts                        # full pipeline from radar
+python -m src.main shorts --pain-point "..."     # manual pain point override
+python -m src.main shorts --variant a            # Remotion text cards only
 
-# Batch download a channel (incremental by default; --force-full for everything)
-python -m src.main channel "Channel Name"
+# Daily operations
+python -m src.main digest                        # daily transcript summary
+python -m src.main curate-newsletters            # inbox → newsletter digest
+python -m src.main loop                          # research → draft → review cycle
 
-# Download every channel in a group
-python -m src.main group claude-code
-
-# Rebuild the knowledge base index
-python -m src.main index
-
-# Run pain point extraction
-python -m src.main analyze --group claude-code
-
-# Ask the knowledge base a question (cited answers)
-python -m src.main ask "what skills do IT professionals need for AI roles"
-
-# Generate the daily digest
-python -m src.main digest
-
-# Curate subscribed AI newsletters into a digest
-python -m src.main curate-newsletters
-
-# Pipeline status + weekly AI-cost report
-python -m src.main status
-python -m src.main report
+# Observability
+python -m src.main status                        # at-a-glance pipeline summary
+python -m src.main report                        # weekly AI-cost report
 ```
 
 ---
@@ -232,87 +213,77 @@ python -m src.main report
 ## Project Structure
 
 ```
-youtube-downloader/
-├── CLAUDE.md                     # Architecture + Claude Code behavior rules
-├── channels.example.json         # Template — copy to channels.json (real registry is git-ignored)
-├── newsletter_sources.example.json # Template — copy to newsletter_sources.json (real list git-ignored)
+enterprise-ai-pipeline/
 ├── src/
-│   ├── main.py                   # Thin CLI entry point — delegates to the orchestrator
+│   ├── main.py                   # Thin CLI — delegates to orchestrator
 │   ├── orchestrator.py           # Pipeline coordinator + state management
-│   ├── downloader/
-│   │   ├── channel.py            # Batch channel download + incremental mode
-│   │   ├── transcript_fetcher.py # Proxy-enabled transcript extraction
-│   │   ├── comment_fetcher.py    # YouTube Data API comment fetcher
-│   │   └── comment_refresher.py  # Re-fetches comments on older videos
-│   ├── converter/to_markdown.py  # Raw transcript → structured Markdown
-│   ├── classifier/category.py    # Suggests a category from title/channel
-│   ├── analyzer/
-│   │   └── pain_point_extractor.py # Two-pass Claude AI analysis
-│   ├── knowledge_base/
-│   │   ├── indexer.py            # Flat-file JSON index builder
-│   │   ├── query.py              # On-demand cited Q&A
-│   │   └── digest.py             # Daily summary generator
-│   ├── curator/
-│   │   └── newsletter_curator.py # Inbox → relevance-filtered newsletter digest
-│   ├── trend_finder/             # Source scan → relevance score → post draft
-│   ├── publisher/                # Buffer scheduling + draft parsing
-│   ├── funnel/kit_sync.py        # Pulls a Kit cohort into a tiered warm-list
-│   ├── channels/registry.py      # Channel registry management
-│   ├── utils/                    # Shared Claude helper + cost ledger + atomic writes
-│   ├── loop.py                   # Unified research → draft → review-gate cycle
-│   ├── status.py                 # Read-only pipeline summary
-│   └── report.py                 # Weekly AI-cost report from the ledger
-├── automation/                   # Headless scheduled-pipeline runners (git-ignored — local ops)
-├── knowledge_base/
-│   ├── index.json                # Searchable transcript index
-│   └── reports/                  # Pain point intelligence reports
-└── tests/                        # 45 passing
+│   ├── downloader/               # Transcript + comment fetching, channel registry
+│   ├── converter/                # Raw transcript → structured Markdown
+│   ├── classifier/               # AI-suggested content categorization
+│   ├── analyzer/                 # Two-pass pain-point extraction
+│   ├── knowledge_base/           # Indexer · cited Q&A · daily digest
+│   ├── shorts/                   # YouTube Shorts pipeline (6 modules)
+│   │   ├── pain_point_selector.py  # Reads Daily Radar, picks top sysadmin topic
+│   │   ├── script_writer.py        # Claude Sonnet → 5-section script + screen hook
+│   │   ├── heygen_renderer.py      # Voice-clone avatar via HeyGen v2 API
+│   │   ├── whisper_transcriber.py  # Word-level timestamps + section frame matching
+│   │   ├── top_half_renderer.py    # Remotion animated text cards (1080×1920)
+│   │   ├── ffmpeg_stitcher.py      # Chromakey composite + captions + hook overlay
+│   │   └── orchestrator.py         # 6-step idempotent state machine
+│   ├── radar/                    # Daily audience radar (scan → score → draft)
+│   ├── curator/                  # Gmail inbox → newsletter digest (MCP)
+│   ├── trend_finder/             # Trend scan → relevance score → post draft
+│   ├── publisher/                # Buffer scheduling + human approval gate
+│   ├── funnel/                   # Kit cohort sync
+│   └── utils/
+│       ├── ai.py                 # Shared Claude helper · cost ledger · rate-limit retry
+│       └── atomic.py             # Atomic file writes
+├── remotion/shorts/              # React/Remotion motion graphics project
+│   └── src/TextCard.tsx          # Animated brand-color section cards (1080×1920)
+├── tests/                        # 129 passing
+├── channels.example.json         # Template — real registry is git-ignored
+├── newsletter_sources.example.json
+└── .env.example                  # All required env vars documented
 ```
 
-> Note: operational and content directories (`automation/`, `content-engine/`, `transcripts/`,
-> `logs/`, `docs/`) and real config (`channels.json`, `newsletter_sources.json`) are git-ignored —
-> the repository ships the code and `.example` templates, not private data.
+> `content-engine/`, `transcripts/`, `logs/`, `docs/`, and real config files are git-ignored — the repo ships code and `.example` templates, not private data.
 
 ---
 
 ## Error Handling
 
-The pipeline implements production-grade error handling across all external API calls:
+Production-grade error handling across all external API calls:
 
+- **Rate limits (429)** — `call_with_retry()` in `src/utils/ai.py`: 60s → 120s exponential backoff, up to 3 attempts, applied to every Anthropic API caller in the system
 - `NoTranscriptFound` — logged and skipped gracefully
 - `TranscriptsDisabled` — caught specifically, processing continues
 - API quota exhaustion — `[WARN]` logged, batch continues
-- Generic failures — single retry with 5-second backoff, then skip
-- Already-downloaded content — detected and skipped (idempotent)
-- Full run statistics — processed, skipped, retried counts at completion
+- Generic failures — single retry with 5-second backoff, then skip with structured error log
+- Already-downloaded content — detected via `download_log.json` and skipped (idempotent)
+- Partial files — cleaned up before exit; a partial `.md` file is never left in the index
+- Graceful shutdown — `KeyboardInterrupt` caught; current file finishes writing before exit
 
 ---
 
 ## Security
 
-- API keys loaded via `.env` with `os.environ.setdefault()` — system env takes precedence
+- API keys in `.env` with `os.environ.setdefault()` — system env takes precedence, cloud-ready
 - `.env` gitignored — credentials never committed
-- URL validation via `urlparse` at pipeline entry — malformed inputs rejected
-- Cloud environment detection — warns against running interactive downloads in restricted environments
-- Randomized rate limiting — reduces bot detection signature
-
----
-
-## Architectural Decisions
-
-Full decision log with context, alternatives considered, and tradeoffs documented in [`docs/DECISIONS.md`](docs/DECISIONS.md).
+- URL validation via `urlparse` at pipeline entry — malformed inputs rejected before any API call
+- Randomized rate limiting — reduces bot detection signature on bulk requests
+- Output directories scoped per-run — no cross-contamination between pipeline executions
 
 ---
 
 ## Built By
 
-**Randy Skiles** — 25+ year IT professional pivoting into AI automation.
+**Randy Skiles** — 25-year enterprise IT professional (infrastructure, systems, network operations) building AI automation tooling.
 
-This project is the research engine behind a content business targeting IT professionals making the same pivot. Every architectural decision is documented. Every pain point finding is real data from 2,900+ audience comments.
+This repo is the research and content engine behind a content business targeting IT professionals navigating the AI transition. Every architectural decision is documented. Every pain point finding comes from real audience data — 47,000+ comments analyzed, not assumed.
 
 - LinkedIn: [linkedin.com/in/randy-skiles](https://linkedin.com/in/randy-skiles)
-- Live project: Actively developed, new channels added weekly
+- Actively developed — new pipeline stages added continuously
 
 ---
 
-*Built with Claude Code · Tested with pytest · Deployed on Windows Task Scheduler*
+*Built with Claude Code · 129 tests · Deployed on Windows Task Scheduler · Shorts rendered with HeyGen + Remotion + FFmpeg*
