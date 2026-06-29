@@ -7,7 +7,7 @@ At the start of every new session, before doing any work:
 1. Read `memory/HOT_STATE.md` FIRST — before anything else
    - If it contains an ACTIVE mid-task state: execute the next step immediately, do not present a priority queue
    - If it says CLEAR: proceed to step 2
-2. Ask Randy to share `memory/SESSION_LOG.md`
+2. Ask Randy to share `memory/SESSION_LOG.md`; read `DECISIONS_LOG.md` before architecture, design, or major implementation work
 3. Do not proceed until the session log has been read
 4. Confirm what session number this is and what was left outstanding from the previous session
 
