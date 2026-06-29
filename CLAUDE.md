@@ -4,11 +4,21 @@
 ## Session Start Protocol
 
 At the start of every new session, before doing any work:
-1. Ask Randy to share `memory/SESSION_LOG.md`
-2. Do not proceed until the session log has been read
-3. Confirm what session number this is and what was left outstanding from the previous session
+1. Read `memory/HOT_STATE.md` FIRST — before anything else
+   - If it contains an ACTIVE mid-task state: execute the next step immediately, do not present a priority queue
+   - If it says CLEAR: proceed to step 2
+2. Ask Randy to share `memory/SESSION_LOG.md`; read `DECISIONS_LOG.md` before architecture, design, or major implementation work
+3. Do not proceed until the session log has been read
+4. Confirm what session number this is and what was left outstanding from the previous session
 
 If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG.md from your memory/ folder?"
+
+### HOT_STATE.md rules
+- Written at the end of any session where Randy stops mid-task (not at a natural stopping point)
+- Content: what Randy just did, the exact next step, the exact command or URL, and what file has full instructions
+- Cleared (replaced with `## CLEAR`) only when the active task completes
+- One task only — if multiple things are in-flight, the most time-sensitive or physically blocking one wins
+- Randy never has to manage this file — Claude writes and clears it
 
 ---
 
