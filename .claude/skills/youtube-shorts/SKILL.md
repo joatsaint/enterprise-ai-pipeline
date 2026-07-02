@@ -178,3 +178,4 @@ Each article → at least 1 Short. Atom the sharpest single idea, not a summary 
 - **Side gaps at 50% scale:** A 9:16 avatar scaled to 50% is only 540px wide in a 1080px canvas — leaves 270px exposed on each side. The background layer must fill the full 1080px width.
 - **CapCut PC has no pinch-zoom.** Scaling is done with the zoom slider only. It maintains AR uniformly.
 - **Captions must avoid the bottom 25%** of the frame — that's where YouTube's like/comment/share buttons overlay in the Shorts feed.
+- **TransitionSeries timing must use `linearTiming()`, not a plain object.** `timing={{ type: "in-out", durationInFrames: N }}` throws `getDurationInFrames is not a function`. Always import `linearTiming` from `@remotion/transitions` and use `const timing = linearTiming({ durationInFrames: TRANS })` — then pass that variable to every `<TransitionSeries.Transition>`.
