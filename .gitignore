@@ -37,12 +37,9 @@ memory/
 # Pre-restructure backup snapshots — local only
 backups/
 
-# Remotion video-render scratch/output — large local-only test artifacts
-remotion-test/
-# Remotion project build artifacts — source files are committed, not build output
-remotion/shorts/node_modules/
-remotion/shorts/out/
-remotion/shorts/.cache/
+# Video production — HeyGen outputs, rendered mp4s, cards, scripts, Remotion build artifacts
+# All local-only: binary assets, generated content, private scripts
+video-production/
 
 # Windows system files
 Thumbs.db
