@@ -87,12 +87,14 @@ docs/
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
 
-# Substack archiver — local-only personal research tools, not for public portfolio
+# Substack archiver + Google Drive fetcher — local-only personal research tools, not for public portfolio
 src/downloader/substack_archiver.py
 src/downloader/substack_link_fetcher.py
+src/downloader/gdrive_fetcher.py
 run_substack.py
 logs/substack_download_log.json
 logs/substack_links_log.json
+logs/gdrive_download_log.json
 
 # Skool downloader debug artifacts
 skool_debug.py
