@@ -98,4 +98,4 @@ changes to this standalone format.
 
 ## Gotchas
 
-- (none logged yet — append here as real sessions surface edge cases)
+- **HARD RULE — LinkedIn URL:** Randy's correct LinkedIn URL is `https://www.linkedin.com/in/randy-skiles/` (with hyphen). Never use `randyskiles` (no hyphen). This has been wrong multiple times. Before writing any URL into content, check `memory/reference_randy_profile_links.md`. Do not construct or guess it from his name.

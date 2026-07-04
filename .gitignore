@@ -96,6 +96,10 @@ logs/substack_download_log.json
 logs/substack_links_log.json
 logs/gdrive_download_log.json
 
+# Quarterly pain point extractor — local scheduler, log contains business intelligence
+run_pain_extractor_quarterly.bat
+logs/pain_extractor_quarterly.log
+
 # Skool downloader debug artifacts
 skool_debug.py
 skool_debug_*.png

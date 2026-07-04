@@ -71,12 +71,73 @@ def _fmt_ts(ts):
     return str(ts)[:16].replace("T", " ") if ts else "—"
 
 
+def show_trials(state, lines, today=None):
+    """Show active subscription trials with cancel deadlines."""
+    today = today or date.today().isoformat()
+    trials = (state or {}).get("subscription_trials", {})
+    active = [t for t in trials.values() if t.get("decision") is None]
+    if not active:
+        return
+    lines.append("━" * 54)
+    lines.append(" ⏰ ACTIVE TRIALS — check deadlines")
+    lines.append("━" * 54)
+    for t in active:
+        cancel_by = t.get("cancel_by", "?")
+        urgent = "  ⚠ CANCEL TODAY" if cancel_by == today else ""
+        lines.append(f"   {t['name']} ({t.get('price','?')}) — cancel by {cancel_by}{urgent}")
+        checklist = t.get("checklist", {})
+        for phase_key in sorted(checklist.keys()):
+            phase = checklist[phase_key]
+            phase_date = phase["label"].split("—")[1].strip().split(" ")[0] if "—" in phase["label"] else ""
+            if phase_date and phase_date > today:
+                continue
+            items = phase.get("items", {})
+            pending = [i["label"] for i in items.values() if not i.get("done")]
+            if pending:
+                lines.append(f"   {phase['label']}:")
+                for p in pending:
+                    lines.append(f"     □ {p}")
+
+
+def show_priorities(state, lines):
+    """Prepend the daily priority list to the status output."""
+    priorities = (state or {}).get("daily_priorities", {})
+    items = priorities.get("items", [])
+    if not items:
+        return
+    lines.append("━" * 54)
+    lines.append(" 🎯 DAILY PRIORITIES — do in this order")
+    lines.append("━" * 54)
+    for item in sorted(items, key=lambda x: x.get("priority", 99)):
+        done = item.get("confirmed_done", False)
+        blocked = item.get("blocked_by")
+        freq = item.get("frequency", "")
+        last = item.get("last_completed")
+        if done:
+            marker = " ✓"
+            label = f"[DONE] {item['label']}"
+        elif blocked:
+            marker = " ◌"
+            label = f"[BLOCKED → {blocked}] {item['label']}"
+        else:
+            marker = " ▶"
+            label = item["label"]
+        freq_tag = f"  [{freq.upper()}]" if freq else ""
+        last_tag = f"  last: {last}" if last else ""
+        lines.append(f"{marker}  {item['priority']}. {label}{freq_tag}{last_tag}")
+        if not done and not blocked:
+            lines.append(f"      {item['instructions'][:120]}")
+    lines.append("━" * 54)
+
+
 def build_report(today=None):
     """Build the status report lines (testable; reads files, no printing)."""
     today = today or date.today().isoformat()
     lines = ["━" * 54, f" Pipeline Status — {today}", "━" * 54]
 
     state = _load_json(DASHBOARD_STATE)
+    show_trials(state, lines, today)
+    show_priorities(state, lines)
     if state:
         s = summarize_articles(state, today)
         bs = s["by_stage"]
