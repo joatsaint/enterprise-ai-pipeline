@@ -98,5 +98,11 @@ Name it distinctly (`_carousel_CODE.pdf`) — never overwrite the image-gen `_ca
 
 ## Gotchas
 
+- **Article must be live before carousel is scheduled.** ART6 had its teaser and first-comments published weeks before the article existed — carousel was then orphaned from the launch window. The hard publishing gate in CONTENT_PUBLISHING_RULES.md now enforces sequence: article live → teaser same day → carousel next day. Never schedule a carousel until you have the live LinkedIn article URL in hand.
+
 - Known Pillow bug already documented above (`Image.init()` / JpegImagePlugin fix) — keep it
   here too since this is the section future sessions check first.
+- Every carousel slide MUST have both `overlay_text` (headline) AND `support_text` (sub-headline) populated in the Gemini storyboard. A headline alone doesn't deliver enough value — the sub-headline completes the contract with the reader. If Gemini skips `support_text`, add it manually from the carousel.md copy before generating images.
+- Re-overlaying existing PNGs: if slides need text re-applied, the gradient must use a two-phase approach — soft fade (top 30% of zone) → fully opaque solid block (bottom 70%). A plain gradient (alpha 0→225) is NOT enough to suppress baked-in text from a prior run and causes double headlines.
+- Word wrap on sub-headlines: use balanced wrapping (iteratively narrow target width until last line has ≥3 words). A naive max-width wrap leaves 1-2 word orphan tails that look unprofessional.
+- **HARD RULE — LinkedIn URL:** Randy's correct LinkedIn URL is `https://www.linkedin.com/in/randy-skiles/` (with hyphen). Never use `randyskiles` (no hyphen). This has been wrong multiple times. Before writing any URL into content, check `memory/reference_randy_profile_links.md`.
