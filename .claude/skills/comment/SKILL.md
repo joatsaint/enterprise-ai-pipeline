@@ -57,6 +57,18 @@ experience," "The longer I work in IT," "I think…," or any generic praise.
 Every comment adds something new. Never just summarize or agree. **If it could fit under 100 different
 posts without changing a word, rewrite it.**
 
+## Spacing and paragraph formatting (always apply)
+
+LinkedIn and most platforms render a blank line as a paragraph break. A wall of text will not be read.
+
+- **Separate every paragraph with a blank line** (one empty line between blocks)
+- **Maximum 3–4 lines per paragraph** — if a paragraph is running long, break it
+- **Minimum 2 paragraphs** for any comment over 200 characters
+- No markdown symbols (no *, #, -, bullet points) — plain text only
+- The blank line is invisible in the output block but LinkedIn/Reddit renders it as spacing
+
+Apply this to every output mode (Clean, Tracker, Variation).
+
 ## Length (platform-aware) — reconciled rule
 - **LinkedIn:** target **500–900 characters** for substance/authority, BUT the first line must work
   standalone (it's all that shows before "…more"). If the post calls for a quick jab, a tight
@@ -126,4 +138,4 @@ replies / profile visits / connection requests.
 
 ## Gotchas
 
-- (none logged yet — append here as real sessions surface edge cases)
+- **Paragraph spacing is mandatory** — LinkedIn/Reddit do not render single newlines as breaks. Output must use blank lines between paragraphs or it reads as a wall of text. Added to skill 2026-07-02 after Randy flagged missing spacing in group posts and comments.

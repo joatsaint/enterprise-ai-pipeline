@@ -97,6 +97,38 @@ Applies to `content-engine/dashboard_state.json` and every schedule/status file:
 - On conflict between any two rules/files, stop and report using the conflict
   format in the create-next-article skill before changing anything.
 
+### dashboard_state.json — Single Source of Truth for All LinkedIn Activity
+
+`content-engine/dashboard_state.json` is the one source of truth for every LinkedIn
+asset and action. No other file (POSTED_LOG.md, session log, Buffer, memory) overrides
+it. When they conflict, trust dashboard_state.json and update the others.
+
+**What must be tracked in dashboard_state.json:**
+- Every LinkedIn asset per article: linkedin-article, article-hero-image, carousel,
+  text-post, image-post, newsletter, first-comments, poll, buffer-schedule
+- Per-asset flags: written, reviewed, approved, scheduled, published
+- Commenting activity: first_comment (posted/date), group_posts (count/last_posted),
+  b3_comments (count/last_session)
+
+**When dashboard_state.json MUST be updated:**
+1. Any asset is written, reviewed, or approved → update that flag immediately
+2. Any asset is scheduled in Buffer → set scheduled=true before ending the session
+3. Any asset goes live on LinkedIn → set published=true before ending the session
+4. First comment is posted → update commenting.first_comment.posted + date
+5. Group cross-posts go out → increment commenting.group_posts.count + last_posted
+6. A B3 commenting session completes → update commenting.b3_comments.last_session
+
+**End-of-session LinkedIn audit (mandatory when any LinkedIn work occurred):**
+Before closing any session that touched LinkedIn content or scheduling:
+1. List every asset touched this session
+2. Verify each one's dashboard_state.json flags match reality
+3. If any flag is stale, update it — with Randy's approval per Status-Change Safety rules
+4. If Randy reports a post went live that session, update published=true immediately
+
+**POSTED_LOG.md is a historical record only** — it is append-only and never
+authoritative. If POSTED_LOG.md and dashboard_state.json conflict, fix
+dashboard_state.json to match reality, not the other way around.
+
 ---
 
 ## Current Status (as of project upgrade)
@@ -230,6 +262,16 @@ Claude Code / Certifications group:
 Minimum required: **Python 3.10**
 At the start of every session, verify with: `python --version`
 If the version is below 3.10, stop and alert the user before running any code.
+
+---
+
+## Approval Behavior — Yes Covers the Full Task
+
+When Randy says "yes," "run it," "go ahead," or equivalent to start a task:
+- That approval covers all steps within that task. Do not re-prompt mid-process.
+- Randy's initial yes is his decision. He will say "No" at a subsequent prompt if he wants to stop.
+- Each new distinct action (a new task, a new git milestone, a new command) gets its own fresh prompt — Randy decides at that point whether to continue.
+- Never insert confirmation checkpoints inside an already-approved running process.
 
 ---
 
