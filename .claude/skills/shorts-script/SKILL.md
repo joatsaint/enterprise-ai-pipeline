@@ -159,3 +159,4 @@ That's [unit] N.
 
 - Google Docs API reports `fileSize: 1` for a freshly uploaded doc even when it's fully
   populated — read the doc back after upload to confirm content, don't trust the size field.
+- **HARD RULE — LinkedIn URL:** Randy's correct LinkedIn URL is `https://www.linkedin.com/in/randy-skiles/` (with hyphen). Never use `randyskiles` (no hyphen). Check `memory/reference_randy_profile_links.md` before writing any URL into content.
