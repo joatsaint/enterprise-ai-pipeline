@@ -36,6 +36,14 @@ Usage:
 
   # YouTube Shorts pipeline
   python -m src.main shorts [--pain-point "..."] [--variant a|b|both] [--dry-run]
+
+  # Web page link downloader (Playwright — clicks Markdown button, saves file)
+  python -m src.main fetch-links --scan-dir <path> --domain <domain> --output-dir <path>
+  # Example:
+  #   python -m src.main fetch-links \\
+  #       --scan-dir transcripts/ai-job-intelligence/nate-b-jones \\
+  #       --domain promptkit.natebjones.com \\
+  #       --output-dir transcripts/ai-job-intelligence/nate-b-jones-guides
 """
 import sys
 
@@ -564,6 +572,44 @@ def main():
                 sys.exit(1)
         from src.shorts.orchestrator import run as run_shorts
         run_shorts(manual_pain_point=pain_point, variant=variant, dry_run=dry_run)
+        return
+
+    # ----------------------------------------------------------------
+    # fetch-links — scan transcripts for ## LINK: URLs, download via Playwright
+    # ----------------------------------------------------------------
+    if cmd == "fetch-links":
+        scan_dir = None
+        domain = None
+        output_dir = None
+        channel_name = ""
+        if "--scan-dir" in args:
+            idx = args.index("--scan-dir")
+            if idx + 1 < len(args):
+                scan_dir = args[idx + 1]
+        if "--domain" in args:
+            idx = args.index("--domain")
+            if idx + 1 < len(args):
+                domain = args[idx + 1]
+        if "--output-dir" in args:
+            idx = args.index("--output-dir")
+            if idx + 1 < len(args):
+                output_dir = args[idx + 1]
+        if "--channel-name" in args:
+            idx = args.index("--channel-name")
+            if idx + 1 < len(args):
+                channel_name = args[idx + 1]
+        if not scan_dir or not domain or not output_dir:
+            print(
+                "Usage: python -m src.main fetch-links "
+                "--scan-dir <path> --domain <domain> --output-dir <path> "
+                "[--channel-name <name>]"
+            )
+            sys.exit(1)
+        from src.downloader.web_page import run_fetch_links
+        run_fetch_links(
+            scan_dir=scan_dir, domain=domain,
+            output_dir=output_dir, channel_name=channel_name,
+        )
         return
 
     print(f"Unknown command: '{cmd}'")
