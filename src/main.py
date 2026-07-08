@@ -44,6 +44,15 @@ Usage:
   #       --scan-dir transcripts/ai-job-intelligence/nate-b-jones \\
   #       --domain promptkit.natebjones.com \\
   #       --output-dir transcripts/ai-job-intelligence/nate-b-jones-guides
+
+  # Research Intake Router — local Ollama screener (zero API cost)
+  python -m src.main screen path/to/doc.md
+  python -m src.main screen path/to/doc.md --model llama3.2:3b
+  python -m src.main screen path/to/doc.md --escalate-only
+
+  # Project Wrap — turn a completed milestone into 5 content + client acquisition assets
+  python -m src.main project-wrap <project> <milestone> [--context path] [--context path]
+  python -m src.main project-wrap swarmops "Milestone 2" --context docs/MONTE.../file.txt
 """
 import sys
 
@@ -610,6 +619,47 @@ def main():
             scan_dir=scan_dir, domain=domain,
             output_dir=output_dir, channel_name=channel_name,
         )
+        return
+
+    # ----------------------------------------------------------------
+    # project-wrap — turn a completed milestone into 5 content assets
+    # ----------------------------------------------------------------
+    if cmd == "project-wrap":
+        if len(args) < 3:
+            print('Usage: python -m src.main project-wrap <project> <milestone> [--context path]')
+            sys.exit(1)
+        project = args[1]
+        milestone = args[2]
+        context_paths = []
+        i = 3
+        while i < len(args):
+            if args[i] == "--context" and i + 1 < len(args):
+                context_paths.append(args[i + 1])
+                i += 2
+            else:
+                i += 1
+        from src.portfolio.project_wrap import run_project_wrap
+        run_project_wrap(project, milestone, context_paths)
+        return
+
+    # ----------------------------------------------------------------
+    # screen — Research Intake Router: local Ollama first-pass screener
+    # ----------------------------------------------------------------
+    if cmd == "screen":
+        if len(args) < 2:
+            print("Usage: python -m src.main screen <path> [--model MODEL] [--escalate-only]")
+            sys.exit(1)
+        file_path = args[1]
+        model = DEFAULT_SCREEN_MODEL = "llama3.2:3b"
+        if "--model" in args:
+            idx = args.index("--model")
+            if idx + 1 >= len(args):
+                print("Usage: python -m src.main screen <path> [--model MODEL]")
+                sys.exit(1)
+            model = args[idx + 1]
+        escalate_only = "--escalate-only" in args
+        from src.screener.screener import run_screen
+        run_screen(file_path, model=model, escalate_only=escalate_only)
         return
 
     print(f"Unknown command: '{cmd}'")
