@@ -140,3 +140,30 @@ docs/The AI Skills That Wont Be Replaced - Lead Magnet.pdf
 docs/Project Reports and Progress/*.docx
 .claude/settings.local.json
 .claude/claude-security-guidance.md
+.claude/settings.json
+
+# Skills library — local-only per repo privacy rule
+.claude/skills/image-prompt/
+.claude/skills/title-generator/
+
+# Local agent config
+.agents/
+
+# n8n local launcher — personal path, not for public repo
+run_n8n.bat
+
+# Separate git repo — managed independently
+project-monte-swarmops-core/
+
+# Remotion build artifacts
+remotion/shorts/node_modules/
+remotion/shorts/out/
+
+# Phigmund planning + content docs — local only (audience-building specifics, personal stories)
+phigmund/LIVING_DOCUMENT_SESSION38.md
+phigmund/CHRONICLES_CONTENT_ANALYSIS.md
+phigmund/MONTE_1_POST_DRAFT.md
+phigmund/r_sysadmin_post.md
+phigmund/PILOT_SCRIPT_EP1.md
+phigmund/SHOW_CONCEPT.md
+phigmund/saved_responses/
