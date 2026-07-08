@@ -27,6 +27,7 @@ logs/
 knowledge_base/index.json
 knowledge_base/reports/*.md
 knowledge_base/digests/*.md
+knowledge_base/research_cards/
 
 # Session logs and memory — internal working notes, never commit
 memory/
