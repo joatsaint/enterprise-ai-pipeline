@@ -156,6 +156,9 @@ run_n8n.bat
 # Separate git repo — managed independently
 project-monte-swarmops-core/
 
+# SwarmOps audit log — written at repo root when scripts run from parent dir
+audit.log
+
 # Remotion build artifacts
 remotion/shorts/node_modules/
 remotion/shorts/out/
