@@ -123,6 +123,56 @@ _Source: <article/slug> · Voice: youtube-voice.md · Draft for review_
 - **[AUDIO]:** "...My challenge for your next shift is ... " + one-sentence CTA from the Steel list
 ```
 
+## Hook & Sequencing Addendum (verified July 2026 — Ramonov, McCoy, VidIQ research)
+
+These sharpen the existing structure. Nothing below overrides the 6-segment format above —
+it fills in the WHY behind Part 1 and the retention mechanics through Parts 2–4.
+
+### Hook rules (sharpens Part 1)
+- Lead with the **result/outcome**, never the topic. "I had 350 files I hadn't touched in
+  months" beats "today we're talking about file organization."
+- Emotional stakes (fear, job risk, active pain) outperform curiosity-only hooks — people
+  act to escape pain; they ignore things they merely like.
+- State the **specific real number**. Don't round or soften — specificity is what makes the
+  hook credible and stoppable.
+- Land the core tension within **10–15 seconds**. Still setting up context at 20 seconds =
+  hook is too long.
+
+### 5-beat map (how the G-drive format maps to the 6-segment structure above)
+| G-drive beat | Maps to |
+|---|---|
+| Hook — result-first, emotional stakes | Part 1 — Friction Hook |
+| Reframe — why people miss this | Part 2 — Contrast & Definition |
+| Stakes / war story — cost of the problem | Part 3 → credibility layer |
+| Solution — show it working live | Part 3 — Step-by-Step |
+| CTA — one specific next action | Part 6 — Outro |
+
+Part 4 (Strategic Reframe) and Part 5 (Anchor/Value-Add) are Randy-specific additions
+that sit inside the "Solution" beat — don't collapse them.
+
+### Retention mechanics through the middle (Parts 2–4)
+- **Plant an open loop early** — promise a specific payoff you'll deliver late:
+  *"There's something Phigmund says when the AI isn't confident enough to decide —
+  I'll show you at the end."* The Zeigarnik effect: withheld payoff measurably increases
+  watch time (VidIQ: ~32% increase cited).
+- **Mid-video re-hook every 30–45 seconds** — a tonal shift, visual change, or a line
+  like *"in the next section I'll show you the part most people get wrong."* Resets
+  drifting attention even for viewers who skip ahead.
+- Deliver the open loop payoff **in Part 4 or Part 5**, not the outro — the outro is for
+  the CTA, not the punchline.
+
+### CTA (confirmed — no change to existing rule)
+Neither Ramonov nor McCoy ends on "here's the repo." Funnel: short-form = awareness →
+long-form = credibility → **email list = the real goal, every video**. The giveaway
+(prompts, template, repo) is the bribe to get the click, not the destination. Randy's
+lead magnet funnel already matches this — keep doing it.
+
+### What NOT to do
+- Don't open with a generic topic statement ("today we're going to talk about…").
+- Don't pitch the tool separately from the tutorial — the tutorial IS the value, with
+  the tool embedded naturally, not bolted on as a sales pitch.
+- Don't send viewers to a GitHub repo or tool page as the primary CTA.
+
 ## Gotchas
 
 - (none logged yet — append here as real sessions surface edge cases)
