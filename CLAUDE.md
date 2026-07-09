@@ -275,6 +275,85 @@ When Randy says "yes," "run it," "go ahead," or equivalent to start a task:
 
 ---
 
+## Pre-Change Notification — Key Documents
+
+Before modifying any file in the list below, Claude must announce:
+1. The exact file name(s) about to be changed
+2. What will change in each file (specific addition, removal, or edit)
+3. What the result/effect will be on future behavior
+
+Format every announcement as:
+
+```
+**Documents about to be changed:**
+
+| File | Current state | What changes | Result |
+|---|---|---|---|
+| filename.md | what the file currently says/does | specific edit description | effect on future behavior |
+
+Confirm to proceed?
+```
+
+Wait for Randy's explicit confirmation before making any change to these files.
+This rule applies even when Randy has already said "yes" to a broader task —
+each key-document change gets its own announcement.
+
+### Pre-Change Checklist (run before every key-document edit)
+
+Before announcing a key-document change, Claude must:
+
+1. **Rollback check** — read the current state of the file and include it in the
+   "Current state" column so any change can be reversed exactly if Randy says undo it.
+
+2. **Conflict check** — grep the Key Documents for any rule that contradicts the
+   proposed change. If a contradiction is found, surface it in the announcement:
+   "⚠️ Conflict: [file] line [N] says [X] — proposed change says [Y]. Resolve before proceeding."
+   Never write a change that contradicts an existing active rule without flagging it first.
+
+3. **Git status check** — run `git status` before touching any Key Document.
+   If uncommitted changes exist, flag it: "⚠️ Uncommitted changes exist — commit or
+   note them before modifying a Key Document." Do not proceed until Randy acknowledges.
+
+### Key Documents (notification required before any edit):
+
+**Brand & Voice (defines what we say and how)**
+- `knowledge/brand/brandscript.md`
+- `knowledge/brand/brand_standards.md`
+- `knowledge/me/voice.md`
+- `knowledge/me/youtube-voice.md`
+- `knowledge/me/icp_pain_map.md`
+
+**Publishing Rules & Decisions (defines how we operate)**
+- `content-engine/rules/CONTENT_PUBLISHING_RULES.md`
+- `DECISIONS_LOG.md`
+- `CLAUDE.md` (this file)
+
+**Tracking & State (defines what's done and what's next)**
+- `content-engine/dashboard_state.json`
+- `memory/MASTER_SCHEDULE.md`
+- `memory/AUDIENCE_GROWTH_BOARD.md`
+- `memory/HOT_STATE.md`
+- `memory/SESSION_LOG.md` (both the in-repo copy and the .claude/projects/ copy)
+
+**Skills (defines repeatable workflows)**
+- Any file matching `.claude/skills/*/SKILL.md`
+
+### Decision Change Protocol (when any rule or decision changes)
+
+When a publishing, brand, or behavioral decision changes:
+1. Run the Pre-Change Checklist above (rollback + conflict + git status)
+2. Announce the change using the format above and wait for confirmation
+3. After confirmation: update the canonical file first (the one that owns the rule)
+4. Grep the entire repo for the old rule text or closely related terms
+5. Announce every file found — both Key Documents and any file outside the list
+6. Update all of them in the same session
+7. Never close a session with a decision updated in one place but not all places
+
+The Key Documents list is a starting point, not a complete inventory.
+A grep pass catches files that weren't anticipated when the list was written.
+
+---
+
 ## Key Design Rules
 
 1. **Never re-download what already exists.** Check download_log.json before fetching.
