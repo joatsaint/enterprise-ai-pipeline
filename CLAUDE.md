@@ -287,16 +287,32 @@ Format every announcement as:
 ```
 **Documents about to be changed:**
 
-| File | Current state | What changes | Result |
-|---|---|---|---|
-| filename.md | what the file currently says/does | specific edit description | effect on future behavior |
+| File | Current state | Change type | What changes | Reversibility | Result | Expiration |
+|---|---|---|---|---|---|---|
+| filename.md | what the file currently says/does | ADD / MODIFY / RETIRE / CORRECT | specific edit description | EASY / MODERATE / HARD | effect on future behavior | PERMANENT / REVISIT WHEN [condition] |
+
+**What this does NOT change:** [explicit scope boundary — what adjacent behavior stays unchanged]
 
 Confirm to proceed?
 ```
 
+**Change type definitions:**
+- `ADD` — new rule or section with no prior equivalent
+- `MODIFY` — existing rule is being changed or extended
+- `RETIRE` — existing rule is being removed or superseded
+- `CORRECT` — fixing an error in the current text (no behavioral change intended)
+
+**Reversibility ratings:**
+- `EASY` — can be undone with a single edit; no downstream files affected
+- `MODERATE` — requires updating 2–4 files or re-running a process to undo
+- `HARD` — touches many files, published content, or external state; requires a plan to reverse
+
 Wait for Randy's explicit confirmation before making any change to these files.
 This rule applies even when Randy has already said "yes" to a broader task —
 each key-document change gets its own announcement.
+
+After completing the edits, read back the affected section(s) verbatim so Randy
+can verify the change landed correctly before the session continues.
 
 ### Pre-Change Checklist (run before every key-document edit)
 
@@ -348,6 +364,9 @@ When a publishing, brand, or behavioral decision changes:
 5. Announce every file found — both Key Documents and any file outside the list
 6. Update all of them in the same session
 7. Never close a session with a decision updated in one place but not all places
+8. Add an audit trail entry to DECISIONS_LOG.md: the rule before, the rule after, the date,
+   and why it changed — this entry does not itself require a Pre-Change announcement since
+   it is part of an already-confirmed change
 
 The Key Documents list is a starting point, not a complete inventory.
 A grep pass catches files that weren't anticipated when the list was written.
