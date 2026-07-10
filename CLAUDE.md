@@ -19,6 +19,12 @@ If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG
 - Cleared (replaced with `## CLEAR`) only when the active task completes
 - One task only — if multiple things are in-flight, the most time-sensitive or physically blocking one wins
 - Randy never has to manage this file — Claude writes and clears it
+- **Two copies exist and both must be written in the same turn:** the in-repo copy
+  (`memory/HOT_STATE.md`) and the Claude Code memory-store copy
+  (`.claude/projects/<project>/memory/HOT_STATE.md`). The Session Start Protocol reads
+  the memory-store copy first. Writing only the repo copy — and telling Randy "saved,
+  nothing to reconstruct" — silently breaks the next session's resume. Never claim state
+  is saved until both copies are confirmed written.
 
 ---
 
@@ -348,7 +354,7 @@ Before announcing a key-document change, Claude must:
 - `content-engine/dashboard_state.json`
 - `memory/MASTER_SCHEDULE.md`
 - `memory/AUDIENCE_GROWTH_BOARD.md`
-- `memory/HOT_STATE.md`
+- `memory/HOT_STATE.md` (both the in-repo copy and the .claude/projects/ copy)
 - `memory/SESSION_LOG.md` (both the in-repo copy and the .claude/projects/ copy)
 
 **Skills (defines repeatable workflows)**
