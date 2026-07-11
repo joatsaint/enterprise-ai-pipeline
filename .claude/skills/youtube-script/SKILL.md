@@ -67,6 +67,12 @@ See memory `reference_cal_hyslop_style_fit`.
 - **One-line credibility stamp (early, Part 1→2).** Earn the right to teach in a single
   sentence of hard-won experience, not credentials: *"I've spent 25 years keeping production
   alive…"*. Once — not repeated.
+- **Avatar disclosure, when Phigmund delivers the video (Part 1, right after the hook).**
+  **Locked standard template: `knowledge/me/phigmund-avatar-intro.md`.** Use it verbatim
+  for paragraphs 4-5 (disclosure + credibility transfer + channel thesis); the hook
+  (paragraph 1) may be swapped per video, paragraphs 2-3 (stakes) may be shortened but
+  must stay factually the same. Never invent a new "why a clone" reason. See
+  `[[reference_mccoy_avatar_intro_pattern]]` for the structural model this is adapted from.
 - **Promise + contained roadmap (Part 2).** Say what they'll have by the end and bound it
   (*"three things," "in under X minutes"*). Bounded scope lifts completion rate.
 - **Define-by-negation before the concept (Part 2/3).** Say what it's NOT first to kill the

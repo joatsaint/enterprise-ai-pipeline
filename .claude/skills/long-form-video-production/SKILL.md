@@ -62,6 +62,17 @@ submitting** — this costs real credits (see `feedback_heygen_ask_before_submit
 Consider submitting Scene 1 alone as a test before batch-generating the
 rest, so a framing/lip-sync problem doesn't cost credits across every scene.
 
+**Avatar disclosure — non-negotiable.** The avatar's name is **Phigmund**
+(same character as the Command Deck persona — see `[[project_phigmund]]` —
+now also appearing as the live HeyGen avatar, not a separate identity).
+Every video where Phigmund delivers the opening must open with the
+**locked standard template: `knowledge/me/phigmund-avatar-intro.md`**
+(confirmed 2026-07-10) — hook may be swapped per video, the disclosure +
+credibility-transfer + channel-thesis paragraphs are fixed and reused
+verbatim unless Randy explicitly asks for a rewrite. Written in Stage 1
+(script), not bolted on here — see the `youtube-script` skill's
+credibility-stamp rule.
+
 Poll `mcp__heygen__get_video` until `status: completed`, download each mp4
 with `curl`, and save directly into `<slug>/heygen/`.
 
@@ -198,6 +209,15 @@ valid if the specific claim inside it is true of the story being told.
   first (e.g. `sysadmin` comp 22, `enterprise ai implementation` comp 16),
   then content-specific secondary tags. ~15-20 total, stay under YouTube's
   ~500-character combined limit.
+- **Proof stack:** lead the description's second paragraph (right after the
+  SEO-keyword-first sentence + CTA) with 1-2 lines of concrete, lived proof
+  before anything else — real ops experience (25 years keeping production
+  alive), a named specific story (the Lamar University source-of-truth
+  failure), or a build shown working in public (SwarmOps). Verified pattern:
+  the creators who credibly sell "I help you do X" all lead with their own
+  track record in X before the pitch, not after it — see
+  `[[reference_mccoy_avatar_intro_pattern]]`. Don't restate the whole bio —
+  one or two specific, checkable facts, not a general claim of expertise.
 
 ## Gotchas
 
