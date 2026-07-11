@@ -14,7 +14,11 @@ At the start of every new session, before doing any work:
 If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG.md from your memory/ folder?"
 
 ### HOT_STATE.md rules
-- Written at the end of any session where Randy stops mid-task (not at a natural stopping point)
+- **Written at the end of every session, period — clean stop or mid-task stop, it doesn't
+  matter.** (Corrected 2026-07-10: the old rule — "only when Randy stops mid-task" — was
+  too narrow to fire during a long continuous session with many completed sub-tasks and
+  no clean mid-task break, which is exactly why it went stale for three sessions in a row.
+  A council review confirmed this was the root cause, not a one-off lapse.)
 - Content: what Randy just did, the exact next step, the exact command or URL, and what file has full instructions
 - Cleared (replaced with `## CLEAR`) only when the active task completes
 - One task only — if multiple things are in-flight, the most time-sensitive or physically blocking one wins
@@ -25,6 +29,15 @@ If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG
   the memory-store copy first. Writing only the repo copy — and telling Randy "saved,
   nothing to reconstruct" — silently breaks the next session's resume. Never claim state
   is saved until both copies are confirmed written.
+
+### Automated Check Maintenance Rule (added 2026-07-10)
+Any automated check/hook that misfires (false positive or false negative) must be
+**fixed or replaced within the same session it's noticed, or removed entirely** — never
+left silently disabled with nothing in its place. The prior SESSION_LOG.md Stop hook was
+disabled after one false positive and stayed disabled for days with zero automated
+freshness check running in the gap. Silence is worse than a known gap: a disabled check
+with no replacement looks the same as "everything's fine" from the outside. If a check
+can't be trusted, say so explicitly rather than quietly dropping it.
 
 ---
 

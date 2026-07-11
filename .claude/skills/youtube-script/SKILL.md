@@ -101,6 +101,13 @@ If the source has context but no concrete, copy-paste prompt or step-by-step:
 - Strip ALL hype — no exclamation spam, no "revolutionary / game-changing," no clickbait.
 - Title: pull a real keyword from `keyword_research.md` (sysadmin / enterprise-ai / ai-proof
   jobs lanes); rank-on-broad-fear, deliver IT-specific.
+- **Fact-check every title against the actual script/description before presenting it.**
+  Curiosity-gap title shapes ("The X That Killed Y — I Just Solved It") are only valid
+  if the claim inside them is literally true of the story being told. Optimizing for the
+  shape without re-reading the content it's titling produces a title that promises the
+  wrong story — worse than a boring-but-accurate one. Read the title back against the
+  hook/description and ask "is this specific claim actually what happened," not just
+  "does this sound clickable."
 
 ## Output + review gate (status-change safety)
 - Write the draft to `content-engine/pending/<slug>/youtube-script.md` (new or existing slug).
@@ -175,4 +182,12 @@ lead magnet funnel already matches this — keep doing it.
 
 ## Gotchas
 
-- (none logged yet — append here as real sessions surface edge cases)
+- **2026-07-10, File Organizer Build video:** suggested title "The AI Project That Killed
+  a University IT Team — I Just Rebuilt It" — but the original project had NO AI
+  involvement (it died from a manual-labor/staffing problem, "years before AI was part
+  of the conversation" per the hook itself). The title misattributed "AI" to the
+  original failure instead of the solution. Caught by Randy, not self-caught, even
+  though the correct facts were sitting in the description drafted moments earlier in
+  the same file. Root cause: optimized for the curiosity-gap title *shape* without
+  re-checking the specific claim against the actual content. See the fact-check rule
+  added above.
