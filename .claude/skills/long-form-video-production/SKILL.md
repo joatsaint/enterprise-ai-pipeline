@@ -249,3 +249,14 @@ valid if the specific claim inside it is true of the story being told.
   script/description before presenting — see the fact-check rule and Gotcha
   entry in the `youtube-script` skill (a suggested title once misattributed
   "AI" to a story event that had no AI involvement, caught by Randy).
+- **When a build video's demo relies on a promised file count or dataset
+  size, verify the real number before locking the script — don't trust an
+  earlier video's stated promise.** The File Organizer Build video promised
+  "350 real files" for the follow-up; when Randy actually staged them, the
+  real count was 152 `.txt` files (plus 2 stray PDFs that had to be pulled
+  since the tool reads files in plain text mode and can't extract real
+  content from PDF/DOCX — dumps garbage instead). Script and hook got
+  corrected to the true number rather than padding the file set to
+  artificially hit the original promise. If a build tool has a real file-type
+  limitation like this, check for it explicitly before staging test data —
+  don't assume dropping in extra files of any type will just work.
