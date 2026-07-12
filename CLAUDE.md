@@ -39,6 +39,20 @@ freshness check running in the gap. Silence is worse than a known gap: a disable
 with no replacement looks the same as "everything's fine" from the outside. If a check
 can't be trusted, say so explicitly rather than quietly dropping it.
 
+### Search Before Assuming Rule (added 2026-07-12)
+Before starting fresh research or download work on any topic, or before telling Randy
+"we don't have this" / "we'd need to get this," **run a real search first** —
+`ls docs/`, Glob/Grep across `docs/` and `transcripts/` for relevant keywords — not just
+a check of what's already in the current conversation's context. `docs/` alone holds 80+
+topic folders, each one clearly named (e.g. "Nate B Jones Substak Subscription," "Horse
+Training Landing Page and Offers") — the information is almost always already there and
+already discoverable, the failure mode is not searching, not a missing index. **Do not
+build a hand-maintained catalog of what exists instead of this rule** — a static list of
+80+ folders would go stale the moment something new is added and not logged, recreating
+the exact staleness problem this rule exists to prevent (same lesson as the
+council-reviewed manifest-hook rejection, 2026-07-10). A live search is always current;
+a written catalog isn't.
+
 ---
 
 ## Project Identity
