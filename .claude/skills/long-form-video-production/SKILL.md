@@ -39,6 +39,23 @@ folder-convention memory for the schema.
 in the conversation is not saved — this is the exact failure this skill
 was built to prevent.
 
+**Alternate path for build/demo videos — two-pass live-capture-then-polish
+(added 2026-07-12).** When the video IS a live build (running code, seeing
+what breaks, fixing it) and the outcome genuinely isn't known in advance,
+don't pre-write the full script before recording — it means guessing at
+what breaks, which defeats the point of letting it be real (today's proven
+best-performing content shape, see `youtube-script/SKILL.md`'s title/hook
+research). Instead:
+1. **Pass 1 — live capture.** At each build checkpoint (see the Stage 2+
+   recording-segment convention below), write the real explanation into
+   `script.md` as it actually happens — raw, accurate, not polished yet.
+2. **Pass 2 — Kallaway/Illusion-of-Novelty polish**, only after the whole
+   real story is known (can't apply contrast framing or the "213 ordering"
+   trick until you know what actually happened, especially at the "it
+   broke" step). Run the full script back through that framework, apply
+   the "AI caught what humans missed" twist device where honestly earned
+   (both in `youtube-script/SKILL.md`), then proceed to Stage 3 normally.
+
 ## Stage 2 — HeyGen avatar/voice — verify before submitting, don't trust cached names
 
 **Known trap:** a saved name like "Randy_DigitalTwin_v2" may refer to the
