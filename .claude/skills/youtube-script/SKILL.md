@@ -121,6 +121,56 @@ If the source has context but no concrete, copy-paste prompt or step-by-step:
   hook/description and ask "is this specific claim actually what happened," not just
   "does this sound clickable."
 
+## Video Title Framework (added 2026-07-11 — scoped to video titles only)
+
+**This is deliberately the opposite philosophy of the `title-generator` skill
+(LinkedIn Pulse articles).** That skill's titles are complete thoughts — the
+paradox is resolved IN the title, for GEO/AI-search citability ("AI Can Read
+Your Logs, But It Can't Read Minds"). Video titles do the opposite on purpose:
+withhold the answer, force the click. **Do not merge these two philosophies or
+apply one skill's approach to the other's format** — they're each correct for
+what they're optimizing.
+
+**Core principle:** People do not click information. People click unresolved
+curiosity. The title should not describe the content — it should create a
+compelling question that can only be answered by watching. Reveal the answer
+inside the video, never in the title. (This is the same lesson behind the
+"never name the specific payoff in the hook" corollary above — same rule,
+now formalized for title-writing specifically.)
+
+**Process:**
+1. Identify the single most surprising fact, insight, mistake, or result in
+   the content.
+2. Ask: why would a normal person find this surprising? What assumption does
+   it violate? What makes someone say "wait, what?"
+3. Build the title around that curiosity gap.
+4. Reveal the answer inside the content, not the title.
+
+**Preferred patterns (with this project's own examples):**
+- **Why Did X Happen?** — *"Why This Server Was Never Rebooted for 11 Years"*
+- **The Hidden Reason** — *"The Hidden Cost of Being the Only Person Who Knows the Fix"*
+- **The Contradiction** — *"The Best Sysadmin in the Company Was a Terrible Documenter"*
+- **The Unexpected Outcome** — *"I Used AI to Clean Up Old Documentation. It Found a Bigger Problem."*
+- **The Specific Curiosity Trigger** — *"The Sysadmin Who Accidentally Automated Himself"*
+
+**Forbidden — titles that merely describe the content, creating no curiosity:**
+*"How I Used AI to Organize Documentation," "Knowledge Base Cleanup Using
+Claude Code," "My AI Documentation Project."* These explain, they don't hook.
+
+**Audience test:** would a Gen X IT professional scrolling past this title
+feel compelled to know the answer? If not, rewrite.
+
+**Accuracy rule (matches the fact-check rule above — reinforces, doesn't
+add a second standard):** never invent facts, never promise information the
+content doesn't contain, never mislead. Curiosity has to be earned honestly —
+the title must be supportable by what's actually in the video.
+
+**Output format when generating video title options:** 5 informational + 5
+curiosity-driven + 5 high-click titles, ranked strongest to weakest by
+expected click-through. Score each on Curiosity (1-10), Clarity (1-10),
+Credibility (1-10). Recommend one and explain why it should outperform the
+others.
+
 ## Output + review gate (status-change safety)
 - Write the draft to `content-engine/pending/<slug>/youtube-script.md` (new or existing slug).
   If the source is an existing pending article, drop it alongside its other pieces.
@@ -174,6 +224,26 @@ that sit inside the "Solution" beat — don't collapse them.
   *"There's something Phigmund says when the AI isn't confident enough to decide —
   I'll show you at the end."* The Zeigarnik effect: withheld payoff measurably increases
   watch time (VidIQ: ~32% increase cited).
+- **The "AI caught what humans missed" twist (a named, reusable device — added
+  2026-07-11).** When a real build genuinely produces a feature, insight, or fix that
+  came from the AI reading/analyzing something at a scale or angle a human wouldn't
+  have — use it as a "stick around to the end" open loop, teased early, paid off late.
+  **Only use this when it's actually true of the build — never fabricate a twist to fit
+  the device.** Worked example (SwarmOps knowledge-classification video): the build was
+  "just" categorize/rename files, but the AI also flagged a file containing a social
+  security number sitting unprotected in a folder — a real, sourced industry blind spot
+  (PII discovery in unstructured files), not a smarter version of the task asked for.
+  Hook (corrected 2026-07-11 — an earlier draft named the specific thing found,
+  which kills the open loop; never reveal the specific payoff in the hook, only the
+  stakes): *"We thought the project was done. Every file categorized, renamed,
+  organized. Then the AI flagged something else — something that could be a ticking
+  time bomb sitting in your files right now, too."* This is a standing device to
+  consider on every build video going forward, not a one-off — but the honesty rule
+  is non-negotiable: the payoff has to be a real thing the AI actually caught, sourced
+  from real research into what the relevant industry actually struggles with, not an
+  invented "gotcha" moment. **Corollary rule: never name the specific payoff in the
+  hook itself** — state the stakes/danger, withhold the specifics, or the open loop
+  is worthless.
 - **Mid-video re-hook every 30–45 seconds** — a tonal shift, visual change, or a line
   like *"in the next section I'll show you the part most people get wrong."* Resets
   drifting attention even for viewers who skip ahead.
