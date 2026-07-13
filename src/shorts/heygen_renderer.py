@@ -9,9 +9,9 @@ Background modes (SHORTS_BG_MODE env var):
 
 Env vars:
     HEYGEN_API_KEY
-    SHORTS_AVATAR_ID    (default: 7f9883cf32554320b7c11877c8ed67b5)
-    SHORTS_VOICE_ID     (default: da9757c70f4b443f82ffb1351870908f)
-    SHORTS_BRAND_KIT_ID (default: 6b1750c6fb4d46f3bd885e065f3cafe1)
+    SHORTS_AVATAR_ID    (required — your own HeyGen avatar ID)
+    SHORTS_VOICE_ID     (required — your own HeyGen voice ID)
+    SHORTS_BRAND_KIT_ID (required — your own HeyGen brand kit ID)
     SHORTS_BG_MODE      (default: transparent)
 
 Returns:
@@ -35,9 +35,6 @@ HEYGEN_BASE = "https://api.heygen.com"
 POLL_INTERVAL = 12
 POLL_MAX = 60
 
-DEFAULT_AVATAR_ID    = "7f9883cf32554320b7c11877c8ed67b5"
-DEFAULT_VOICE_ID     = "da9757c70f4b443f82ffb1351870908f"
-DEFAULT_BRAND_KIT_ID = "6b1750c6fb4d46f3bd885e065f3cafe1"
 DEFAULT_BG_MODE      = "transparent"
 
 GREENSCREEN_COLOR = "#00FF00"
@@ -52,6 +49,28 @@ def _api_key() -> str:
             "Get it at: app.heygen.com > Settings > API"
         )
     return key
+
+
+def _avatar_config() -> tuple[str, str, str]:
+    avatar_id = os.environ.get("SHORTS_AVATAR_ID", "")
+    voice_id = os.environ.get("SHORTS_VOICE_ID", "")
+    brand_kit_id = os.environ.get("SHORTS_BRAND_KIT_ID", "")
+    missing = [
+        name
+        for name, val in (
+            ("SHORTS_AVATAR_ID", avatar_id),
+            ("SHORTS_VOICE_ID", voice_id),
+            ("SHORTS_BRAND_KIT_ID", brand_kit_id),
+        )
+        if not val
+    ]
+    if missing:
+        raise EnvironmentError(
+            f"{', '.join(missing)} not set. These are your own HeyGen avatar/voice/"
+            "brand-kit IDs (each account's are different). Add them to .env — "
+            "find yours at app.heygen.com after creating a photo avatar and voice clone."
+        )
+    return avatar_id, voice_id, brand_kit_id
 
 
 def _headers() -> dict:
@@ -72,9 +91,7 @@ def _background_payload(bg_mode: str) -> dict | None:
 
 def submit(script: str, title: str = "Randy Shorts", bg_mode: str = DEFAULT_BG_MODE) -> str:
     """Submit the script to HeyGen. Returns video_id."""
-    avatar_id    = os.environ.get("SHORTS_AVATAR_ID",    DEFAULT_AVATAR_ID)
-    voice_id     = os.environ.get("SHORTS_VOICE_ID",     DEFAULT_VOICE_ID)
-    brand_kit_id = os.environ.get("SHORTS_BRAND_KIT_ID", DEFAULT_BRAND_KIT_ID)
+    avatar_id, voice_id, brand_kit_id = _avatar_config()
 
     payload: dict = {
         "video_inputs": [
