@@ -10,34 +10,31 @@ Randy's manual process (per-step, ~several hours the first time):
      Remotion overlays.
 
 This module replaces step 3's manual assembly-then-export round trip. We already know
-every duration involved (raw segment length via ffprobe, avatar length via HeyGen's
-own returned duration_s / Whisper), so the full master timeline can be computed
-directly — no CapCut needed until final compositing.
+every duration involved (avatar length via HeyGen's own returned duration_s), so the
+full master timeline can be computed directly — no CapCut needed until final compositing.
 
-Per-segment structure (confirmed with Randy 2026-07-13):
-  [still frame, held ~STILL_HOLD_S]  →  [sped-up B-roll, fills remaining avatar duration]
-  ...both playing under/behind the avatar's spoken explanation, split-screen.
-
-  - The still frame is the LAST frame of the raw segment (the "step complete, here's
-    what happened and why" on-screen moment) — gives the audience a few seconds to
-    read it before motion starts.
-  - The B-roll is an earlier portion of the SAME raw segment, sped up (setpts) to
-    exactly fill the remaining avatar duration. Randy's own build videos run ~5x raw
-    footage to final length (20 min raw -> 4 min final), so there is always enough
-    raw material — freeze-frame (extend the still) is a fallback for the rare case
-    where a segment is too short, not the expected path.
+Per-segment structure (revised with Randy 2026-07-13, dropping the earlier still+B-roll
+split): each segment's background is a SINGLE STILL IMAGE — the last frame of the raw
+segment (the "step complete, here's what happened and why" on-screen moment) — held for
+the segment's ENTIRE avatar-speaking duration, not just a few seconds. Two real reasons
+for this, not just simplicity:
+  1. HeyGen avatar segments stay short and independently redoable — a bad take only
+     costs re-rendering one short segment, not a long continuous generation.
+  2. A still image has no length constraint of its own, so there's no footage-to-speech
+     duration-matching problem to solve at all — it just holds for however long is
+     needed. B-roll speed-matching (the earlier design) is no longer needed.
+  Remotion graphics still provide on-screen visual separation/activity between segments,
+  layered on top of the still in the compositing step.
 
 Output: <out_dir>/timeline.json (master timeline, same idea as whisper.json/
-section_frames but spanning the whole video) + the actual still/B-roll clip files,
-ready for the Remotion overlay-storyboard step and, eventually, final compositing.
+section_frames but spanning the whole video) + the actual still clip files, ready for
+the Remotion overlay-storyboard step and the compositor.
 """
 import json
 import subprocess
 from pathlib import Path
 
 from src.utils.atomic import atomic_write_json
-
-STILL_HOLD_S = 3.0   # default seconds to hold the end-frame still before B-roll starts
 
 
 def _ffprobe_duration(path: Path) -> float:
@@ -94,95 +91,35 @@ def _extract_still_clip(segment: Path, hold_s: float, out_path: Path) -> bool:
     return True
 
 
-def _extract_sped_up_broll(segment: Path, raw_duration: float, target_duration: float, out_path: Path) -> bool:
-    """
-    Take the segment (excluding the last ~1s reserved for the still frame) and speed
-    it up (setpts) to exactly fill target_duration.
-    """
-    if out_path.exists():
-        return True
-    available = max(raw_duration - 1.0, 0.5)   # leave the last second for the still grab
-    speed_factor = available / target_duration if target_duration > 0 else 1.0
-    setpts_factor = 1.0 / speed_factor
-    cmd = [
-        "ffmpeg", "-y",
-        "-i", str(segment),
-        "-t", str(available),
-        "-vf", f"setpts={setpts_factor:.6f}*PTS",
-        "-t", str(target_duration),   # hard-cap output — setpts + fps quantization can overshoot
-        "-c:v", "libx264", "-preset", "fast", "-pix_fmt", "yuv420p",
-        "-an",
-        str(out_path),
-    ]
-    r = subprocess.run(cmd, capture_output=True)
-    if r.returncode != 0:
-        print(f"[timeline] B-roll speed-up failed for {segment.name}:\n"
-              f"{r.stderr.decode(errors='replace')[-600:]}")
-        return False
-    return True
-
-
 def build_segment(
     raw_segment: Path,
     avatar_duration_s: float,
     out_dir: Path,
     index: int,
-    still_hold_s: float = STILL_HOLD_S,
 ) -> dict:
     """
-    Build the still + B-roll pieces for one step's segment.
-    Returns a dict describing what was built and each piece's duration.
+    Build the still-frame background for one step's segment — the raw
+    segment's last frame, held for the entire avatar-speaking duration.
+    Returns a dict describing what was built.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
-    raw_duration = _ffprobe_duration(raw_segment)
-
     still_path = out_dir / f"segment_{index:02d}_still.mp4"
-    broll_path = out_dir / f"segment_{index:02d}_broll.mp4"
 
-    remaining = avatar_duration_s - still_hold_s
-
-    if remaining <= 0.5 or raw_duration <= 1.5:
-        # Fallback: not enough avatar time or raw footage for real B-roll —
-        # extend the still frame to cover the whole avatar duration instead.
-        print(f"[timeline] segment {index}: using freeze-frame fallback "
-              f"(avatar={avatar_duration_s:.1f}s, raw={raw_duration:.1f}s)")
-        ok = _extract_still_clip(raw_segment, avatar_duration_s, still_path)
-        return {
-            "index": index,
-            "raw_segment": str(raw_segment),
-            "raw_duration_s": round(raw_duration, 3),
-            "still_path": str(still_path) if ok else None,
-            "still_duration_s": round(avatar_duration_s, 3) if ok else 0.0,
-            "broll_path": None,
-            "broll_duration_s": 0.0,
-            "fallback_freeze_frame": True,
-        }
-
-    still_ok = _extract_still_clip(raw_segment, still_hold_s, still_path)
-    broll_ok = _extract_sped_up_broll(raw_segment, raw_duration, remaining, broll_path)
-
+    ok = _extract_still_clip(raw_segment, avatar_duration_s, still_path)
     return {
         "index": index,
         "raw_segment": str(raw_segment),
-        "raw_duration_s": round(raw_duration, 3),
-        "still_path": str(still_path) if still_ok else None,
-        "still_duration_s": round(still_hold_s, 3) if still_ok else 0.0,
-        "broll_path": str(broll_path) if broll_ok else None,
-        "broll_duration_s": round(remaining, 3) if broll_ok else 0.0,
-        "fallback_freeze_frame": False,
+        "still_path": str(still_path) if ok else None,
+        "still_duration_s": round(avatar_duration_s, 3) if ok else 0.0,
     }
 
 
-def build_timeline(
-    steps: list[dict],
-    out_dir: Path,
-    still_hold_s: float = STILL_HOLD_S,
-) -> dict:
+def build_timeline(steps: list[dict], out_dir: Path) -> dict:
     """
     steps: ordered list of
         {"label": str, "raw_segment": Path, "avatar_path": Path, "avatar_duration_s": float}
-    Computes cumulative start/end timestamps for every piece (still, B-roll, avatar)
-    across the whole video and writes timeline.json.
+    Computes cumulative start/end timestamps for every segment (still + avatar, running
+    concurrently) across the whole video and writes timeline.json.
     """
     out_path = out_dir / "timeline.json"
     if out_path.exists():
@@ -199,44 +136,29 @@ def build_timeline(
             avatar_duration_s=step["avatar_duration_s"],
             out_dir=pieces_dir,
             index=i,
-            still_hold_s=still_hold_s,
         )
 
-        still_start = cursor
-        still_end = still_start + seg_result["still_duration_s"]
+        start = cursor
+        end = start + seg_result["still_duration_s"]
         entry = {
             "label": step["label"],
             "index": i,
             "still": {
                 "path": seg_result["still_path"],
-                "start_s": round(still_start, 3),
-                "end_s": round(still_end, 3),
+                "start_s": round(start, 3),
+                "end_s": round(end, 3),
+            },
+            "avatar": {
+                "path": str(step["avatar_path"]),
+                "start_s": round(start, 3),
+                "end_s": round(end, 3),
             },
         }
-        cursor = still_end
-
-        if not seg_result["fallback_freeze_frame"] and seg_result["broll_path"]:
-            broll_start = cursor
-            broll_end = broll_start + seg_result["broll_duration_s"]
-            entry["broll"] = {
-                "path": seg_result["broll_path"],
-                "start_s": round(broll_start, 3),
-                "end_s": round(broll_end, 3),
-            }
-            cursor = broll_end
-
-        entry["avatar"] = {
-            "path": str(step["avatar_path"]),
-            "start_s": round(still_start, 3),   # avatar audio runs concurrent with still+broll
-            "end_s": round(still_start + step["avatar_duration_s"], 3),
-        }
-
         entries.append(entry)
-        cursor = max(cursor, entry["avatar"]["end_s"])
+        cursor = end
 
     timeline = {
         "total_duration_s": round(cursor, 3),
-        "still_hold_s": still_hold_s,
         "steps": entries,
     }
 
