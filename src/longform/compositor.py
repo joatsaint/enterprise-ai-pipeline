@@ -15,6 +15,7 @@ once the TODO visual descriptions are filled in) get composited on top of
 this in a later pass, same as the existing Shorts pipeline layers graphics
 under the avatar.
 """
+import json
 import subprocess
 import tempfile
 from pathlib import Path
@@ -74,7 +75,7 @@ def composite_step(
     avatar_path: Path,
     out_path: Path,
     bg_mode: str = "greenscreen",
-) -> bool:
+) -> tuple[bool, int]:
     """
     Avatar (full-height, right side, chromakeyed) overlaid onto a canvas built
     from footage (left) + a solid backdrop (right, behind the avatar).
@@ -84,14 +85,17 @@ def composite_step(
     stays visible. Build an opaque canvas first (footage + solid backdrop
     hstacked), then `overlay` the chromakeyed avatar on top of that — overlay
     is what actually respects the alpha chromakey produces.
-    """
-    if out_path.exists():
-        return True
 
+    Returns (success, footage_w) — footage_w is needed by the overlay-
+    compositing step later so it knows the exact left-zone width to target.
+    """
     avatar_w, avatar_h = _ffprobe_dims(avatar_path)
     # Scale avatar to full frame height, preserving its aspect ratio
     scaled_avatar_w = int(avatar_w * (FRAME_H / avatar_h))
     footage_w = max(FRAME_W - scaled_avatar_w, 1)
+
+    if out_path.exists():
+        return True, footage_w
 
     if bg_mode == "greenscreen":
         avatar_filter = (
@@ -122,24 +126,30 @@ def composite_step(
     r = subprocess.run(cmd, capture_output=True)
     if r.returncode != 0:
         print(f"[compositor] step composite failed:\n{r.stderr.decode(errors='replace')[-800:]}")
-        return False
-    return True
+        return False, footage_w
+    return True, footage_w
 
 
 def composite_timeline(timeline: dict, out_dir: Path, bg_mode: str = "greenscreen") -> Path | None:
     """
     Builds the full base video (all steps composited + concatenated) from
     a timeline.json dict. Returns the output path, or None on failure.
+
+    Also writes layout.json (footage_w, frame dims) alongside base_video.mp4
+    so the later overlay-compositing step knows the exact footage-zone width
+    without re-deriving it from the avatar clip.
     """
     composited_dir = out_dir / "pieces" / "composited"
     composited_dir.mkdir(parents=True, exist_ok=True)
     final_out = out_dir / "base_video.mp4"
+    layout_path = out_dir / "layout.json"
 
     if final_out.exists():
         print(f"[compositor] base_video.mp4 already exists, skipping")
         return final_out
 
     step_clips = []
+    footage_w = None
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         for step in timeline["steps"]:
@@ -154,10 +164,12 @@ def composite_timeline(timeline: dict, out_dir: Path, bg_mode: str = "greenscree
                 return None
 
             step_out = composited_dir / f"step_{idx:02d}.mp4"
-            ok = composite_step(footage_path, avatar, step_out, bg_mode=bg_mode)
+            ok, step_footage_w = composite_step(footage_path, avatar, step_out, bg_mode=bg_mode)
             if not ok:
                 print(f"[compositor] step {idx}: composite failed, aborting")
                 return None
+            if footage_w is None:
+                footage_w = step_footage_w
             step_clips.append(step_out)
 
         concat_list = tmp / "final_concat.txt"
@@ -177,5 +189,69 @@ def composite_timeline(timeline: dict, out_dir: Path, bg_mode: str = "greenscree
             print(f"[compositor] final concat failed:\n{r.stderr.decode(errors='replace')[-600:]}")
             return None
 
+    layout_path.write_text(
+        json.dumps({"frame_w": FRAME_W, "frame_h": FRAME_H, "footage_w": footage_w}, indent=2),
+        encoding="utf-8",
+    )
     print(f"[compositor] Base video built: {final_out.name} ({len(step_clips)} steps)")
     return final_out
+
+
+def composite_overlay(
+    base_video_path: Path,
+    overlay_video_path: Path,
+    out_path: Path,
+    footage_w: int | None = None,
+    bg_mode: str = "greenscreen",
+) -> bool:
+    """
+    Layers a rendered Remotion overlay video onto the FOOTAGE ZONE ONLY of an
+    already-composited base_video.mp4 (avatar + footage side by side), leaving
+    the avatar untouched — matches Randy's confirmed design: graphics play on
+    top of the footage side, never over the avatar.
+
+    Overlay video is expected to be rendered at exactly footage_w x FRAME_H
+    (not full-frame) on a pure #00FF00 background per the existing Remotion
+    convention (long-form-video-production skill, Stage 4) — chromakeyed here
+    the same way the avatar is, then placed at x=0, y=0.
+
+    footage_w: if not given, read from layout.json next to base_video_path
+    (written by composite_timeline).
+    """
+    if out_path.exists():
+        return True
+
+    if footage_w is None:
+        layout_path = base_video_path.parent / "layout.json"
+        if not layout_path.exists():
+            print(f"[compositor] footage_w not given and no layout.json found next to {base_video_path.name}")
+            return False
+        footage_w = json.loads(layout_path.read_text(encoding="utf-8"))["footage_w"]
+
+    if bg_mode == "greenscreen":
+        overlay_filter = (
+            f"[1:v]scale={footage_w}:{FRAME_H},"
+            f"chromakey=color={GREENSCREEN_HEX}:similarity=0.15:blend=0.05[ovl]"
+        )
+    else:
+        overlay_filter = f"[1:v]scale={footage_w}:{FRAME_H}[ovl]"
+
+    cmd = [
+        "ffmpeg", "-y",
+        "-i", str(base_video_path),
+        "-i", str(overlay_video_path),
+        "-filter_complex",
+        f"{overlay_filter};"
+        f"[0:v][ovl]overlay=x=0:y=0:shortest=1[vout]",
+        "-map", "[vout]",
+        "-map", "0:a",
+        "-c:v", "libx264", "-preset", "fast", "-pix_fmt", "yuv420p",
+        "-c:a", "aac", "-b:a", "192k",
+        str(out_path),
+    ]
+    r = subprocess.run(cmd, capture_output=True)
+    if r.returncode != 0:
+        print(f"[compositor] overlay composite failed:\n{r.stderr.decode(errors='replace')[-800:]}")
+        return False
+    print(f"[compositor] Overlay composited: {out_path.name}")
+    return True
