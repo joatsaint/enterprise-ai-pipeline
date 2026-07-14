@@ -63,13 +63,21 @@ def _append_error(video_id, url, error_msg):
     try:
         log = _read_json(ERROR_LOG)
     except Exception:
-        log = {"errors": []}
-    log["errors"].append({
+        log = []
+    entry = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "video_id": video_id,
         "url": url,
         "error": error_msg,
-    })
+    }
+    # error_log.json is written as a flat list by every other module that
+    # touches it (gdrive_fetcher, skool, substack_*, web_page) — only this
+    # function ever assumed a {"errors": [...]} wrapper. Match what's
+    # actually on disk instead of forcing a schema other writers don't use.
+    if isinstance(log, dict):
+        log.setdefault("errors", []).append(entry)
+    else:
+        log.append(entry)
     _write_json(ERROR_LOG, log)
 
 
