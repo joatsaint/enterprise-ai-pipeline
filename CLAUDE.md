@@ -53,6 +53,44 @@ the exact staleness problem this rule exists to prevent (same lesson as the
 council-reviewed manifest-hook rejection, 2026-07-10). A live search is always current;
 a written catalog isn't.
 
+### External Prior-Art Rule (added 2026-07-13)
+Before starting any new BUILD (not casual conversation — an actual "let's create X"
+moment), run a real external web search for existing prior art / competing products
+before designing anything. Internal search (the rule above) only checks what Randy
+already has; it says nothing about what already exists in the market. **Why:** the
+Claude Code Memory Plan (found by Randy on his own, not surfaced by Claude first) is a
+real example of a gap this closes — a specific creator's product Claude had no reason to
+suspect existed, since nothing prompted a search for it. Search finds things well when
+you know roughly what to look for; it's weak at surfacing a category you didn't know
+existed at all. A broad, speculative "what's already out there for X" search — even with
+no specific claim to verify — closes that gap. **How to apply:** before proposing a new
+tool, template, or feature, search for real competing/prior-art solutions and report
+findings honestly (including if the space is crowded) before recommending whether/how to
+proceed — matches the standard already applied to SwarmOps's governance-layer
+positioning (Neo Agent, MSPbots, Atera found this way) and the AEO/AI-visibility niche
+research. Don't let this slow down conversation that isn't a build — it's scoped to new
+builds specifically, not every topic mentioned.
+
+### Simplest-Path-First Rule (added 2026-07-13)
+Before starting any new project or build, explicitly consider "Worse is Better" / "the
+simplest thing that could possibly work" first — a real, established principle (Richard
+P. Gabriel's 1989 essay; also MVP/Lean Startup, Extreme Programming) that a simpler,
+less complete implementation usually wins in the real world over a more sophisticated
+one, because it ships and gets real feedback sooner instead of chasing theoretical
+completeness. **Why:** surfaced from Jared Rhod's "prompts + Claude Code + Obsidian, no
+custom infrastructure" approach to his Jarvis agent — not a new idea, an old, well-
+documented one, applied at the right moment. People don't default to it because
+technical culture rewards sophistication as a status signal, and because people import
+scale/rigor assumptions from contexts that don't apply to the actual problem in front of
+them. (Real caveat, not survivorship-bias-blind: plenty of people try the simple version
+and get no attention — visible success isn't proof the idea was novel, just that the
+execution and timing landed.) **How to apply:** before designing a new build, ask
+explicitly whether a simpler version (fewer moving parts, no custom infrastructure, an
+existing tool used as-is) already solves the real problem, before assuming more
+sophistication is needed. Pairs with the External Prior-Art Rule above — that rule checks
+whether something already exists; this one checks whether what you're about to build is
+more complex than the actual problem requires.
+
 ---
 
 ## Project Identity
