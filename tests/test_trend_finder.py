@@ -340,7 +340,7 @@ def test_gather_candidates_combines_all_sources():
 
 
 # ---------------------------------------------------------------------------
-# orchestrator — sequencing + writing to content-engine/pending/
+# orchestrator — sequencing + writing to content-engine/content/
 # ---------------------------------------------------------------------------
 
 TOP_RANKED = [

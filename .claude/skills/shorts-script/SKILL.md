@@ -100,7 +100,7 @@ upload (the API reports `fileSize: 1` for Docs even when populated — read it b
 - **9:16 vertical.** Top half = 1080×960 card (`content-engine/generate_short_card.py`); bottom half =
   Randy's talking-head footage. Text baked into the card with Pillow (line 1 white, line 2 amber).
 - **Card headline = 3–5 words, 2 lines.** First frame / cover = the card headline.
-- **Style preset** from `content-engine/pending/_video/SHORTS_STYLE_PRESETS.md` — default **Enterprise-IT**
+- **Style preset** from `content-engine/content/_video/SHORTS_STYLE_PRESETS.md` — default **Enterprise-IT**
   for a consistent series; swap only when a unit wants a different cold open. Style serves the script.
 - **Captions required** (most watch on mute): white default, **industrial amber `#E0A21A`** on the
   emphasis word, CRT green only for literal "system OK", incident red on a single alert beat. Charcoal
@@ -118,7 +118,7 @@ upload (the API reports `fileSize: 1` for Docs even when populated — read it b
 - Human-paced release: 2–3/week, don't dump all N the same day.
 
 ## Output location
-`content-engine/pending/{slug}/_shorts/` — per `memory/project_content_folder_convention.md` (one folder
+`content-engine/content/{slug}/_shorts/` — per `memory/project_content_folder_convention.md` (one folder
 per article; `_video/`-adjacent shorts live under the article's folder). Files:
 `00_INTRO.md`, `01_*.md` … `0N_*.md`, `0(N+1)_OUTRO.md`, `_PRODUCTION-NOTES.md`, `_STITCH-PLAN.md`.
 

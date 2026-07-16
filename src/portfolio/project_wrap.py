@@ -8,7 +8,7 @@ For every milestone shipped, generates:
   4. youtube-topic.md       — title, hook, demo flow, CTA outline
   5. service-offering.md    — what Randy offers, who it's for, what they get
 
-Outputs land in content-engine/pending/{project}-{milestone}/
+Outputs land in content-engine/content/{project}-{milestone}/
 
 Usage:
   python -m src.main project-wrap <project> <milestone> [--context path] [--context path]
@@ -26,7 +26,7 @@ import anthropic
 
 from src.utils.ai import create
 
-PENDING_DIR = Path("content-engine/pending")
+PENDING_DIR = Path("content-engine/content")
 MODEL = "claude-haiku-4-5-20251001"
 MAX_TOKENS = 2048
 
@@ -155,7 +155,7 @@ def run_project_wrap(project: str, milestone: str, context_paths: list[str]):
     print(f"\n{'━' * 56}")
     print(f" Project Wrap — {project}")
     print(f" Milestone: {milestone}")
-    print(f" Output: content-engine/pending/{slug}/")
+    print(f" Output: content-engine/content/{slug}/")
     print(f"{'━' * 56}\n")
 
     generated = {}
@@ -198,5 +198,5 @@ def run_project_wrap(project: str, milestone: str, context_paths: list[str]):
     (out_dir / "_README.md").write_text(readme, encoding="utf-8")
 
     print(f"\n{'━' * 56}")
-    print(f" ✓ 5 assets generated → content-engine/pending/{slug}/")
+    print(f" ✓ 5 assets generated → content-engine/content/{slug}/")
     print(f"{'━' * 56}\n")

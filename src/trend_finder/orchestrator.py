@@ -1,6 +1,6 @@
 """
 Trend Finder orchestrator — sequences source_scanner -> relevance_scorer ->
-post_drafter and writes the day's draft to content-engine/pending/ for
+post_drafter and writes the day's draft to content-engine/content/ for
 Randy's review.
 
 Pipeline (one run = one draft, per the locked-in "1 draft per day" scope):
@@ -8,7 +8,7 @@ Pipeline (one run = one draft, per the locked-in "1 draft per day" scope):
   2. score_topics()       -> ranked by fit to the ICP
   3. draft_post()         -> full post draft + rationale, in voice, for the
                              single top-ranked topic
-  4. write_draft()        -> content-engine/pending/<slug>/ (text-post.md + _README.md)
+  4. write_draft()        -> content-engine/content/<slug>/ (text-post.md + _README.md)
   5. _append_log()        -> append a run record to logs/trend_finder_log.json
 
 This module never publishes anything — it only ever proposes. Every draft
@@ -26,7 +26,7 @@ from src.trend_finder.post_drafter import draft_post
 
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-PENDING_DIR = ROOT / "content-engine" / "pending"
+PENDING_DIR = ROOT / "content-engine" / "content"
 TREND_LOG = ROOT / "logs" / "trend_finder_log.json"
 VOICE_PATH = ROOT / "knowledge" / "me" / "voice.md"
 
@@ -56,7 +56,7 @@ def _append_log(record):
 
 
 def _write_draft(slug, topic, draft):
-    """Write the draft + a review README into content-engine/pending/<slug>/."""
+    """Write the draft + a review README into content-engine/content/<slug>/."""
     out_dir = PENDING_DIR / slug
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -148,9 +148,9 @@ def run(dry_run=False):
     slug = _slugify(top_topic.get("title", "untitled"), date_str)
     written = _write_draft(slug, top_topic, draft)
     summary["status"] = "drafted"
-    summary["output_dir"] = f"content-engine/pending/{slug}"
+    summary["output_dir"] = f"content-engine/content/{slug}"
 
-    print(f"[DONE] Draft written -> content-engine/pending/{slug}/ ({', '.join(written)})")
+    print(f"[DONE] Draft written -> content-engine/content/{slug}/ ({', '.join(written)})")
     print("       Review, edit, and approve before scheduling to Buffer.")
 
     # Autonomy L1 — log a shadow verdict for this draft (non-fatal: vetting must

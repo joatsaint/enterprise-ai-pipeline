@@ -76,6 +76,11 @@ anything, confirm live:
 Submit each scene via `mcp__heygen__create_video_from_avatar` with the
 confirmed `avatarId`/`voiceId`. **Always confirm settings with Randy before
 submitting** — this costs real credits (see `feedback_heygen_ask_before_submit`).
+
+**Before submitting, also check the script against the Text-to-Speech
+Formatting Rules in `youtube-script/SKILL.md`** — numbers spelled out, no
+ambiguous hyphenated ranges/shorthand. Cheaper to catch in the text than
+after a real render.
 Consider submitting Scene 1 alone as a test before batch-generating the
 rest, so a framing/lip-sync problem doesn't cost credits across every scene.
 
@@ -184,10 +189,15 @@ the same rhythm) — gets the same recognition without reproducing the IP.
 
 **Recurring character — "the operator":** a consistent visual identity used
 across LinkedIn article images (`04_operator.png` in several `content-engine/
-pending/` article folders) and this video's assets: man in his 50s, short
+content/` article folders) and this video's assets: man in his 50s, short
 gray/salt-and-pepper beard, dark polo shirt, IT-office/server-room setting.
 Keep new generations consistent with this description rather than
 re-deriving it from scratch each time.
+
+**Before generating the thumbnail, confirm the destination is
+`video-production/long-form/<slug>/`, not the Shorts-card folder** — see the
+image-prompt skill's "three questions before any image run" and its Gotcha
+on the same real bug (fixed 2026-07-15).
 
 **Title/thumbnail-text pairing:** once the video title is locked, thumbnail
 text should complement it, not repeat it — title carries the stakes/hook,

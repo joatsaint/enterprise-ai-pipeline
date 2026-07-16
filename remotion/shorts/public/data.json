@@ -1,49 +1,49 @@
 {
   "fps": 30,
-  "durationInFrames": 1391,
+  "durationInFrames": 1350,
   "width": 1080,
   "height": 1920,
   "bgColor": "#0C0C0E",
-  "textHook": "AI built it. Nobody owns it.",
+  "textHook": "I built an app. Nobody noticed.",
   "textHookEndFrame": 300,
   "sections": [
     {
       "label": "hook",
-      "text": "Junior dev used AI to build a dashboard. Now nobody can fix it.",
+      "text": "In 2014 I built two mobile apps with zero coding background.",
       "startFrame": 0,
-      "endFrame": 0,
+      "endFrame": 217,
       "color": "#39ff14",
       "size": "large"
     },
     {
       "label": "problem",
-      "text": "Vibe-coded tools are showing up in production. No documentation, no logic trail, no one who actually understands what the thing is doing. And guess who gets the 2am ticket when it breaks.",
-      "startFrame": 0,
-      "endFrame": 437,
+      "text": "Most people think a skill like that gets noticed on its own.",
+      "startFrame": 217,
+      "endFrame": 313,
       "color": "#f8f9fa",
       "size": "medium"
     },
     {
       "label": "insight",
-      "text": "This is the part nobody's saying out loud: AI didn't replace the sysadmin. It created a new layer of undocumented, unreviewed infrastructure that only makes sense to the person who prompted it \u2014 and they're already on to the next thing.",
-      "startFrame": 437,
-      "endFrame": 817,
+      "text": "The people who needed the apps to work knew exactly what almost went wrong",
+      "startFrame": 313,
+      "endFrame": 666,
       "color": "#FF6700",
       "size": "medium"
     },
     {
       "label": "implication",
-      "text": "Start treating every AI-generated tool like a vendor black box. Document what it's supposed to do, what it touches, and what breaks if it goes offline. Because right now that knowledge lives nowhere except maybe a chat history that's already been cleared.",
-      "startFrame": 817,
-      "endFrame": 1270,
+      "text": "But here is the thing",
+      "startFrame": 666,
+      "endFrame": 1216,
       "color": "#f8f9fa",
       "size": "medium"
     },
     {
       "label": "cta",
-      "text": "Drop a comment if you've already inherited one of these. I want to know how bad it is.",
-      "startFrame": 1270,
-      "endFrame": 1391,
+      "text": "Write it down before you need it on a resume.",
+      "startFrame": 1216,
+      "endFrame": 1350,
       "color": "#39ff14",
       "size": "small"
     }

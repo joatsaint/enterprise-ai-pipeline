@@ -67,9 +67,9 @@ intelligence. It's the highest-signal input and it's free. Every brief should st
 #### Input 4 — Repetition Guard
 
 **Files to read:**
-- `content-engine/ARTICLES.md` (or equivalent article schedule/index)
+- `content-engine/content/ARTICLES.md` (or equivalent article schedule/index)
 - `content-engine/POSTED_LOG.md`
-- `content-engine/pending/_ideas/_CONTENT_INVENTORY.md` (if exists)
+- `content-engine/content/_ideas/_CONTENT_INVENTORY.md` (if exists)
 
 **What to extract:** Has this topic or angle already been covered?
 - If yes: name the article (number + full title), the angle used, and whether a new

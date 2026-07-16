@@ -11,7 +11,7 @@ a time, paced + direct-first, and caches each topic so re-runs are free.
 
   python -m src.main spiceworks-hangouts [--per-tag N]   # default 12 topics/tag
 
-Out: content-engine/icp_research/spiceworks_hangouts.md  (gitignored)
+Out: content-engine/research/icp_research/spiceworks_hangouts.md  (gitignored)
 """
 import collections
 import json
@@ -32,7 +32,7 @@ from src.trend_finder.source_scanner import (
 from src.utils.atomic import atomic_write_json, atomic_write_text
 
 CACHE_DIR = os.path.join(".cache", "spiceworks_topics")
-OUT_DIR = os.path.join("content-engine", "icp_research")
+OUT_DIR = os.path.join("content-engine", "research", "icp_research")
 OUT_PATH = os.path.join(OUT_DIR, "spiceworks_hangouts.md")
 
 # domain substring -> human platform label (ordered: first match wins)

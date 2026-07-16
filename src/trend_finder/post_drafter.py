@@ -4,7 +4,7 @@ LinkedIn post draft in Randy's voice, plus a short rationale note explaining
 why the topic was chosen.
 
 This module never publishes anything. It produces text for a human review
-queue (content-engine/pending/) — the same review→approve→schedule→publish
+queue (content-engine/content/) — the same review→approve→schedule→publish
 flow every other piece of content in this project goes through.
 """
 import os

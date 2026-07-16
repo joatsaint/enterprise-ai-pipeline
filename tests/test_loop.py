@@ -12,7 +12,7 @@ from src import loop
 
 
 def test_run_loop_drafted(capsys):
-    summary = {"status": "drafted", "output_dir": "content-engine/pending/TREND_x",
+    summary = {"status": "drafted", "output_dir": "content-engine/content/TREND_x",
                "topic": "T", "score": 0.8}
     with patch.object(loop, "run_trending", return_value=summary) as m, \
          patch.object(loop, "build_report", return_value=["STATUS-LINE"]):

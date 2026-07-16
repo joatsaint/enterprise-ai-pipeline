@@ -18,7 +18,7 @@ scheduled/published, never modify `dashboard_state.json`.
 
 ## Before drafting (read these — in order)
 1. `content-engine/CONTENT_PUBLISHING_RULES.md` — governs all content work.
-2. **The latest curator digest** — newest file in `content-engine/newsletter_curation/YYYY-MM-DD_digest.md`.
+2. **The latest curator digest** — newest file in `content-engine/research/newsletter_curation/YYYY-MM-DD_digest.md`.
    This is the raw material for "The Signal." If none exists or it's stale, tell Randy to run
    `python -m src.main curate-newsletters` first.
 3. **`knowledge/me/icp_pain_map.md`** — the Core Pains. The Pain Point section pulls ONE from here.
@@ -81,7 +81,7 @@ Weekly, **Sunday evening** (decoupled from the Tuesday article on purpose; catch
 their week). Easy to move — a starting assumption, not a constraint.
 
 ## Output
-Write the draft to `content-engine/newsletter_curation/issues/YYYY-MM-DD_issue.md` (create the folder if
+Write the draft to `content-engine/research/newsletter_curation/issues/YYYY-MM-DD_issue.md` (create the folder if
 needed). Title the file with the issue's Sunday date. Draft for review — Randy edits, approves, and
 publishes manually on LinkedIn.
 

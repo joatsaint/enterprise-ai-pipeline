@@ -168,33 +168,43 @@ Applies to `content-engine/dashboard_state.json` and every schedule/status file:
 - On conflict between any two rules/files, stop and report using the conflict
   format in the create-next-article skill before changing anything.
 
-### dashboard_state.json — Single Source of Truth for All LinkedIn Activity
+### Completion Propagation Protocol — dashboard_state.json is the Single Source of Truth
 
-`content-engine/dashboard_state.json` is the one source of truth for every LinkedIn
-asset and action. No other file (POSTED_LOG.md, session log, Buffer, memory) overrides
-it. When they conflict, trust dashboard_state.json and update the others.
+`content-engine/dashboard_state.json` (schema v2, extended 2026-07-15) is the one
+source of truth for every article, LinkedIn asset, long-form video, and Short — not
+just LinkedIn. No other file (POSTED_LOG.md, session log, Buffer, metadata.json,
+memory) overrides it. When they conflict, trust dashboard_state.json and update the
+others. `dashboard.py` (the old Flask web UI) is retired — do not treat it as
+authoritative or assume Randy is looking at it.
 
-**What must be tracked in dashboard_state.json:**
-- Every LinkedIn asset per article: linkedin-article, article-hero-image, carousel,
-  text-post, image-post, newsletter, first-comments, poll, buffer-schedule
-- Per-asset flags: written, reviewed, approved, scheduled, published
-- Commenting activity: first_comment (posted/date), group_posts (count/last_posted),
-  b3_comments (count/last_session)
+**What's tracked, and where, by asset type:**
+| Asset type | Section in dashboard_state.json | Key fields |
+|---|---|---|
+| LinkedIn article/post/carousel/MONTE post | `articles.<slug>.pieces.<piece>` | written, reviewed, approved, scheduled, published |
+| LinkedIn commenting activity | `articles.<slug>.commenting` | first_comment (posted/date), group_posts, b3_comments |
+| Long-form YouTube video | `long_form_videos.<slug>` | status, title, publish_date, platform |
+| YouTube Short | `shorts_videos.<slug>` | status, publish_date |
 
-**When dashboard_state.json MUST be updated:**
-1. Any asset is written, reviewed, or approved → update that flag immediately
-2. Any asset is scheduled in Buffer → set scheduled=true before ending the session
-3. Any asset goes live on LinkedIn → set published=true before ending the session
-4. First comment is posted → update commenting.first_comment.posted + date
-5. Group cross-posts go out → increment commenting.group_posts.count + last_posted
-6. A B3 commenting session completes → update commenting.b3_comments.last_session
+**The mandatory trigger — fires immediately, same turn, never deferred:**
+The instant Randy reports ANYTHING as done, published, posted, live, or complete —
+whether or not it was the topic of the current task — do this in that same turn, not
+at session end and not just logged narratively to SESSION_LOG.md:
+1. Identify which asset type it is (table above) and find its entry.
+2. Update every relevant field to match what Randy just said.
+3. Report back an explicit confirmation: which file(s) were updated and exactly which
+   fields changed — so Randy can see it happened without opening the file himself.
+   Never just acknowledge conversationally and move on.
 
-**End-of-session LinkedIn audit (mandatory when any LinkedIn work occurred):**
-Before closing any session that touched LinkedIn content or scheduling:
-1. List every asset touched this session
-2. Verify each one's dashboard_state.json flags match reality
-3. If any flag is stale, update it — with Randy's approval per Status-Change Safety rules
-4. If Randy reports a post went live that session, update published=true immediately
+This is the actual fix for a real, named failure mode: Randy reporting something
+complete, getting an acknowledgment that lands only in the session log, and coming
+back later to find the tracking files never caught up. Session-log narrative is not a
+substitute for updating the structured trackers — both happen, every time.
+
+**End-of-session audit (safety net, not the primary mechanism):**
+Before closing any session that touched content or video work, do one final pass:
+list everything touched, verify dashboard_state.json matches reality, and catch
+anything the same-turn trigger above might have missed. If Randy reports a
+completion during this pass, update immediately per the same protocol.
 
 **POSTED_LOG.md is a historical record only** — it is append-only and never
 authoritative. If POSTED_LOG.md and dashboard_state.json conflict, fix

@@ -165,7 +165,7 @@ def test_run_curate_no_matches_writes_no_digest():
                 __import__("datetime").timezone.utc
             ).strftime("%Y-%m-%d")
             assert not os.path.isfile(
-                f"content-engine/newsletter_curation/{today}_digest.md"
+                f"content-engine/research/newsletter_curation/{today}_digest.md"
             )
 
             with open("logs/newsletter_curation_log.json", encoding="utf-8") as fh:
@@ -214,7 +214,7 @@ def test_run_curate_produces_digest_with_relevant_items():
 
             import datetime as dt
             today = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d")
-            digest_path = f"content-engine/newsletter_curation/{today}_digest.md"
+            digest_path = f"content-engine/research/newsletter_curation/{today}_digest.md"
             assert os.path.isfile(digest_path)
 
             content = open(digest_path, encoding="utf-8").read()

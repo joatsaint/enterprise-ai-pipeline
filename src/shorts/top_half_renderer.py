@@ -96,7 +96,12 @@ def _write_remotion_data(whisper: dict, sections: list, text_hook: str, out_dir:
 
 
 def render_variant_a(whisper: dict, sections: list, text_hook: str, out_dir: Path) -> Path | None:
-    out_path = out_dir / "top_a.mp4"
+    # Absolute path, deliberately -- the Remotion CLI runs with cwd=REMOTION_DIR
+    # below, so a relative out_path here silently resolves under the Remotion
+    # project folder instead of the real output location (real bug found
+    # 2026-07-15 during a live end-to-end pipeline test -- same root cause as
+    # the FFmpeg concat-path bug in render_variant_b).
+    out_path = (out_dir / "top_a.mp4").resolve()
     if out_path.exists():
         print("[remotion] top_a.mp4 already exists, skipping")
         return out_path
@@ -166,10 +171,15 @@ def _images_to_video(image_paths: list, durations: list, out_path: Path) -> bool
     concat_path = out_path.parent / "_concat_b.txt"
     with open(concat_path, "w") as f:
         for img, dur in zip(image_paths, durations):
-            f.write(f"file '{img.as_posix()}'\n")
+            # Absolute paths here, deliberately -- FFmpeg's concat demuxer
+            # resolves relative paths against the concat file's own directory,
+            # not the process CWD. Writing a CWD-relative path here silently
+            # double-prefixes and fails to open (real bug found 2026-07-15
+            # during a live end-to-end pipeline test).
+            f.write(f"file '{img.resolve().as_posix()}'\n")
             f.write(f"duration {dur:.3f}\n")
         if image_paths:
-            f.write(f"file '{image_paths[-1].as_posix()}'\n")
+            f.write(f"file '{image_paths[-1].resolve().as_posix()}'\n")
 
     cmd = [
         "ffmpeg", "-y",

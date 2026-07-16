@@ -14,7 +14,7 @@ Curation mode reads newsletter_sources.json for the active sender allowlist,
 matches messages in the fetch cache against it, and uses Claude to filter for
 relevance, summarize key AI topics, and explain why each item fits Randy's
 AI-career-focused content business. Output mirrors digest.py's format and is
-written to content-engine/newsletter_curation/YYYY-MM-DD_digest.md.
+written to content-engine/research/newsletter_curation/YYYY-MM-DD_digest.md.
 
 Curation also writes logs/newsletter_move_candidates.json — the message IDs of
 every matched (active-sender) item — so the headless pipeline can move those
@@ -36,7 +36,7 @@ from datetime import datetime, timezone
 from html import unescape
 
 SOURCES_PATH = "newsletter_sources.json"
-OUTPUT_DIR = "content-engine/newsletter_curation"
+OUTPUT_DIR = "content-engine/research/newsletter_curation"
 CURATION_LOG_PATH = "logs/newsletter_curation_log.json"
 ERROR_LOG_PATH = "logs/error_log.json"
 FETCH_CACHE_PATH = "logs/newsletter_fetch_cache.json"
@@ -428,7 +428,7 @@ def run_curate(days: int = 7, force: bool = False, scheduled: bool = False,
     - Loads the active sender allowlist from newsletter_sources.json
     - Matches cached messages whose sender address is on the allowlist
     - Uses Claude to filter for relevance, summarize, and explain "why this fits"
-    - Writes content-engine/newsletter_curation/YYYY-MM-DD_digest.md (overwrite)
+    - Writes content-engine/research/newsletter_curation/YYYY-MM-DD_digest.md (overwrite)
     - Writes logs/newsletter_move_candidates.json with message IDs to move
     - Appends matched message IDs to logs/newsletter_processed_ids.json so they
       are excluded from future runs

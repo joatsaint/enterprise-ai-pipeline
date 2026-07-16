@@ -29,7 +29,7 @@ from src.radar.comment_generator import generate_comments
 from src.utils.atomic import atomic_write_text, atomic_write_json
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-OUT_DIR = ROOT / "content-engine" / "daily_radar"
+OUT_DIR = ROOT / "content-engine" / "research" / "daily_radar"
 STATE_PATH = OUT_DIR / "radar_state.json"
 RADAR_LOG = ROOT / "logs" / "daily_radar_log.json"
 
@@ -128,7 +128,7 @@ def _write_day(date_str, items):
 def run(dry_run=False, top_n=10):
     """
     Run the Daily Audience Radar pipeline once: gather -> score -> draft
-    comments -> write content-engine/daily_radar/<date>_radar.md.
+    comments -> write content-engine/research/daily_radar/<date>_radar.md.
 
     --dry-run gathers and scores only (no comment-drafting spend, nothing
     written) — same convention as trending --dry-run.

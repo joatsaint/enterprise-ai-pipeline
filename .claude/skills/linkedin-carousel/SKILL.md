@@ -8,7 +8,7 @@ description: Generate a code-rendered LinkedIn carousel (1080x1350 portrait, Gen
 Turns an article into an 8–9 slide LinkedIn carousel using a terminal/engineering
 visual system the GenX-IT audience respects — code-rendered (deterministic, $0,
 editable), as opposed to the AI-image carousels (`generate_carousel_images.py`).
-Reference output: `content-engine/pending/ART3-motel/ART3-motel_carousel_CODE.pdf`.
+Reference output: `content-engine/content/articles/ART3-motel/ART3-motel_carousel_CODE.pdf`.
 
 > **A/B STATUS (2026-06-20):** Randy is testing this code-rendered style vs the
 > existing image-gen carousels for ICP engagement/value. Keep both pipelines until
