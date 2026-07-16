@@ -323,7 +323,13 @@ def test_digest_scheduled_mode_silent_on_error(capsys):
             assert os.path.isfile("logs/error_log.json")
             with open("logs/error_log.json", encoding="utf-8") as fh:
                 log = json.load(fh)
-            assert any("API unavailable" in e["error"] for e in log["errors"])
+            # error_log.json is a flat list on disk, matching every other
+            # module in the codebase -- this test previously asserted
+            # log["errors"] (dict access), which encoded the same wrong
+            # assumption that caused the production bug (digest.py's
+            # _append_error_log crashing on real transient API errors).
+            assert isinstance(log, list)
+            assert any("API unavailable" in e["error"] for e in log)
         finally:
             os.chdir(orig)
 
