@@ -1,5 +1,5 @@
 """
-Loader for Buffer-eligible posts that live in content-engine/pending/{slug}/
+Loader for Buffer-eligible posts that live in content-engine/content/{slug}/
 (the current folder-per-piece structure), as opposed to the legacy single-file
 docs/...CONTENT_DRAFTS.md format that content_parser.py reads.
 
@@ -19,41 +19,41 @@ CST_OFFSET = timedelta(hours=-6)
 
 PENDING_ITEMS = {
     "mon-career-2": {
-        "file": "content-engine/pending/career-positioning-series/02_the-skill-that-makes-you-indispensable.md",
+        "file": "content-engine/content/career-positioning-series/02_the-skill-that-makes-you-indispensable.md",
         "body_between": ("# Post body", "# First comment"),
         "label": "Mon 6/22 — Career post #2 (observability)",
     },
     "wed-art8-text": {
-        "file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/text-post.md",
+        "file": "content-engine/content/articles/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/text-post.md",
         "body_between": ("## TEXT FEED POST", None),
         "label": "Wed 6/24 12:15 — ART8 text teaser",
-        "image_file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/images/00_hero_vertical.png",
+        "image_file": "content-engine/content/articles/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/images/00_hero_vertical.png",
     },
     "fri-art8-image": {
-        "file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/image-post.md",
+        "file": "content-engine/content/articles/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/image-post.md",
         "body_between": ("## IMAGE POST", None),
         "label": "Fri 6/26 — ART8 image post (pull quote)",
         "strip_line_prefix": "Static image text:",
-        "image_file": "content-engine/pending/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/images/image_post_busy_vs_safe.png",
+        "image_file": "content-engine/content/articles/ART8_The_Hardest_Worker_On_My_Team_Got_Cut_First/images/image_post_busy_vs_safe.png",
     },
     "wed-art9-text": {
-        "file": "content-engine/pending/ART9_The_Next_Y2K_2038/text-post.md",
+        "file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/text-post.md",
         "body_between": ("## TEXT FEED POST", None),
         "label": "Wed 7/08 12:15 — ART9 text teaser",
     },
     "thu-art9-image": {
-        "file": "content-engine/pending/ART9_The_Next_Y2K_2038/image-post.md",
+        "file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/image-post.md",
         "body_between": ("## IMAGE POST", None),
         "label": "Thu 7/09 11:30 — ART9 image post (pull quote)",
         "strip_line_prefix": "Static image text:",
-        "image_file": "content-engine/pending/ART9_The_Next_Y2K_2038/images/image_post_pull_quote.png",
+        "image_file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/images/image_post_pull_quote.png",
     },
     "fri-art9-carousel": {
-        "file": "content-engine/pending/ART9_The_Next_Y2K_2038/carousel.md",
+        "file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/carousel.md",
         "body_between": ("## CAROUSEL CAPTION", "## SLIDES"),
         "label": "Fri 7/10 08:30 — ART9 carousel (10 slides, PDF)",
-        "document_file": "content-engine/pending/ART9_The_Next_Y2K_2038/ART9_The_Next_Y2K_2038_carousel.pdf",
-        "thumbnail_file": "content-engine/pending/ART9_The_Next_Y2K_2038/images/01_hook.png",
+        "document_file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/ART9_The_Next_Y2K_2038_carousel.pdf",
+        "thumbnail_file": "content-engine/content/articles/ART9_The_Next_Y2K_2038/images/01_hook.png",
         "document_title": "What Would You Say You Do Here? In 2038 We're Gonna Find Out!",
     },
 }

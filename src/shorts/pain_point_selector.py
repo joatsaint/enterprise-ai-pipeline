@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-RADAR_STATE = ROOT / "content-engine" / "daily_radar" / "radar_state.json"
+RADAR_STATE = ROOT / "content-engine" / "research" / "daily_radar" / "radar_state.json"
 
 SYSADMIN_KEYWORDS = [
     "sysadmin", "sys admin", "system admin", "it admin", "network admin",
@@ -71,7 +71,7 @@ def select(manual_override: str | None = None) -> dict:
     state = _load_radar_state()
     if not state:
         raise FileNotFoundError(
-            "No radar state found at content-engine/daily_radar/radar_state.json. "
+            "No radar state found at content-engine/research/daily_radar/radar_state.json. "
             "Run `python -m src.main audience-radar` first, or pass --pain-point."
         )
 

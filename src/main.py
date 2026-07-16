@@ -18,7 +18,7 @@ Usage:
   python -m src.main skool-archive --community <slug> [--resolution 1080] [--course "Name"] [--limit N]  # full offline course archive
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM"  # schedule LinkedIn post via Buffer
   python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" --dry-run
-  python -m src.main trending                   # find a trending topic, draft a post to content-engine/pending/
+  python -m src.main trending                   # find a trending topic, draft a post to content-engine/content/
   python -m src.main trending --dry-run         # gather + score only, write nothing
   python -m src.main loop                        # unified cycle: research -> draft -> review gate (status readout, no publish)
   python -m src.main loop --dry-run              # run the cycle without writing a draft
@@ -29,7 +29,7 @@ Usage:
   python -m src.main report [--days N]           # weekly AI cost report
   python -m src.main refresh-comments [--days N] [--limit N]  # re-fetch comments on videos older than N days (default 7)
   python -m src.main curate-newsletters --discover [--days N]  # list inbox senders to build newsletter_sources.json
-  python -m src.main curate-newsletters [--days N] [--force]   # curate AI newsletters into content-engine/newsletter_curation/
+  python -m src.main curate-newsletters [--days N] [--force]   # curate AI newsletters into content-engine/research/newsletter_curation/
   python -m src.main curate-newsletters --scheduled             # silent mode for Task Scheduler
   python -m src.main audience-radar [--dry-run] [--top N]       # Daily Audience Radar: find conversations, draft comments
   python -m src.main radar-status <rank> approve|edit|skip|posted|needs_reply [--note "..."] [--date YYYY-MM-DD]
@@ -441,7 +441,7 @@ def main():
         return
 
     # ----------------------------------------------------------------
-    # trending — find a trending topic, draft a post to content-engine/pending/
+    # trending — find a trending topic, draft a post to content-engine/content/
     # ----------------------------------------------------------------
     if cmd == "trending":
         dry_run = "--dry-run" in args

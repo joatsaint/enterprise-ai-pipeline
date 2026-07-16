@@ -102,7 +102,7 @@ Step 5  Remotion graphics     animated text-card composition (brand colors, sect
 Step 6  FFmpeg stitcher       chromakey composite + drawtext captions + hook overlay → final MP4
 ```
 
-**Output:** `content-engine/pending/_video/shorts/{slug}/final_a.mp4` — ready to review and post.
+**Output:** `content-engine/content/_video/shorts/{slug}/final_a.mp4` — ready to review and post.
 
 ---
 

@@ -12,7 +12,7 @@ AI matched Randy and, critically, the FALSE-APPROVE count (AI said "ship" where
 Randy would have said "kill"). That scorecard is what earns a content type its
 way to higher autonomy levels later. Nothing is auto-approved at L1.
 
-Log: content-engine/autonomy/shadow_log.jsonl — one JSON object per line,
+Log: logs/shadow_log.jsonl — one JSON object per line,
 gitignored. Two record kinds, joined by (slug, content_type):
   {"phase": "prediction", "ai_verdict": ..., "ai_confidence": ..., ...}
   {"phase": "actual",     "actual_verdict": ..., "note": ...}
@@ -32,8 +32,8 @@ from src.utils.ai import create as ai_create
 ROOT = Path(__file__).resolve().parent.parent.parent
 RUBRIC_PATH = ROOT / "knowledge" / "me" / "kill_rubric.md"
 VOICE_PATH = ROOT / "knowledge" / "me" / "voice.md"
-LOG_PATH = ROOT / "content-engine" / "autonomy" / "shadow_log.jsonl"
-PENDING_DIR = ROOT / "content-engine" / "pending"
+LOG_PATH = ROOT / "logs" / "shadow_log.jsonl"
+PENDING_DIR = ROOT / "content-engine" / "content"
 
 VERDICTS = ("ship", "fix", "kill")
 _DEFAULT_MODEL = "claude-haiku-4-5-20251001"
@@ -343,7 +343,7 @@ def run_shadow_score(slug, content_type=None):
     else:
         ctype, text = _load_asset_text(slug)
     if not text:
-        print(f"[shadow] No readable asset found in content-engine/pending/{slug}/")
+        print(f"[shadow] No readable asset found in content-engine/content/{slug}/")
         return
     print(f"[shadow] Scoring {slug} ({ctype}) against the kill-rubric...")
     pred = score_and_log(slug, ctype, text)

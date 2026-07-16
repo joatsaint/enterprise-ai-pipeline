@@ -21,8 +21,8 @@ Pipeline:
   3. Cohort = everyone whose signals include a "Steel" form; classify each by tier.
   4. Write a CSV warm-list + a counts-only summary; append a PII-free run log.
 
-Output: content-engine/warmlist/steel_warmlist.csv   (gitignored — contains emails/PII)
-        content-engine/warmlist/steel_warmlist_summary.md  (counts only)
+Output: content-engine/distribution/warmlist/steel_warmlist.csv   (gitignored — contains emails/PII)
+        content-engine/distribution/warmlist/steel_warmlist_summary.md  (counts only)
 Log:    logs/kit_sync_log.json   (counts only — never emails, per CLAUDE.md logging rules)
 
 Kit is an approved outbound integration for this project (Randy directed the funnel
@@ -38,7 +38,7 @@ import requests
 
 KIT_BASE = "https://api.kit.com/v4"
 KIT_LOG = "logs/kit_sync_log.json"
-OUT_DIR = os.path.join("content-engine", "warmlist")
+OUT_DIR = os.path.join("content-engine", "distribution", "warmlist")
 CSV_PATH = os.path.join(OUT_DIR, "steel_warmlist.csv")
 SUMMARY_PATH = os.path.join(OUT_DIR, "steel_warmlist_summary.md")
 

@@ -3,14 +3,14 @@ Unified content loop — one command that runs the owned pipeline through to the
 human approval gate, then stops. It never publishes (publishing approved content
 stays a separate, deliberate Buffer action).
 
-  python -m src.main loop            # research -> score -> draft -> pending/ (gate)
+  python -m src.main loop            # research -> score -> draft -> content/ (gate)
   python -m src.main loop --dry-run  # research + score only; write nothing
 
 This is the single sequential orchestrator from the pipeline redesign. Stages
 (each writes state — nothing lives only in chat memory):
 
-  1. Research + draft   src.trend_finder.orchestrator.run  -> a draft in pending/
-  2. Human gate         the draft waits in content-engine/pending/ for review
+  1. Research + draft   src.trend_finder.orchestrator.run  -> a draft in content/
+  2. Human gate         the draft waits in content-engine/content/ for review
   3. Status readout     prints the updated review queue so you see what's waiting
 
 QA, multi-format atomize, and publish-approved stages slot in here later — for

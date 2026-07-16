@@ -10,7 +10,7 @@ import os
 from datetime import date
 
 DASHBOARD_STATE = os.path.join("content-engine", "dashboard_state.json")
-PENDING_DIR = os.path.join("content-engine", "pending")
+PENDING_DIR = os.path.join("content-engine", "content")
 KIT_LOG = "logs/kit_sync_log.json"
 INDEX = "knowledge_base/index.json"
 RUN_SUMMARY = "logs/run_summary.json"
@@ -157,9 +157,20 @@ def build_report(today=None):
             n for n in os.listdir(PENDING_DIR)
             if os.path.isdir(os.path.join(PENDING_DIR, n))
         )
-        lines.append(f" Review queue (pending/): {len(folders)}")
+        lines.append(f" Review queue (content/): {len(folders)}")
         for n in folders[:8]:
             lines.append(f"   - {n}")
+
+    if state:
+        lf = state.get("long_form_videos", {}) or {}
+        sh = state.get("shorts_videos", {}) or {}
+        if lf or sh:
+            lines.append(" Video status:")
+            for slug, v in lf.items():
+                title = v.get("title") or "(title not set)"
+                lines.append(f"   [long-form] {slug} — {v.get('status')} — {title}")
+            for slug, v in sh.items():
+                lines.append(f"   [shorts]    {slug} — {v.get('status')}")
 
     kit = _last_run(_load_json(KIT_LOG))
     if kit:

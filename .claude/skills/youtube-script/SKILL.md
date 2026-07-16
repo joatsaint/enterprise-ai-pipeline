@@ -121,6 +121,39 @@ If the source has context but no concrete, copy-paste prompt or step-by-step:
   hook/description and ask "is this specific claim actually what happened," not just
   "does this sound clickable."
 
+## Text-to-Speech Formatting Rules (added 2026-07-14 — real edge case, not theoretical)
+
+Applies to every **[AUDIO]** line that goes to HeyGen (or any TTS engine).
+Found live editing script.md for the Knowledge Catalog video: a hyphenated
+range ("a 25-, 30-year IT career") and a bare digit ("I'm 60") were the only
+two numbers not already spelled out — everything else in that script
+already followed this instinct without it being written down anywhere.
+
+- **Spell out every number in spoken lines. Never use digit characters.**
+  "346" → "three hundred forty-six," not "346." TTS engines generally parse
+  plain numbers correctly, but spelling out removes the ambiguity entirely
+  instead of trusting the engine's guess.
+- **Hyphenated ranges and shorthand are the real risk category, not plain
+  numbers.** Something like "25-, 30-year" can be read as a dash, a
+  fragment, or garbled — write out "twenty-five, thirty-year" instead.
+  Years are the same problem: "2026" can come out as "two thousand
+  twenty-six" or "twenty twenty-six" depending on the engine — write the
+  one you actually want.
+- **Expand abbreviations on first use.** Write "text to speech (TTS)," then
+  TTS is fine afterward if the engine reads the acronym correctly on
+  playback. If an acronym gets misread, either spell it out fully or add
+  periods between the letters ("A.I." instead of "AI") — check on preview,
+  don't assume.
+- **Punctuation is a pacing instruction, not just grammar.** Periods create
+  a stronger pause than commas — use that deliberately for delivery, not
+  only for correctness.
+- **Preview before treating a script as final.** HeyGen's own guidance is
+  to play back the generated line and listen before submitting the full
+  video — this catches number/abbreviation issues cheaper than finding them
+  after a full render.
+
+Sources: [ElevenLabs — TTS best practices](https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices), [HeyGen — Script Tips](https://help.heygen.com/en/articles/9574152-script-tips), [HeyGen Academy — Scripting and Pronunciation](https://community.heygen.com/public/resources/heygen-academy-101-scripting-and-pronunciation)
+
 ## Video Title Framework (added 2026-07-11 — scoped to video titles only)
 
 **This is deliberately the opposite philosophy of the `title-generator` skill
@@ -172,7 +205,7 @@ Credibility (1-10). Recommend one and explain why it should outperform the
 others.
 
 ## Output + review gate (status-change safety)
-- Write the draft to `content-engine/pending/<slug>/youtube-script.md` (new or existing slug).
+- Write the draft to `content-engine/content/<slug>/youtube-script.md` (new or existing slug).
   If the source is an existing pending article, drop it alongside its other pieces.
 - A draft is NOT approval. Do not mark anything reviewed/approved/scheduled/published, and do
   not modify `dashboard_state.json`, unless Randy explicitly approves that exact change.
@@ -273,3 +306,10 @@ lead magnet funnel already matches this — keep doing it.
   the same file. Root cause: optimized for the curiosity-gap title *shape* without
   re-checking the specific claim against the actual content. See the fact-check rule
   added above.
+- **2026-07-14, Knowledge Catalog video:** a hyphenated age/year range ("a 25-,
+  30-year IT career") and a bare digit ("I'm 60") were the only two numbers
+  in the whole script not already spelled out — everything else already
+  followed the instinct without it being a written rule. Caught during a
+  manual formatting review, not automatically. See the Text-to-Speech
+  Formatting Rules section added above — apply it by default going forward,
+  don't wait for a review pass to catch it.

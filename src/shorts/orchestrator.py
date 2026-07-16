@@ -9,7 +9,7 @@ Steps (all idempotent — safe to re-run from any point):
   5. Render top-half graphics (Remotion A + gpt-image-1 B)
   6. Stitch finals (FFmpeg → captioned 1080×1920 shorts)
 
-Output folder: content-engine/pending/_video/shorts/{slug}/
+Output folder: content-engine/content/_video/shorts/{slug}/
 """
 import json
 import time
@@ -21,7 +21,7 @@ from src.shorts import whisper_transcriber, top_half_renderer, ffmpeg_stitcher
 from src.utils.atomic import atomic_write_json
 
 ROOT = Path(__file__).resolve().parent.parent.parent
-SHORTS_BASE = ROOT / "content-engine" / "pending" / "_video" / "shorts"
+SHORTS_BASE = ROOT / "content-engine" / "content" / "_video" / "shorts"
 ERROR_LOG = ROOT / "logs" / "error_log.json"
 
 
