@@ -66,15 +66,24 @@ def _log(msg, scheduled):
 
 
 def _append_error_log(message):
+    # error_log.json is a flat list on disk (matches every other module in
+    # the codebase, e.g. orchestrator.py's _append_error) -- not a
+    # {"errors": [...]} dict. Calling .setdefault() on the loaded list
+    # crashed this function on every transient Claude API error during
+    # summarization, silently killing the whole day's digest (root cause
+    # of 4 missing digest days, found 2026-07-15 via Task Scheduler event
+    # log + daily_run_output.log cross-reference).
     os.makedirs("logs", exist_ok=True)
-    log = {"errors": []}
+    log = []
     if os.path.isfile(ERROR_LOG_PATH):
         try:
             with open(ERROR_LOG_PATH, "r", encoding="utf-8") as fh:
                 log = json.load(fh)
         except (json.JSONDecodeError, OSError):
             pass
-    log.setdefault("errors", []).append({
+    if not isinstance(log, list):
+        log = []
+    log.append({
         "timestamp": _now_str(),
         "module": "digest",
         "error": message,
