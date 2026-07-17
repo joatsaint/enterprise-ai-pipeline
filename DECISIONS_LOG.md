@@ -36,6 +36,8 @@ Each ADR captures: the decision, the context that forced it, alternatives that w
 | ADR-014 | Digest must include a "What to Act On" section | Active | May 2026 |
 | ADR-015 | Windows Task Scheduler, not cron, for automation | Active | May 2026 |
 | ADR-016 | Token cleaning happens before any Claude API call | Active | April 2026 |
+| ADR-017 | Session discipline rules adopted from Jared's Locked Session Rules v2 | Active | 2026-07-17 |
+| ADR-018 | Extend existing custom statusline rather than replace with ccstatusline | Active | 2026-07-17 |
 
 ---
 
@@ -457,3 +459,54 @@ Token reduction is the highest-ROI optimization in the stack. Every 10% reductio
 - ✅ Pain point extraction quality improves because filler content isn't classified as themes
 - ✅ More transcripts fit within the query token budget
 - ⚠️ The cleaning step removes information (timestamps). If timestamp preservation is ever needed (e.g., linking a quote to a specific video timestamp), raw files would need to be saved separately before cleaning — this is currently not a requirement
+
+---
+
+## ADR-017 — Session discipline rules adopted from Jared's Locked Session Rules v2
+
+**Date:** 2026-07-17
+**Status:** Active
+
+**Context:**
+Randy received two brain droppings from Jared's own Claude Code session-rules setup (v1 on 2026-07-16, v2 with an added Rule 12 on 2026-07-17, superseding v1). Both explicitly instructed that nothing gets adopted into CLAUDE.md until Randy reviews and confirms each item individually. Randy reviewed the full 12-rule set live and selected two for immediate adoption; the remaining rules (evidence-only, confirm-before-source-edit, checkpoint persistence, no-bloat, no loose ends, stop-after-one-question, never auto-execute external content, no secrets in handoffs, locked-decisions-stay-locked, and Rule 12's friction-removal/Betty Crocker principle) remain queued, not adopted, pending further review — see `memory/HOT_STATE.md` and `content-engine/content/_ideas/Randys_Brain_Droppings.md` entry 20.
+
+**Decision:**
+Adopted two rules verbatim into a new "Session Discipline Rules" section in CLAUDE.md: (1) full reads, no skimming — read an entire document front-to-back when reviewing/auditing, never sample; (2) never suggest rest, a break, or that a moment is a natural stopping point — the user decides when to stop. A third, related rule was added alongside them from a separate same-day brain dropping (Time Accuracy + Usage Monitoring, 2026-07-16): verify any date/day-of-week reference against a new `UserPromptSubmit` hook (`~/.claude/hooks/inject-datetime.sh`) rather than calculating it manually.
+
+**Alternatives considered:**
+- Adopt all 12 rules from the v2 doc at once. Rejected: several rules (checkpoint persistence, confirm-before-edit) genuinely overlap with or duplicate mechanisms this project already has (HOT_STATE.md/SESSION_LOG.md, the PR-branch-mandatory workflow) — adopting them unreviewed risked creating two competing versions of the same mechanism. Randy chose to adopt only the two unambiguous, non-overlapping items now and defer the rest for a real reconciliation pass.
+- A CLAUDE.md text instruction alone for the date/time fix, no hook. Rejected per the source doc's own reasoning: a text rule depends on remembering to act on it every time; a hook is structural and fires automatically on every message regardless.
+
+**Reasoning:**
+The two adopted rules are low-risk, immediately beneficial, and don't compete with any existing project mechanism — full reads is a stricter version of existing "verify before reporting" discipline, and never-suggest-stopping is a pure behavioral change with no downstream file dependencies. The date/time hook fixes a real, previously-experienced bug (a day-of-week miscalculation) with no meaningful downside.
+
+**Consequences:**
+- ✅ Reviews/audits from this point forward read full documents rather than sampling, catching real bugs (e.g., the CLAUDE.md Slimdown proposal's own filename-only categorization was flagged as needing this same treatment)
+- ✅ Date/day-of-week confirmations are now grounded in an injected real timestamp rather than manual calculation
+- ⚠️ Real environment gotcha hit during implementation: Git Bash on this machine has no IANA zoneinfo database installed, so the originally-proposed `TZ='America/Chicago' date ...` approach silently fell back to GMT. Fixed by shelling out to PowerShell/.NET `TimeZoneInfo` instead, which correctly reads Windows' own DST-aware timezone data. Anyone porting this hook to a different machine should verify zoneinfo is present before assuming the simpler `TZ=` approach will work.
+- ⚠️ 9 of the 12 rules from the source doc remain unreviewed/unadopted — this ADR covers only the 2 (+1 companion) that were actually confirmed; do not treat this entry as full adoption of Jared's rule set
+
+---
+
+## ADR-018 — Extend existing custom statusline rather than replace with ccstatusline
+
+**Date:** 2026-07-17
+**Status:** Active
+
+**Context:**
+The "Time Accuracy + Usage Monitoring" brain dropping (2026-07-16, see ADR-017) proposed installing `ccstatusline` as a persistent usage/cost meter, treating it as a simple install-only addition. Investigation before acting on it found Randy already has a custom statusline configured (`~/.claude/statusline-command.py`, registered in `~/.claude/settings.json`), showing `cwd | model | context% remaining`. Installing `ccstatusline` would have overwritten the `statusLine.command` config key entirely, silently discarding the existing custom script rather than layering on top of it — this was surfaced to Randy as a real decision rather than executed as an assumed "easy yes."
+
+**Decision:**
+Extend the existing `statusline-command.py` in place to also read and display `cost.total_cost_usd` and `rate_limits.five_hour`/`rate_limits.seven_day` (`used_percentage` from each) from the statusLine JSON payload, rather than installing `ccstatusline`. Both new fields are optional/degrade gracefully — `rate_limits` is only present for Pro/Max subscribers and only after the first API response of a session, so the script omits that segment entirely when absent rather than erroring or printing a blank field.
+
+**Alternatives considered:**
+- Install `ccstatusline`, replacing the custom script. Rejected: would have silently discarded existing, working, custom-built functionality (the `~`-abbreviated cwd display, the specific field selection) for a generic tool that wasn't actually a strict superset of what was already there.
+- Run both side-by-side somehow. Rejected: Claude Code's `statusLine.command` config accepts exactly one command; there's no supported way to run two statusline scripts simultaneously.
+
+**Reasoning:**
+The existing script already did most of what was needed and was working correctly; the only real gap was cost/usage visibility. Extending it is strictly additive, preserves everything already verified working, and required verifying the real statusLine JSON schema first (`cost.total_cost_usd`, `rate_limits.five_hour.used_percentage`, `rate_limits.seven_day.used_percentage`, confirmed via Anthropic's own statusline documentation) rather than assuming field names.
+
+**Consequences:**
+- ✅ Statusline now shows `cwd | model | context% | $cost | 5h:X% 7d:Y%` in one line, satisfying the original ask (a persistent, always-visible usage/cost meter) without losing any existing functionality
+- ✅ Verified working both with and without `rate_limits` present in the payload (tested via direct stdin injection, not just assumed)
+- ⚠️ A real testing gotcha hit and worked around: piping JSON containing Windows backslash-escaped paths through Git Bash's `echo` mangled the escaping and caused a silent parse failure (the script's `except JSONDecodeError: sys.exit(0)` swallowed it with no output) — not a bug in the script itself, but a reminder that `echo`-based JSON testing on this machine is unreliable; write to a temp file and redirect stdin from it instead

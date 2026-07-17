@@ -346,6 +346,26 @@ If the version is below 3.10, stop and alert the user before running any code.
 
 ---
 
+## Session Discipline Rules (added 2026-07-17, source: Jared's Locked Session Rules v2 via brain droppings — see `memory/reference_brain_droppings_google_drive.md`)
+
+- **Full reads, no skimming.** When asked to read, review, or audit something,
+  read the whole thing, every line, front to back. No sampling, no "got the
+  gist." If it's genuinely too big for one session, say so and let Randy
+  decide rather than silently sampling.
+- **Never suggest rest or stopping.** Never suggest Randy rest, sleep, take a
+  break, wrap up, or that a moment is a natural stopping point. Randy decides
+  when to stop and will say so; until then the session is mid-stride no
+  matter the hour. End responses with the next action, a forward question, or
+  nothing — never an invitation to disengage. Does not override a genuine
+  safety concern unrelated to session pacing.
+- **Verify date/day-of-week against the injected timestamp, never calculate
+  manually.** A `UserPromptSubmit` hook (`~/.claude/hooks/inject-datetime.sh`)
+  stamps the real current Central-time date/day/time on every message. Before
+  confirming any publish date, deadline, or day-of-week reference, check that
+  stamp — don't assume or hand-calculate what day a future date falls on.
+
+---
+
 ## Approval Behavior — Yes Covers the Full Task
 
 When Randy says "yes," "run it," "go ahead," or equivalent to start a task:
