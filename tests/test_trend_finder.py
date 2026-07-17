@@ -329,14 +329,18 @@ def test_gather_candidates_combines_all_sources():
     with patch("src.trend_finder.source_scanner.scan_reddit", return_value=[{"title": "r"}]) as mock_reddit, \
          patch("src.trend_finder.source_scanner.scan_spiceworks", return_value=[{"title": "s"}]) as mock_spice, \
          patch("src.trend_finder.source_scanner.scan_rss", return_value=[{"title": "f"}]) as mock_rss, \
+         patch("src.trend_finder.source_scanner.scan_github", return_value=[{"title": "g"}]) as mock_github, \
+         patch("src.trend_finder.source_scanner.scan_hackernews", return_value=[{"title": "h"}]) as mock_hn, \
          patch("src.trend_finder.source_scanner.scan_knowledge_base", return_value=[{"title": "k"}]) as mock_kb:
         candidates = source_scanner.gather_candidates()
 
     mock_reddit.assert_called_once()
     mock_spice.assert_called_once()
     mock_rss.assert_called_once()
+    mock_github.assert_called_once()
+    mock_hn.assert_called_once()
     mock_kb.assert_called_once()
-    assert [c["title"] for c in candidates] == ["r", "s", "f", "k"]
+    assert [c["title"] for c in candidates] == ["r", "s", "f", "g", "h", "k"]
 
 
 # ---------------------------------------------------------------------------
