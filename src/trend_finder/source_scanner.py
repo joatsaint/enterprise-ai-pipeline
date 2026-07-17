@@ -11,7 +11,18 @@ list, not an open crawl):
     endpoint — direct connection first, proxy only as a fallback on 403/429
     (a stable IP + low frequency looks like a normal reader; rotating IPs can
     read as more bot-like to detection — so we don't proxy by default here)
+  - GitHub — public Search API (unauthenticated, 10 req/min), searched against
+    a curated term list, biased toward RECENTLY CREATED repos (not just
+    recently updated) since the goal is catching new "weekend project" builds,
+    not established repos getting routine commits
+  - Hacker News — Algolia's public HN Search API (free, no key), same curated
+    term list, restricted to the "story" tag
   - The existing transcript knowledge base (recurring themes, zero new calls)
+
+GitHub + Hacker News both search the same BUILD_SIGNAL_TERMS list — this is
+the "what are smart people obsessively building for free" signal: the same
+handful of ideas turning up independently across many different repos/posts
+is the thing worth noticing, not any single high-view post.
 
 Anti-throttling design (mirrors CLAUDE.md's existing rate-limiting rules):
   - Routes through the project's existing Webshare rotating residential proxy
@@ -33,7 +44,7 @@ import random
 import re
 import time
 from email.utils import format_datetime
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import requests
 import defusedxml.ElementTree as ET
@@ -65,11 +76,33 @@ SPICEWORKS_TAGS = [
 ]
 SPICEWORKS_BASE = "https://community.spiceworks.com"
 
+# "Weekend project" convergence terms — curated 2026-07-17 from Randy's own
+# signal-hunting brief. Search these, not generic category terms ("AI
+# assistant"), because the goal is spotting the same specific thing being
+# independently rebuilt by many people, not general topic volume.
+BUILD_SIGNAL_TERMS = [
+    "Jarvis build",
+    "AI operating system",
+    "voice assistant local AI",
+    "desktop AI",
+    "Claude Code projects",
+    "MCP server projects",
+    "agentic workflows",
+]
+
+GITHUB_SEARCH_URL = "https://api.github.com/search/repositories"
+GITHUB_LOOKBACK_DAYS = 45  # bias toward NEW repos, not old ones getting updated
+
+HN_ALGOLIA_SEARCH_URL = "https://hn.algolia.com/api/v1/search"
+HN_LOOKBACK_DAYS = 45
+
 USER_AGENT = "randy-trend-scanner/1.0 (personal research tool; contact via project owner)"
 
 REDDIT_PAUSE = (2.0, 5.0)     # randomized seconds between Reddit requests
 RSS_PAUSE = (1.0, 3.0)        # randomized seconds between RSS requests
 SPICEWORKS_PAUSE = (2.0, 5.0)  # randomized seconds between Spiceworks requests
+GITHUB_PAUSE = (6.0, 8.0)     # GitHub search API caps at 10 req/min unauthenticated
+HN_PAUSE = (1.0, 2.0)         # Algolia HN search has a generous, informal rate limit
 RATE_LIMIT_PAUSE = 60         # seconds to wait on HTTP 429 before one retry
 
 _LAST_FETCH_LOG = "logs/trend_source_last_fetch.json"
@@ -389,6 +422,155 @@ def scan_rss():
 
 
 # ---------------------------------------------------------------------------
+# GitHub — public Search API, unauthenticated, biased toward recently-created
+# repos (catching new weekend-project builds, not established repos updating)
+# ---------------------------------------------------------------------------
+
+def _github_headers():
+    headers = {
+        "User-Agent": USER_AGENT,
+        "Accept": "application/vnd.github+json",
+    }
+    token = os.getenv("GITHUB_TOKEN", "").strip()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
+def _fetch_github_term(term, limit=10):
+    """
+    Search GitHub repositories for one term, restricted to repos created in
+    the last GITHUB_LOOKBACK_DAYS days, sorted by star count. Returns a list
+    of candidate dicts, or [] on failure.
+    """
+    since = (datetime.now(timezone.utc) - timedelta(days=GITHUB_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+    query = f'{term} in:name,description,readme created:>{since}'
+    params = {"q": query, "sort": "stars", "order": "desc", "per_page": limit}
+
+    try:
+        resp = requests.get(
+            GITHUB_SEARCH_URL,
+            params=params,
+            headers=_github_headers(),
+            proxies=_get_proxies(),
+            timeout=15,
+        )
+        if resp.status_code == 403 and resp.headers.get("X-RateLimit-Remaining") == "0":
+            print(f"[RATE] GitHub search rate limit hit for '{term}' — skipping this term.")
+            return []
+        resp.raise_for_status()
+        data = resp.json()
+    except Exception as e:
+        print(f"[WARN] GitHub search failed for '{term}': {e}")
+        return []
+
+    candidates = []
+    for repo in data.get("items", [])[:limit]:
+        name = repo.get("full_name") or repo.get("name") or ""
+        if not name:
+            continue
+        description = (repo.get("description") or "").strip()
+        stars = repo.get("stargazers_count", 0)
+        created = (repo.get("created_at") or "")[:10]
+        candidates.append({
+            "title": name,
+            "summary": f"GitHub repo (matched \"{term}\", {stars} stars, created {created}): {description}"[:500],
+            "source": f"github:{term}",
+            "url": repo.get("html_url"),
+        })
+    return candidates
+
+
+def scan_github():
+    """
+    Search GitHub for each curated BUILD_SIGNAL_TERMS entry, restricted to
+    recently-created repos, with a randomized pause between each request
+    (GitHub's unauthenticated search API caps at 10 req/min). Returns a flat
+    list of candidate dicts.
+    """
+    all_candidates = []
+    for i, term in enumerate(BUILD_SIGNAL_TERMS):
+        print(f"[SCAN] github \"{term}\" ...", end=" ", flush=True)
+        found = _fetch_github_term(term)
+        all_candidates.extend(found)
+        print(f"{len(found)} candidate(s)")
+
+        if i < len(BUILD_SIGNAL_TERMS) - 1:
+            time.sleep(random.uniform(*GITHUB_PAUSE))
+
+    return all_candidates
+
+
+# ---------------------------------------------------------------------------
+# Hacker News — Algolia public Search API, free, no key
+# ---------------------------------------------------------------------------
+
+def _fetch_hn_term(term, limit=10):
+    """
+    Search Hacker News stories for one term via Algolia's public API,
+    restricted to stories posted in the last HN_LOOKBACK_DAYS days. Returns
+    a list of candidate dicts, or [] on failure.
+    """
+    since_ts = int((datetime.now(timezone.utc) - timedelta(days=HN_LOOKBACK_DAYS)).timestamp())
+    params = {
+        "query": term,
+        "tags": "story",
+        "numericFilters": f"created_at_i>{since_ts}",
+        "hitsPerPage": limit,
+    }
+
+    try:
+        resp = requests.get(
+            HN_ALGOLIA_SEARCH_URL,
+            params=params,
+            headers={"User-Agent": USER_AGENT},
+            proxies=_get_proxies(),
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    except Exception as e:
+        print(f"[WARN] Hacker News search failed for '{term}': {e}")
+        return []
+
+    candidates = []
+    for hit in data.get("hits", [])[:limit]:
+        title = (hit.get("title") or "").strip()
+        if not title:
+            continue
+        points = hit.get("points", 0)
+        num_comments = hit.get("num_comments", 0)
+        object_id = hit.get("objectID")
+        hn_url = f"https://news.ycombinator.com/item?id={object_id}" if object_id else None
+        candidates.append({
+            "title": title,
+            "summary": f"Hacker News story (matched \"{term}\", {points} points, {num_comments} comments).",
+            "source": f"hackernews:{term}",
+            "url": hit.get("url") or hn_url,
+        })
+    return candidates
+
+
+def scan_hackernews():
+    """
+    Search Hacker News for each curated BUILD_SIGNAL_TERMS entry via the
+    Algolia API, with a randomized pause between each request. Returns a
+    flat list of candidate dicts.
+    """
+    all_candidates = []
+    for i, term in enumerate(BUILD_SIGNAL_TERMS):
+        print(f"[SCAN] hackernews \"{term}\" ...", end=" ", flush=True)
+        found = _fetch_hn_term(term)
+        all_candidates.extend(found)
+        print(f"{len(found)} candidate(s)")
+
+        if i < len(BUILD_SIGNAL_TERMS) - 1:
+            time.sleep(random.uniform(*HN_PAUSE))
+
+    return all_candidates
+
+
+# ---------------------------------------------------------------------------
 # Knowledge base — recurring themes, zero new outbound calls
 # ---------------------------------------------------------------------------
 
@@ -423,12 +605,14 @@ def scan_knowledge_base(limit=5):
 
 def gather_candidates():
     """
-    Run all three scans and return one combined list of candidate dicts,
-    ready to hand to relevance_scorer.score_topics().
+    Run all scans and return one combined list of candidate dicts, ready to
+    hand to relevance_scorer.score_topics().
     """
     candidates = []
     candidates.extend(scan_reddit())
     candidates.extend(scan_spiceworks())
     candidates.extend(scan_rss())
+    candidates.extend(scan_github())
+    candidates.extend(scan_hackernews())
     candidates.extend(scan_knowledge_base())
     return candidates
