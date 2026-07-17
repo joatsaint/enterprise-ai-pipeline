@@ -443,8 +443,16 @@ def _fetch_github_term(term, limit=10):
     the last GITHUB_LOOKBACK_DAYS days, sorted by star count. Returns a list
     of candidate dicts, or [] on failure.
     """
+    # Quoted exact-phrase match -- unquoted, GitHub's search treats a multi-word
+    # term as an AND of individual words, so "Jarvis build" also matches any
+    # repo containing the generic word "build" anywhere (confirmed empirically:
+    # unquoted returned 3,013 total matches, mostly irrelevant noise like
+    # "Awesome-Agent-Engineering"; quoted returned 35, all genuinely on-topic
+    # Jarvis-style builds). Precision on the exact phrase is the whole point of
+    # this scanner -- catching the SAME specific idea recurring, not general
+    # keyword volume.
     since = (datetime.now(timezone.utc) - timedelta(days=GITHUB_LOOKBACK_DAYS)).strftime("%Y-%m-%d")
-    query = f'{term} in:name,description,readme created:>{since}'
+    query = f'"{term}" in:name,description,readme created:>{since}'
     params = {"q": query, "sort": "stars", "order": "desc", "per_page": limit}
 
     try:
