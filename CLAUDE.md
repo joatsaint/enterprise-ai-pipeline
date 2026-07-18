@@ -363,6 +363,17 @@ If the version is below 3.10, stop and alert the user before running any code.
   stamps the real current Central-time date/day/time on every message. Before
   confirming any publish date, deadline, or day-of-week reference, check that
   stamp — don't assume or hand-calculate what day a future date falls on.
+- **New projects default-create inside this folder (2026-07-17, until
+  countermanded).** Randy wants all projects — current and future — living
+  under one root, this project's folder, rather than scattered as sibling
+  folders. A new project gets its own subfolder here by default. Each
+  subproject may still keep its own independent git repo (nested-but-
+  separate, same pattern as `voice-line` — a line in this project's
+  `.gitignore`, never tracked by this repo's own git). Only deviate from
+  this default if Randy explicitly says a specific project should live
+  elsewhere. Revisit if/when Randy adopts the parked orchestrator-level
+  structure (Claude Code running one folder up, managing each project's
+  own session) — not scheduled, no active plan.
 
 ---
 
