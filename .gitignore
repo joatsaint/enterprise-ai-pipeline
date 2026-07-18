@@ -85,6 +85,12 @@ Randy_Skiles_Voice_Profile_v2.gdoc
 # slip through if managed file-by-file. Articles are published on LinkedIn anyway.
 docs/
 
+# Jarvis Project/ — consolidated 2026-07-17, same local-only rationale as
+# docs/ above (planning notes) plus voice-line's own independent nested git
+# repo (github.com/joatsaint/voice-line) which must never be tracked by
+# this repo's own git.
+Jarvis Project/
+
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
 

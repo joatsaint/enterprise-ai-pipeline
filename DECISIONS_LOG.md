@@ -510,3 +510,29 @@ The existing script already did most of what was needed and was working correctl
 - ✅ Statusline now shows `cwd | model | context% | $cost | 5h:X% 7d:Y%` in one line, satisfying the original ask (a persistent, always-visible usage/cost meter) without losing any existing functionality
 - ✅ Verified working both with and without `rate_limits` present in the payload (tested via direct stdin injection, not just assumed)
 - ⚠️ A real testing gotcha hit and worked around: piping JSON containing Windows backslash-escaped paths through Git Bash's `echo` mangled the escaping and caused a silent parse failure (the script's `except JSONDecodeError: sys.exit(0)` swallowed it with no output) — not a bug in the script itself, but a reminder that `echo`-based JSON testing on this machine is unreliable; write to a temp file and redirect stdin from it instead
+
+---
+
+## ADR-019 — Removed the `$cost` field from the statusline (superseded ADR-018's cost display)
+
+**Date:** 2026-07-17
+**Status:** Active — supersedes the cost-display portion of ADR-018; the usage/cost-meter *concept* stays, the cost *number* does not
+
+**Context:**
+Randy noticed the statusline's `$cost` figure climbing rapidly during a long session (20-60 cents per check) and flagged it as alarming — it reached $91.82. He cross-checked against the real Anthropic Console and found actual spend for the day was ~$0.45, a roughly 200x discrepancy, far beyond normal estimate drift.
+
+**Decision:**
+Removed the `cost.total_cost_usd` field from `~/.claude/statusline-command.py` entirely. Kept the 5-hour/7-day rate-limit usage percentages (`5h:X% 7d:Y%`), which were not implicated in the discrepancy.
+
+**Alternatives considered:**
+- Relabel it as an estimate (e.g. `~$X (est, may differ)`) rather than remove it. Rejected — Randy's explicit choice was full removal, not a caveat label, since the number had proven itself off by two orders of magnitude, not just "a bit approximate."
+
+**Reasoning:**
+Anthropic's own statusline documentation already labels `total_cost_usd` as a client-side estimate that "may differ from your actual bill," but a 200x gap goes well beyond that caveat's normal scope. The most likely explanation, not fully confirmed (no way to inspect the live raw JSON Claude Code fed into the statusline to prove it directly): this session was unusually long and cache-heavy (large CLAUDE.md and memory files reloaded every turn, multiple subagent calls), and prompt-cache reads bill at roughly a tenth of normal input-token price — if the client-side estimate prices cumulative tokens at the full uncached rate instead of the actual blended cached rate, it would dramatically overstate cost in exactly this kind of session while the real (correctly cache-discounted) bill stays low. A statusline field whose entire purpose is peripheral-vision cost awareness is actively harmful if it causes false alarm instead — removal was the right call over a soft relabel.
+
+**Consequences:**
+- ✅ Statusline no longer displays a misleading, alarm-triggering dollar figure
+- ✅ Comment left in the script explaining why the field was removed, so it isn't silently re-added later without this context
+- ✅ Verified via direct stdin injection that the field is gone even when fed a live-shaped payload containing the actual $91.82 value
+- ⚠️ Real spend visibility for this project now requires checking the Anthropic Console or `/usage` directly — no longer available at a glance in the terminal. Randy explicitly accepted this tradeoff given the alternative was an actively misleading number.
+- ⚠️ The root cause (client-side estimate vs. cache-discounted actual bill) is a plausible, well-reasoned hypothesis, not confirmed against Claude Code's actual cost-calculation source — if Anthropic fixes or clarifies this upstream, the field could be considered for reinstatement, but only with real verification against the Console first, not by trusting the estimate again
