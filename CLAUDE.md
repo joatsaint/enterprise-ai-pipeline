@@ -387,6 +387,89 @@ When Randy says "yes," "run it," "go ahead," or equivalent to start a task:
 
 ---
 
+## Engineering Autonomy (added 2026-07-19)
+
+Randy's explicit request: stop asking permission for the everyday engineering
+judgment calls Claude Code is the expert on. The goal is fewer interruptions
+for routine work, not less rigor on anything that actually carries risk.
+
+**No longer requires asking first:**
+- Routine implementation choices — how to structure a module, which approach
+  to take, writing/editing code. Just do it and report what was done.
+- Git workflow up through opening a PR — commit, push a feature branch, open
+  a pull request. Proceed without a mid-process check-in.
+
+**Unaffected by this section — still requires the existing process, exactly
+as before:**
+- The branch → PR requirement itself for `youtube-downloader` (and the
+  general practice of PRs over direct pushes elsewhere). This is not a trust
+  gate that loosens with more autonomy — it exists for review/traceability
+  and (for `youtube-downloader`) is also technically enforced by GitHub
+  branch protection regardless of anyone's authorization.
+- The **Pre-Change Notification — Key Documents** protocol below.
+- **Status-Change Safety** rules on `dashboard_state.json` and any
+  reviewed/approved/scheduled/published field.
+- Any genuinely destructive or hard-to-reverse action (force-push, deleting
+  files/branches, publishing/posting externally, modifying shared
+  infrastructure) — the general Executing Actions With Care guidance stays
+  in force unchanged.
+
+**This is the "executive-level decision" line Randy drew himself** — the
+sections above are exactly that line, not an arbitrary carve-out.
+
+**Explicitly separate from `memory/project_progressive_autonomy_system.md`'s
+content-ship autonomy ladder** (the L0→L4 system governing whether an
+article/post/video is ready to publish). That system stays earn-it,
+evidence-based, and un-touched by this section — this section is about
+engineering execution, not content-ship decisions. Do not fold the two
+together.
+
+---
+
+## Field-Failure-Driven Iteration (added 2026-07-19)
+
+Randy's framing, drawn from the Iron Man suit-iteration model: Tony Stark's
+suits improved because a *specific field failure* (ice forms on the Mark II
+mid-flight) became the *literal design spec* for the next build (Mark III's
+alloy fixes exactly that), and recurring distinct threats eventually
+justified dedicated specialized suits rather than one generalist suit
+patched forever (Iron Man 3's House Party Protocol).
+
+**This is not a new system to build — it's a pattern already partially in
+use here, now named and applied consistently:**
+- **Skill Gotchas sections** (see Skill Maintenance rule above) are already
+  Mark I → Mark II: a real session surfaces an edge case, it gets appended
+  immediately so the same skill doesn't fail the same way twice.
+- **`DECISIONS_LOG.md`** already records *why* a given redesign happened —
+  the specific failure or gap that justified it.
+- **The skills directory itself is the House Party Protocol** — Citation
+  Guard split out of `create-next-article` into its own dedicated skill
+  because fabrication-checking turned out to be a distinct enough recurring
+  problem to deserve its own purpose-built tool, reusable by other skills.
+
+**What's actually new — apply this consistently, not just to
+content-writing skills:**
+- Every active project should have an equivalent lightweight
+  failure-capture habit, not just the ones with a `SKILL.md` Gotchas
+  section — a runtime error log, a project memory file's own running notes,
+  whatever fits that project's shape.
+- **The explicit trigger for splitting a recurring pattern into its own
+  dedicated tool/skill:** once the same type of problem has genuinely
+  recurred 2-3+ times, that's the signal to stop patching the generalist
+  approach and build the specialized one — don't wait for it to become
+  obviously overdue, and don't split on a single occurrence either.
+
+**Real caveat, not glossed over:** Tony's failures were immediate and
+binary (the suit works, or he falls out of the sky) — most of what happens
+in this project is slower and fuzzier. This mechanism transfers cleanly to
+anything with a fast, concrete feedback loop (a script bug, a skill
+misfiring, a hook false-positive). It needs conscious adaptation for
+slow-feedback bets (audience growth, a career pivot) — don't declare
+something a "failure" and rush to the next iteration before enough real
+time has actually passed to know.
+
+---
+
 ## Pre-Change Notification — Key Documents
 
 Before modifying any file in the list below, Claude must announce:

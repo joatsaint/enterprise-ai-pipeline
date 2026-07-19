@@ -536,3 +536,85 @@ Anthropic's own statusline documentation already labels `total_cost_usd` as a cl
 - ✅ Verified via direct stdin injection that the field is gone even when fed a live-shaped payload containing the actual $91.82 value
 - ⚠️ Real spend visibility for this project now requires checking the Anthropic Console or `/usage` directly — no longer available at a glance in the terminal. Randy explicitly accepted this tradeoff given the alternative was an actively misleading number.
 - ⚠️ The root cause (client-side estimate vs. cache-discounted actual bill) is a plausible, well-reasoned hypothesis, not confirmed against Claude Code's actual cost-calculation source — if Anthropic fixes or clarifies this upstream, the field could be considered for reinstatement, but only with real verification against the Console first, not by trusting the estimate again
+
+---
+
+## ADR-020 — Standing CTA Rule: every LinkedIn post closes with a named-benefit CTA line, not just the dedicated Lead Magnet Post
+
+**Date:** 2026-07-18
+**Status:** Active
+
+**Context:**
+Randy raised a real funnel concern: dozens of LinkedIn/YouTube posts with CTAs, only 2 email subscribers total. A live audit of `docs/LinkedIn Stats/LinkedIn Posts 7-18-2026.txt` and `docs/LinkedIn Stats/pretty-links-clicks-2026-07-19.csv` found: reach is real (several posts hit thousands to 48,012 impressions with genuine engagement), the lead magnet link works end-to-end (verified by Randy), and the click-to-signup rate on real human clicks is a normal ~10-15%. But after stripping bot traffic (LinkedInBot, Googlebot family, facebookexternalhit, Mediumbot, YandexBot, Baiduspider, GPTBot, bingbot, and Randy's own repeat IP) from seven weeks of pretty-links click data, real distinct human clicks on the lead magnet link totaled roughly 12-20 total — against tens of thousands of cumulative impressions. The leak is entirely upstream of the landing page: most high-reach posts either carried no CTA at all (a pure story post), gated the CTA behind a comment (the mechanic already retired 2026-07-05 specifically because "they weren't being seen" — first-comments.md rule in `CONTENT_PUBLISHING_RULES.md`), or buried the CTA inline in the closing sentence ("Full story: [link]") where it doesn't register as an ask.
+
+**Decision:**
+Every LinkedIn post — story post, article teaser, standalone — must close with one short, visually separated CTA line (blank line break before it, named benefit + link, e.g. `Free 14-Day Plan: Stay Indispensable in the AI Era → https://rskiles.com/the-riddle-of-steel`, never a vague "read more" or comment-gate). This is in addition to, not a replacement for, the existing dedicated Lead Magnet Post (Julie McCoy structure, max 1/2 weeks). Added as a new section in `content-engine/rules/CONTENT_PUBLISHING_RULES.md`.
+
+**Alternatives considered:**
+- Move the CTA earlier in the post body. Rejected — LinkedIn truncates to ~3 lines before "see more"; moving the CTA up competes with the hook that earns the expand-click in the first place, and the people who do expand are already a warmer, filtered audience — the fix is making the CTA register once they get there, not relocating it.
+- Leave cadence at only the dedicated Lead Magnet Post (1/2 weeks). Rejected — that's where zero CTA exposure was happening on ~90% of posting volume, including the highest-reach posts (Grandma story, COBOL story), which is the actual gap this closes.
+
+**Reasoning:**
+The data ruled out the landing page, the signup form, and reach itself as the bottleneck (all verified working or present). What's left is that most posts never ask, and the ones that do ask use a mechanism (comment-gate) or phrasing (buried "read more") already known not to register. This is a smaller, more mechanical fix than a funnel rebuild — same tested Beat-5 CTA format the Lead Magnet Post already uses, just applied to the posts that currently carry none.
+
+**Conflict resolved:** `.claude/skills/create-next-article/SKILL.md`'s "Product / Lead Magnet Rule" previously said not to mention the lead magnet unless the brief explicitly called for it — updated in the same change so the closing CTA line is now standard on every article, while the article body itself still doesn't sell mid-content.
+
+**Consequences:**
+- ✅ Every future post carries a real, visible ask instead of only the biweekly dedicated post
+- ✅ CTA phrasing/placement standardized on the format already proven in the Lead Magnet Post (Beat 5 + bottom block), not a new untested pattern
+- ⚠️ Not yet measured against live data — this is a hypothesis-driven fix based on the click-data audit, not yet confirmed by a before/after conversion comparison. Revisit once a few weeks of posts under the new rule have real click data to check against.
+
+---
+
+## ADR-021 — Platform lock-in: YouTube primary, Medium secondary, Facebook dropped as a lead-gen channel
+
+**Date:** 2026-07-18
+**Status:** Active — resolves the "Platform selection TBD" note left open by ADR-level decision in `CONTENT_PUBLISHING_RULES.md`'s Multi-Platform Expansion gate-lift (2026-07-05)
+
+**Context:**
+Following ADR-020's CTA audit, Randy pushed back on "pick one channel and master it" as vague, non-actionable advice — correctly, since mastery of a channel doesn't help if the channel's own business model structurally opposes the goal (driving traffic off-platform to an opt-in). He asked for one thing: research-confirmed platform incentive alignment, not a guess. Live 2026 web research was run (not assumed from training knowledge) covering LinkedIn, Facebook, YouTube, and Medium.
+
+**Decision:**
+- **YouTube — primary.** Description links don't hurt reach unless spammy; external traffic is treated as a positive distribution signal by the algorithm.
+- **Medium — secondary.** Partner Program shifted 15% of payout weight toward search/external-driven traffic (effective Nov 2025) — rewards outbound traffic rather than punishing it. Already partially wired in via citation-guard's Check 9 (Medium disclosure on offsite links).
+- **Facebook — dropped as a lead-gen channel.** External links cut reach 70-80% (deepened 2025 rollout), worse than LinkedIn's ~60%. Facebook Groups have a real reach advantage over Pages (30-60% vs. 2-5%) but the link penalty applies regardless, so it doesn't fix the actual bottleneck. Public Pages/Groups are Google-indexed (private Groups are not), a real but separate SEO/long-tail asset that doesn't offset the live-feed suppression. Existing Facebook content stays up; no further growth investment.
+- Reddit's existing reach/R&D role is unchanged. Remaining backlog platforms (X, Substack, Threads, Instagram, Skool) remain genuinely undecided — this closes only the YouTube/Medium/Facebook question.
+
+**Alternatives considered:**
+- Treat Facebook Groups as viable given their higher reach vs. Pages. Rejected — the external-link penalty applies at the platform level regardless of Groups vs. Pages, so higher reach doesn't translate into more surviving CTA clicks, which is the actual metric that matters here.
+- Leave platform choice as a preference/gut call. Rejected per Randy's explicit request — this needed to be research-confirmed, not asserted.
+
+**Reasoning:**
+LinkedIn and Facebook both optimize their feed ranking to keep users on-platform (LinkedIn's "Depth Score," Facebook's explicit anti-link-reach mechanic) — a structural conflict with any goal that requires driving people off-platform, regardless of content quality or "mastery." YouTube and Medium's incentive structures don't have this conflict (YouTube is neutral-to-positive on outbound links; Medium is now actively rewarding external traffic). This reframes the earlier "pick one channel and master it" framing (from the 1-Page Marketing Plan discussion) into something concrete: master the channel whose business model doesn't require you to lose in order for it to win.
+
+**Consequences:**
+- ✅ Closes an open TBD that had been sitting unresolved since 2026-07-05
+- ✅ Decision is now backed by explicit 2026 platform-mechanics research (sources logged in the conversation), not just Randy's own prior outcome data (which independently pointed the same direction — see `memory/project_linkedin_deprioritized_youtube_primary.md`)
+- ⚠️ Medium cross-posting isn't yet an active habit — this locks in the *decision*, not yet a build/workflow change. Next step would be adding Medium cross-post to the standard per-article supporting-content set if Randy wants to formalize it.
+
+---
+
+## ADR-022 — Engineering Autonomy + Field-Failure-Driven Iteration added to CLAUDE.md
+
+**Date:** 2026-07-19
+**Status:** Active
+
+**Context:**
+Two separate real requests from the same conversation. First, Randy asked to stop being asked permission for routine engineering work — writing Python files, committing, pushing to GitHub — reserving his input for "executive-level" decisions that affect the project as a whole, having noticed he was saying yes to nearly everything anyway. Second, Randy proposed applying the Iron Man suit-iteration model (a specific field failure becomes the literal design spec for the next build; recurring distinct problems eventually justify dedicated specialized tools rather than one generalist patched forever) as an explicit, formalized discipline across every project, not just informally.
+
+**Decision:**
+Added two new CLAUDE.md sections (full text in the file itself, not duplicated here):
+- **Engineering Autonomy** — no longer requires asking first for routine implementation choices or Git workflow up through opening a PR. Explicitly does NOT loosen: the branch→PR requirement (structural/traceability, not trust-gated, and technically enforced by GitHub branch protection on `youtube-downloader` regardless), the Pre-Change Notification — Key Documents protocol, `dashboard_state.json` Status-Change Safety, or any genuinely destructive/hard-to-reverse action. Explicitly kept separate from `project_progressive_autonomy_system.md`'s content-ship autonomy ladder, which stays earn-it/evidence-based.
+- **Field-Failure-Driven Iteration** — named and formalized a pattern already partially in use (skill Gotchas sections, DECISIONS_LOG ADRs themselves, Citation Guard splitting out of `create-next-article`). New discipline: every active project should have an equivalent lightweight failure-capture habit, and a recurring pattern hitting 2-3+ times is the explicit trigger to split it into its own dedicated tool/skill. Includes an explicit caveat distinguishing fast-feedback failures (scripts, hooks, skills) from slow-feedback bets (audience growth, career pivots), where "failure" shouldn't be declared before enough real time has passed.
+
+**Alternatives considered:**
+- Treat Randy's verbal agreement in this conversation as sufficient authorization on its own. Rejected — a chat-level "yes" doesn't durably persist into future sessions the way a CLAUDE.md rule does; per this assistant's own operating instructions, only a written, durable instruction (a CLAUDE.md rule) counts as advance authorization for autonomous action, not a one-time conversational approval.
+- Fold the new engineering autonomy into the existing Progressive Autonomy System (L0-L4 ladder). Rejected — that system was deliberately designed to be earned on a logged scorecard specifically for content-ship decisions, where the failure mode (AI ships something Randy would have killed) needs to stay near zero and provably so. Engineering execution (writing code, routine Git operations) doesn't carry the same public/irreversible-once-published risk profile, so gating it the same way would be over-cautious for one and the content-ship system would lose its own rigor if diluted with a different kind of decision.
+
+**Reasoning:**
+Both changes reduce friction on genuinely low-risk, reversible work while leaving every existing safety mechanism (Key Documents, status-change safety, destructive-action caution, the content-ship ladder) completely untouched — the "executive-level decision" line Randy asked to keep is exactly where the existing protocols already draw it, so this is a real reduction in unnecessary interruption, not a loosening of anything that actually carries risk.
+
+**Consequences:**
+- ✅ Fewer interruptions expected for routine engineering work and Git operations up through PR
+- ✅ Failure-capture becomes a named, consistent discipline instead of an ad hoc habit that only existed for skills
+- ⚠️ Not yet tested in practice — the real proof is whether this actually reduces unnecessary check-ins without any near-miss on something that should have been flagged. Revisit if a genuinely risky action ever gets swept in under "routine" by mistake.
