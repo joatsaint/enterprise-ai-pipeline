@@ -81,6 +81,9 @@ Backup_*.md
 # Personal and brand files
 Randy_Skiles_Voice_Profile_v2.gdoc
 
+# check-claude-code-updates.ps1's runtime cache — generated state, not source
+.claude/hooks/.claude_code_version_cache.json
+
 # docs/ — entire folder local-only; too easy for private research assets to
 # slip through if managed file-by-file. Articles are published on LinkedIn anyway.
 docs/
