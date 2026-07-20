@@ -19,7 +19,23 @@ If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG
   too narrow to fire during a long continuous session with many completed sub-tasks and
   no clean mid-task break, which is exactly why it went stale for three sessions in a row.
   A council review confirmed this was the root cause, not a one-off lapse.)
-- Content: what Randy just did, the exact next step, the exact command or URL, and what file has full instructions
+- **Format rule (added 2026-07-20 — see ADR-023):** each entry is short — roughly 5-8
+  lines: what Randy just did, the exact next step, the exact command or URL, and a link
+  to whichever file has the full detail. HOT_STATE is an index, not the comprehensive
+  note. If an idea needs more than that to capture, it goes in its own `memory/` file
+  (durable) or the day's Daily Note (below, not yet durable) — never written inline as a
+  full narrative in HOT_STATE itself. This does not apply retroactively; existing
+  entries are not rewritten, only new ones follow this format.
+- **Daily Notes (added 2026-07-20 — see ADR-023):** `memory/daily/YYYY-MM-DD.md` is the
+  scratch capture point for an idea *the moment it comes up mid-session* — this is the
+  actual fix for the compaction-loses-context problem, since HOT_STATE only gets written
+  at session end. Write full raw detail there immediately; HOT_STATE links to the day's
+  note instead of holding the narrative inline. Anything worth keeping past that day gets
+  promoted into a real `memory/project_*.md`/`feedback_*.md`/`reference_*.md` file
+  (same as always) — the daily note itself is not a permanent record and is allowed to
+  just age out if nothing in it turns out to matter. Adapted from Jared Rhod's AI Memory
+  Vault (github.com/jaredrhod/ai-memory-vault) daily-note mechanic — see
+  `memory/project_note_taking_system_idea.md` for the comparison that led here.
 - Cleared (replaced with `## CLEAR`) only when the active task completes
 - One task only — if multiple things are in-flight, the most time-sensitive or physically blocking one wins
 - Randy never has to manage this file — Claude writes and clears it

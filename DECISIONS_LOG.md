@@ -618,3 +618,61 @@ Both changes reduce friction on genuinely low-risk, reversible work while leavin
 - ✅ Fewer interruptions expected for routine engineering work and Git operations up through PR
 - ✅ Failure-capture becomes a named, consistent discipline instead of an ad hoc habit that only existed for skills
 - ⚠️ Not yet tested in practice — the real proof is whether this actually reduces unnecessary check-ins without any near-miss on something that should have been flagged. Revisit if a genuinely risky action ever gets swept in under "routine" by mistake.
+
+## ADR-023 — HOT_STATE.md format tightened to a short index; Daily Notes added
+
+**Date:** 2026-07-20
+**Status:** Active
+
+**Context:**
+Randy raised a real recurring problem: mid-session compaction sometimes loses
+enough of an idea's detail that it can't be fully reconstructed afterward,
+and `HOT_STATE.md` — meant to be a fast index read first every session — had
+drifted into holding full comprehensive narratives inline (1,242 lines,
+individual entries running 40-80 lines, the "RESUME HERE" line itself a
+single run-on sentence). Randy's own proposed fix (a short index + link to a
+comprehensive note elsewhere) turned out to already exist as the
+`MEMORY.md`/`memory/project_*.md` system — the real gap was that
+`HOT_STATE.md` itself never followed that pattern. Before finalizing,
+checked Jared Rhod's AI Memory Vault (github.com/jaredrhod/ai-memory-vault)
+for a better mechanic rather than building blind — most of its architecture
+duplicates what's already here (index + linked notes, its own `MEMORY.md`
+pointer, job-based note priming already covered by this project's skill
+`Required Reference Files` sections), but its **Daily Notes** mechanic (one
+template-based scratch file per day, written to immediately, promoted to
+durable memory only if something in it turns out to matter) filled the
+actual missing piece: a capture point for *mid-session*, not just
+end-of-session, detail.
+
+**Decision:**
+1. `HOT_STATE.md` entries going forward are short (~5-8 lines): what
+   happened, the exact next step, and a link to wherever the full detail
+   lives. Not applied retroactively — existing entries stay as-is.
+2. New tier added: `memory/daily/YYYY-MM-DD.md` — a same-day scratch note,
+   written the moment an idea comes up mid-session (this is the actual fix
+   for the compaction-loss problem, since HOT_STATE only gets written at
+   session end). Not a permanent record on its own; promoted into a real
+   `memory/project_*.md`/`feedback_*.md`/`reference_*.md` file if it's
+   worth keeping, otherwise allowed to age out.
+Full text in `CLAUDE.md`'s HOT_STATE.md rules section; comparison detail in
+`memory/project_note_taking_system_idea.md`.
+
+**Alternatives considered:**
+- Adopt Jared's full Obsidian vault wholesale. Rejected — nearly all of its
+  architecture already exists here in a form fitted to this project (memory/
+  + MEMORY.md + skills' own reference-file lists); only the Daily Notes
+  mechanic was a genuine gap worth importing.
+- Migrate/rewrite HOT_STATE.md's existing 1,242 lines into the new format
+  now. Rejected for this change — Randy scoped this as "going forward" only;
+  a retroactive cleanup is a separate, larger decision not yet made.
+
+**Reasoning:**
+Keeps HOT_STATE fast to read (its actual job) while giving mid-session ideas
+a real place to land before compaction can eat them — closing the specific
+failure mode Randy named, not just reorganizing files for their own sake.
+
+**Consequences:**
+- ✅ HOT_STATE stays scannable going forward instead of continuing to grow as a second copy of the comprehensive-notes layer
+- ✅ Mid-session ideas get captured immediately instead of only at session-end, which is when the actual compaction-loss risk occurs
+- ⚠️ Introduces a third memory tier (`daily/` alongside `memory/` and `journal/`) — worth watching for whether it adds real value or just another place to check; revisit if daily notes go unused or unmined for more than a couple weeks
+- ⚠️ Existing HOT_STATE.md history (1,242 lines) is untouched and will keep aging as a separate, unresolved question
