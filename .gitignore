@@ -98,6 +98,11 @@ journal/
 # this repo's own git.
 Jarvis Project/
 
+# brain-droppings-vault/ — local-only personal ideas mirror, its own
+# independent nested git repo (no remote, never pushed), same rationale as
+# journal/ above. Banked 2026-07-20.
+brain-droppings-vault/
+
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
 
