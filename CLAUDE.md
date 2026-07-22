@@ -87,6 +87,36 @@ positioning (Neo Agent, MSPbots, Atera found this way) and the AEO/AI-visibility
 research. Don't let this slow down conversation that isn't a build — it's scoped to new
 builds specifically, not every topic mentioned.
 
+### 20-Minute MVP Staging Rule (added 2026-07-21, source: Brain Droppings
+"AI Production Pipeline Bottlenecks, Quality Systems, and the 20-Minute MVP
+Framework")
+
+Any new content/build asset gets built in three explicit, separable stages —
+never treated as one monolithic pass:
+1. **Validate (≤20 min)** — the fastest possible version that proves the
+   idea works at all. Rough, ugly, no polish. The only question this stage
+   answers is "is this worth continuing."
+2. **Polish** — once validated, bring it up to portfolio/publish quality.
+3. **Build** — the real, full product version, if the asset goes beyond a
+   single piece of content.
+
+**Why:** named after a real failure — the Trojan Horse Popcorn Calculator
+Short stalled because one blocked piece (an open platform question) held up
+the whole asset instead of shipping the validated core and handling the
+blocker separately. Staging explicitly means a block in stage 2 or 3 never
+retroactively kills stage 1's proof that the idea works.
+
+**How to apply:** when starting a new content/build asset, name which stage
+is active before starting. If something blocks mid-build, ask whether the
+block only affects the current stage — if so, the earlier stage's output
+still stands and can ship or be reported as done on its own terms, not held
+hostage to the blocked stage.
+
+**Not yet built:** the source idea also proposed a formal AI Production
+Playbook — a written SOP per asset type, so Claude doesn't need to
+re-derive preferences each session. Banked, not written — a real next step,
+but a separate, larger effort from this staging rule.
+
 ### Simplest-Path-First Rule (added 2026-07-13)
 Before starting any new project or build, explicitly consider "Worse is Better" / "the
 simplest thing that could possibly work" first — a real, established principle (Richard
