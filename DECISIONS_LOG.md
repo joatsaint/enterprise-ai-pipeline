@@ -676,3 +676,50 @@ failure mode Randy named, not just reorganizing files for their own sake.
 - ✅ Mid-session ideas get captured immediately instead of only at session-end, which is when the actual compaction-loss risk occurs
 - ⚠️ Introduces a third memory tier (`daily/` alongside `memory/` and `journal/`) — worth watching for whether it adds real value or just another place to check; revisit if daily notes go unused or unmined for more than a couple weeks
 - ⚠️ Existing HOT_STATE.md history (1,242 lines) is untouched and will keep aging as a separate, unresolved question
+
+## ADR-024 — 20-Minute MVP Staging Rule added to CLAUDE.md
+
+**Date:** 2026-07-21
+**Status:** Active
+
+**Context:**
+Randy's Brain Droppings review (2026-07-21) surfaced a real, useful process
+idea: "AI Production Pipeline Bottlenecks, Quality Systems, and the
+20-Minute MVP Framework." It named a real failure directly — the Trojan
+Horse Popcorn Calculator Short stalled because one blocked piece (an open
+TikTok-platform question) held up the entire asset instead of the validated
+core shipping separately. Randy confirmed this was worth acting on
+immediately rather than banking for the strategy session, since the value
+is in the discipline itself, not in reasoning depth (so it doesn't depend
+on the separate, still-open Fable 5 decision).
+
+**Decision:**
+Added the 20-Minute MVP Staging Rule to `CLAUDE.md`, directly before the
+existing Simplest-Path-First Rule: any new content/build asset is staged as
+Validate (≤20 min, proves the idea works, no polish) → Polish
+(portfolio/publish quality) → Build (full product, if applicable). A block
+in a later stage never retroactively holds an earlier, already-validated
+stage hostage.
+
+**Alternatives considered:**
+- Also write the source idea's proposed formal AI Production Playbook (a
+  written SOP per asset type) in the same pass. Rejected for now — that's a
+  separate, larger effort than the staging rule itself; banked as "not yet
+  built" inside the new CLAUDE.md section rather than attempted here.
+
+**Reasoning:**
+Matches the Simplest-Path-First Rule's own logic (ship the smallest real
+thing first) but applies it to *sequencing within* a build rather than to
+*whether* to build — a distinct, complementary gap the existing rule didn't
+cover.
+
+**Consequences:**
+- ✅ Future builds get an explicit named stage, making "is this actually
+  blocked, or just one stage of it" a real question to ask instead of an
+  implicit all-or-nothing status
+- ✅ Directly closes the specific failure mode that stalled the Trojan Horse
+  Popcorn Calculator
+- ⚠️ Not applied retroactively to any in-flight asset; only governs builds
+  started after 2026-07-21
+- ⚠️ The companion Production Playbook idea remains unbuilt — a real
+  follow-on, not done here
