@@ -31,6 +31,7 @@ Most market research tools tell you what people are saying. This system tells yo
 | **YouTube Shorts** | Pain point → Claude script → HeyGen voice-clone avatar → Whisper timestamps → Remotion motion graphics → FFmpeg composite → captioned 9:16 Short |
 | **Newsletter curation** | Gmail inbox → relevance-filtered AI newsletter digest via MCP integration |
 | **Scheduling** | Buffer API integration → posts queue behind a human approval gate |
+| **Workflow automation (n8n)** | YouTube Data API → weekly channel-performance report, built and running in n8n — no manual reporting |
 | **Observability** | At-a-glance `status` + weekly AI-cost `report` from a per-call usage ledger |
 
 Every stage flows through a single orchestrator and stops at a human review gate before anything is published.
@@ -119,6 +120,24 @@ Nothing auto-posts. Every comment draft goes through a human gate before Randy p
 
 ---
 
+## n8n Automation — Weekly YouTube Content Report
+
+Runs weekly on its own schedule, no manual triggering:
+
+```
+Schedule trigger → YouTube search.list (past 7 days) → extract video IDs
+→ YouTube videos.list (batched stats) → format markdown report
+→ write report to disk
+```
+
+Pulls view/like/comment counts for the week's uploads via the YouTube Data
+API v3 and saves a formatted report automatically — replaces manually
+pulling and compiling channel stats every week. Built and tested end-to-end
+in n8n; first of a planned set of n8n workflows automating recurring
+reporting/content-ops tasks.
+
+---
+
 ## Key Technical Decisions
 
 | Decision | Choice | Reasoning |
@@ -146,8 +165,8 @@ Nothing auto-posts. Every comment draft goes through a human gate before Randy p
 | Test coverage | **129 passing** |
 | Cost per full analysis run | ~$0.10 (Haiku) |
 | Cost per YouTube Short | ~16 HeyGen credits (~$0.50) |
-| Scheduled jobs | Daily digest · Daily radar · Weekly comment refresh · Weekly newsletter curation |
-| External integrations | YouTube Data API v3 · Anthropic · HeyGen · OpenAI Whisper · Remotion · Buffer · Kit · Gmail MCP |
+| Scheduled jobs | Daily digest · Daily radar · Weekly comment refresh · Weekly newsletter curation · Weekly YouTube content report (n8n) |
+| External integrations | YouTube Data API v3 · Anthropic · HeyGen · OpenAI Whisper · Remotion · Buffer · Kit · Gmail MCP · n8n |
 
 ---
 
