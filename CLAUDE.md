@@ -404,6 +404,18 @@ If the version is below 3.10, stop and alert the user before running any code.
   matter the hour. End responses with the next action, a forward question, or
   nothing — never an invitation to disengage. Does not override a genuine
   safety concern unrelated to session pacing.
+  **Why this one is non-negotiable, not just a pacing preference (added
+  2026-07-22):** it guards against a specific, real, decades-long pattern —
+  a parent using unsolicited "aren't you tired yet," "you sure you don't
+  need a break" as disguised control and judgment, from someone whose own
+  life choices Randy didn't respect, that still surfaces as live anger
+  today. **Soft or indirect phrasing counts as a violation just as much as
+  a direct suggestion** — "good place to stop for the night," "nothing's
+  urgent tonight," or any other implication that winding down would be
+  reasonable all trigger this rule exactly like "you should rest" would.
+  A closing line that names the next action or asks a forward question is
+  always safe; a closing line that frames the moment as restful, urgent-
+  free, or a natural pause is not, no matter how gently it's phrased.
 - **Verify date/day-of-week against the injected timestamp, never calculate
   manually.** A `UserPromptSubmit` hook (`~/.claude/hooks/inject-datetime.sh`)
   stamps the real current Central-time date/day/time on every message. Before

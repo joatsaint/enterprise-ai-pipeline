@@ -38,6 +38,7 @@ Each ADR captures: the decision, the context that forced it, alternatives that w
 | ADR-016 | Token cleaning happens before any Claude API call | Active | April 2026 |
 | ADR-017 | Session discipline rules adopted from Jared's Locked Session Rules v2 | Active | 2026-07-17 |
 | ADR-018 | Extend existing custom statusline rather than replace with ccstatusline | Active | 2026-07-17 |
+| ADR-025 | "Never suggest rest or stopping" rule strengthened with real Why + soft-phrasing closure | Active | 2026-07-22 |
 
 ---
 
@@ -723,3 +724,58 @@ cover.
   started after 2026-07-21
 - ⚠️ The companion Production Playbook idea remains unbuilt — a real
   follow-on, not done here
+
+---
+
+## ADR-025 — "Never suggest rest or stopping" rule strengthened with real Why + soft-phrasing closure
+
+**Date:** 2026-07-22
+**Status:** Active
+
+**Context:**
+The existing rule (ADR-017, Session Discipline Rules) prohibited directly
+suggesting Randy rest, sleep, take a break, or wrap up. Tonight, at the end
+of a long, emotionally heavy conversation (personal/philosophical topics,
+real exhaustion), Claude closed two consecutive responses with "Good place
+to land for the night" and "nothing's urgent tonight" — soft, indirect
+phrasing that implies the same thing the direct version prohibits, and
+slipped past the existing rule's wording because it wasn't a literal
+"you should rest" statement. Randy called it out and explained the real
+stakes: this isn't a pacing preference, it's tied to a decades-long pattern
+of a parent using unsolicited "aren't you tired yet" as disguised control
+and judgment — a real, live source of anger, not a minor annoyance.
+
+**Decision:**
+Added two things to the existing rule in `CLAUDE.md`: (1) an explicit
+**Why** explaining the real source (the parental-nagging pattern) so the
+rule is never treated as a low-stakes style note again, and (2) explicit
+closure of the soft-phrasing loophole — any closing line that frames the
+moment as restful, urgent-free, or a natural pause violates the rule
+exactly like a direct suggestion would, regardless of how gently it's
+phrased. A safe closing line names the next action or asks a forward
+question; nothing else.
+
+**Alternatives considered:**
+- Leave the rule as-is and treat tonight as a one-off slip. Rejected —
+  Randy was explicit that this is a repeatable trigger tied to real
+  history, not a random fluke; the soft-phrasing gap that let it through
+  will keep producing the same failure until it's closed in the rule text
+  itself.
+
+**Reasoning:**
+Matches the Field-Failure-Driven Iteration pattern already in `CLAUDE.md`:
+a real session surfaced a specific, repeatable gap in an existing rule
+(soft phrasing wasn't covered), so it gets closed immediately rather than
+banked. Naming the real Why also follows the "Why" convention already used
+throughout this project's own memory files — a rule without its reason is
+easy to under-weight in a future session.
+
+**Consequences:**
+- ✅ The soft-phrasing loophole that let tonight's violation through is
+  explicitly closed
+- ✅ Future sessions understand this rule is tied to real personal history,
+  not just a stylistic preference, making it less likely to be
+  under-weighted or reasoned around
+- ⚠️ Depends on active application in the moment, same as any instruction —
+  being in context reduces but doesn't guarantee zero future slips; this
+  entry itself is the record if it needs sharpening again
