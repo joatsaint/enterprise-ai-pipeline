@@ -14,7 +14,7 @@
   </Triggers>
   <Principals>
     <Principal id="Author">
-      <UserId>HP-CAPCUT\joatsaint</UserId>
+      <UserId>YOUR-MACHINE\your-username</UserId>
       <LogonType>InteractiveToken</LogonType>
       <RunLevel>LeastPrivilege</RunLevel>
     </Principal>
@@ -33,7 +33,7 @@
     <Exec>
       <Command>C:\Python314\pythonw.exe</Command>
       <Arguments>run_daily.py --scheduled</Arguments>
-      <WorkingDirectory>C:\Users\joatsaint\desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader</WorkingDirectory>
+      <WorkingDirectory>C:\path\to\youtube-downloader</WorkingDirectory>
     </Exec>
   </Actions>
 </Task>

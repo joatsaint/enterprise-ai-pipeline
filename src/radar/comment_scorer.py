@@ -1,6 +1,6 @@
 """
 Comment Opportunity Scorer — scores candidate threads/posts for "is this a
-conversation worth Randy joining today," per the Daily Audience Radar v1 spec
+conversation worth joining today," per the Daily Audience Radar v1 spec
 (docs/Daily Audience Radar for Commenting/Build Daily Audience Radar v1.txt).
 
 Five dimensions per candidate (1-5 each), one Claude call per batch:
@@ -20,7 +20,7 @@ import anthropic
 
 
 _ICP_DESCRIPTION = (
-    "Randy Skiles — a 25-year enterprise IT/sysadmin operator (Gen X) writing for "
+    "An experienced enterprise IT/sysadmin operator (Gen X) writing for "
     "Gen-X sysadmins and infrastructure pros worried AI will displace their careers. "
     "They are peers, not students: skeptical of hype, allergic to corporate-speak, "
     "moved by real war stories over theory."
@@ -39,7 +39,7 @@ def _load_env():
 _load_env()
 
 
-_PROMPT_TEMPLATE = """You are scoring audience-building opportunities for Randy Skiles, a 25-year
+_PROMPT_TEMPLATE = """You are scoring audience-building opportunities for an experienced 25-year
 enterprise IT operator writing for Gen-X sysadmins worried about AI and career relevance.
 
 AUDIENCE:
@@ -54,7 +54,7 @@ For each candidate thread/post below, score 1-5 on each dimension:
 - sales_risk: how much would commenting here read as self-promotion, off-topic, or out of place (5 = high risk, avoid)?
 
 Then write:
-- why_it_matters: one sentence — why this is worth Randy's time today
+- why_it_matters: one sentence — why this is worth your time today
 - one_liner: one sentence describing the actual hook/angle a comment could take (not the comment itself)
 
 Do not sell. Do not suggest links or hashtags. Return ONLY the top %(top_n)s candidates, sorted by

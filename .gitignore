@@ -2,6 +2,21 @@
 transcripts/
 *.txt
 
+# Phigmund brand/persona planning + demo content — personal content-marketing
+# IP, not reusable engineering (repo privacy audit, 2026-07-24)
+phigmund/PHIGMUND_FACE_REMOTION_SKETCH.md
+phigmund/demo_emails.md
+phigmund/phigmund_lines.py
+
+# Claude skills bound to ICP psychology / audience strategy / marketing
+# playbooks / proprietary positioning — no separable generic technical
+# content (repo privacy audit, 2026-07-24)
+.claude/skills/comment/
+.claude/skills/kb-research/
+.claude/skills/newsletter/
+.claude/skills/shorts-script/
+.claude/skills/video-distribution-checklist/
+
 # Skool offline course archives — large video/binary content, local only
 courses/
 

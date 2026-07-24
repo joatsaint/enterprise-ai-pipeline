@@ -203,7 +203,7 @@ def _synthesize_action_items(client, all_summaries, group_filter):
     )
 
     prompt = (
-        "You are advising a content creator who publishes paid PDF guides and free lead magnets "
+        "You are advising a content creator focused on AI-era career advice "
         "for IT professionals pivoting into AI careers. "
         f"Based on the following YouTube transcript summaries{group_context}, "
         "identify 2-3 specific, actionable insights for what content to create next, "

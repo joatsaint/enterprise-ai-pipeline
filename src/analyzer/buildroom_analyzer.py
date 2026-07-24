@@ -1,23 +1,23 @@
 """
-Build Room Analyzer — Phase B strategic teardown of Duncan Rogoff's Build Room.
+Build Room Analyzer — Phase B strategic teardown of a third-party paid course.
 
 Goal (strategic, NOT a build-along guide):
-  Decompose the automated content pipeline Duncan teaches, inventory the tools /
+  Decompose the automated content pipeline the course teaches, inventory the tools /
   paid services / automations behind it, then feed that inventory into a synthesis
-  pass that designs a cheaper, more token-efficient, more fully-automated version
+  pass that designs a more token-efficient, more fully-automated version
   starting from THIS project's current state.
 
 This module covers Step 1 only — the cheap, checkpointed Haiku catalog pass over
 every lesson's written text (`*_lesson.md`). It deliberately ignores the 3rd-party
 video transcripts (setup mechanics, ~650K tokens of re-embedded tutorials); the
-strategy lives in Duncan's own lesson prose, which names every tool and automation.
+strategy lives in the course's own lesson prose, which names every tool and automation.
 
   Pass: one Haiku call per *_lesson.md  → structured JSON, checkpointed/resumable
   Out:  courses/buildroom/_phaseB/catalog.json   (per-lesson)
         courses/buildroom/_phaseB/inventory.md   (aggregated, human-readable)
   Log:  logs/analyzer_log.json (shared)
 
-The architecture decomposition and the June-2026 replacement research are done by
+The architecture decomposition and the replacement research are done by
 Claude directly against the methodology courses + this catalog — not by this script.
 """
 import glob

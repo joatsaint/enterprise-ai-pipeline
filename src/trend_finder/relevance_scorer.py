@@ -1,5 +1,5 @@
 """
-Relevance Scorer — scores candidate trending topics against Randy's ICP.
+Relevance Scorer — scores candidate trending topics against the configured ICP.
 
 ICP: experienced IT/sysadmin professionals (Gen X, ~25 years in the field)
 who are worried about AI displacing their careers and want to know how to

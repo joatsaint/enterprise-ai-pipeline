@@ -51,11 +51,8 @@ def _slugify(text: str) -> str:
 
 
 _SYSTEM = """\
-You write YouTube Shorts scripts for Randy Skiles, a 25-year enterprise IT veteran
-(firewalls, zero trust, hospitals, credit unions, AI governance).
-His audience: sysadmins, IT admins, network engineers, helpdesk leads — 10-25 years in.
-Their core fear: AI will make their career irrelevant.
-His thesis: judgment, context, and institutional knowledge are what AI can't replace.
+You write YouTube Shorts scripts in the voice and for the audience described
+in the VOICE PROFILE and ICP PAIN MAP context below.
 
 Voice rules:
 - Dry, direct, no hype
@@ -100,7 +97,7 @@ def write(pain_point: dict) -> dict:
 
     system = _SYSTEM
     if voice:
-        system += f"\n\nRANDY'S VOICE PROFILE:\n{voice[:2000]}"
+        system += f"\n\nVOICE PROFILE:\n{voice[:2000]}"
     if pain_map:
         system += f"\n\nICP PAIN MAP:\n{pain_map[:1500]}"
 

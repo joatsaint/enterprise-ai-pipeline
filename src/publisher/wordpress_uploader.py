@@ -1,10 +1,10 @@
 """
-WordPress media uploader — hosts images/PDFs on rskiles.com so Buffer's
+WordPress media uploader — hosts images/PDFs on your WordPress site so Buffer's
 add_image()/DocumentAssetInput (which require a public URL, not file bytes)
 have something to point at.
 
 Auth: WP Application Password (WP_USERNAME + WP_APP_PASSWORD in .env), sent as
-HTTP Basic Auth to the REST API. Create one at rskiles.com/wp-admin > Users >
+HTTP Basic Auth to the REST API. Create one at yoursite.com/wp-admin > Users >
 Profile > Application Passwords.
 """
 import mimetypes
@@ -32,7 +32,7 @@ _load_env()
 
 def upload_media(file_path, title=None):
     """
-    Upload a file to the WordPress media library on rskiles.com.
+    Upload a file to the configured WordPress media library.
     Args: file_path (str — local path to an image or PDF), title (str, optional)
     Returns dict with keys: id, url, mime_type.
     """

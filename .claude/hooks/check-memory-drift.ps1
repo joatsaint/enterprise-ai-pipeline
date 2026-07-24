@@ -13,7 +13,7 @@
 # Never auto-edits HOT_STATE.md, SESSION_LOG.md, or any git-tracked file.
 # Read-only in every direction.
 
-$repoRoot = "C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader"
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 
 $repos = @(
     @{ Name = "youtube-downloader"; Path = $repoRoot }

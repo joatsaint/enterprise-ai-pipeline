@@ -14,9 +14,9 @@ Log file: logs/web_download_log.json  (separate from video download_log.json)
 
 CLI (via src/main.py):
   python -m src.main fetch-links \\
-      --scan-dir transcripts/ai-job-intelligence/nate-b-jones \\
-      --domain promptkit.natebjones.com \\
-      --output-dir transcripts/ai-job-intelligence/nate-b-jones-guides
+      --scan-dir transcripts/some-group/some-channel \\
+      --domain example.com \\
+      --output-dir transcripts/some-group/some-channel-guides
 """
 
 import json
