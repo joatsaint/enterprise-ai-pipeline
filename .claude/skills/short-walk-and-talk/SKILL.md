@@ -68,6 +68,27 @@ in this file:**
   (Example from the first pass: "Red Flags I Missed," tied directly to the
   war story in that video, not a reusable stock phrase.)
 
+**Prepend the thumbnail to the video itself — mandatory, no exceptions**
+(Randy's rule, 2026-07-24): YouTube Shorts has no manual custom-thumbnail
+upload option, so the only way to influence what YouTube shows as the
+cover is to control what's actually in the frame it auto-picks from. Add
+a **0.5-second freeze of the finished thumbnail image** (with its text
+overlay) as the literal first frame(s) of the final render, before the
+live footage starts. This is a safety net as much as a technique — if
+Randy forgets to set a thumbnail manually, the odds favor YouTube
+defaulting to a frame at/near the start of the video, which will then
+already be the designed thumbnail rather than an arbitrary moment.
+0.5s is long enough to plausibly register as a selectable frame, short
+enough not to meaningfully eat into the critical first-3-seconds hook
+window. Match the main video's exact codec/resolution/framerate/audio
+params when building the freeze segment (silent audio track, same
+duration) so the concat doesn't require a re-encode of the untouched
+footage. Verify the seam afterward — spot-check a frame during the
+freeze and a frame just after it starts, confirm the cut is clean and
+the total duration still respects the 180s Short cap (0.5s adds
+negligible margin, but check anyway if the payload was already close to
+the ceiling).
+
 ## Length decision — Short vs. long-form
 
 This is a decision, not a default. Work it in this order:
@@ -153,8 +174,14 @@ exceptions.
    several points spread across the full duration (not one frame near the
    start), confirming captions are present, correctly synced to the
    transcript, positioned in the center-third, and not covering the face.
-9. Write `youtube_metadata.md`.
-10. Generate a plain-text transcript (`<slug>_transcript.txt` — no
+9. **Prepend the thumbnail — mandatory, no exceptions** (see Thumbnail
+   formula above). Build a 0.5s freeze segment from the finished
+   thumbnail image matching the main video's exact codec/resolution/
+   framerate/audio params, concat it onto the front of the captioned
+   video, and verify the seam (frame during the freeze + frame just after
+   it ends) before treating the render as final.
+10. Write `youtube_metadata.md`.
+11. Generate a plain-text transcript (`<slug>_transcript.txt` — no
     timestamps, no styling markup, just the spoken words as readable
     prose) from the same word-level data used for captions. Build it from
     the already-generated `.ass`/caption data rather than re-running
