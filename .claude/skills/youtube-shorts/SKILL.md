@@ -28,9 +28,9 @@ and anything added later).
 
 **When to create it:** At the end of the session that builds/renders the short — same session, before closing out. Do not leave it for the upload session.
 
-**Template (fields/format only — this specific file predates the location
-fix above and still lives at its original path):** `content-engine/content/
-SHORT_LayoffFear/youtube_metadata.md`.
+**Template:** `video-production/shorts/LayoffFear/youtube_metadata.md`
+(migrated 2026-07-24 into the current-convention location, along with the
+Remotion render outputs it referenced).
 
 ---
 
@@ -207,6 +207,6 @@ Each article → at least 1 Short. Atom the sharpest single idea, not a summary 
 - **Side gaps at 50% scale:** A 9:16 avatar scaled to 50% is only 540px wide in a 1080px canvas — leaves 270px exposed on each side. The background layer must fill the full 1080px width.
 - **CapCut PC has no pinch-zoom.** Scaling is done with the zoom slider only. It maintains AR uniformly.
 - **Captions must avoid the bottom 25%** of the frame — that's where YouTube's like/comment/share buttons overlay in the Shorts feed.
-- **youtube_metadata.md must be created in the same session as the render** — not deferred to upload day. ShortsLayoffFear was caught missing title/description/tags at upload time. Template (fields/format only, old location): `content-engine/content/SHORT_LayoffFear/youtube_metadata.md`.
-- **`youtube_metadata.md` lives in the video's own project folder** (`video-production/shorts/<slug>/`), not `content-engine/content/SHORT_{slug}/` — that split caused Randy to have to ask whether a video's assets were even fully created, since the metadata was invisible sitting in a different folder than the video itself. Fixed 2026-07-24 — see Required Deliverable above.
+- **youtube_metadata.md must be created in the same session as the render** — not deferred to upload day. ShortsLayoffFear was caught missing title/description/tags at upload time. Template: `video-production/shorts/LayoffFear/youtube_metadata.md`.
+- **`youtube_metadata.md` lives in the video's own project folder** (`video-production/shorts/<slug>/`), not `content-engine/content/SHORT_{slug}/` — that split caused Randy to have to ask whether a video's assets were even fully created, since the metadata was invisible sitting in a different folder than the video itself. Fixed 2026-07-24 — see Required Deliverable above. The one pre-existing case (`SHORT_LayoffFear`) was migrated the same day: `youtube_metadata.md` moved into `video-production/shorts/LayoffFear/`, and its Remotion render outputs (previously left sitting in the tool's own `remotion/out/` folder, never consolidated) were copied in alongside it.
 - **TransitionSeries timing must use `linearTiming()`, not a plain object.** `timing={{ type: "in-out", durationInFrames: N }}` throws `getDurationInFrames is not a function`. Always import `linearTiming` from `@remotion/transitions` and use `const timing = linearTiming({ durationInFrames: TRANS })` — then pass that variable to every `<TransitionSeries.Transition>`.
