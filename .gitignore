@@ -23,6 +23,9 @@ pipeline_secrets.env
 # Logs — runtime data, not source
 logs/
 
+# Canonical Backlog System data — local-only, private (FR9.1/FR9.2, ADR-026)
+data/backlog/
+
 # Knowledge base — generated data, not source
 knowledge_base/index.json
 knowledge_base/reports/*.md
