@@ -141,10 +141,21 @@ avoid bottom 25%, 99%+ sync) with two format-specific overrides:
 
 ## Required deliverable
 
-Same as `youtube-shorts`: `youtube_metadata.md` in
-`content-engine/content/SHORT_{slug}/` (or the long-form equivalent if the
-length decision routes it there), same session as the render, no
-exceptions.
+Same as `youtube-shorts`: `youtube_metadata.md`, same session as the
+render, no exceptions.
+
+**Location — single folder, no exceptions (locked 2026-07-24):**
+`youtube_metadata.md` lives in the **same folder as every other asset for
+that video** — the final render, thumbnail, captions, and transcript —
+not a separate `content-engine/content/` location. This is the actual
+per-video project folder from `[[project_video_production_folder_convention]]`
+(`video-production/shorts/<slug>/` or `video-production/long-form/<slug>/`
+depending on the length decision). One folder holds the whole video: copy
+that one folder and everything needed for tracking, review, or re-upload
+is there. This was a real gap — the location split wasn't decided when
+video production was added to a pipeline that previously only produced
+text and images, and it cost a real "wait, is this actually finished?"
+moment before being caught and fixed the same session it was noticed.
 
 ## Production steps (what actually gets run)
 
