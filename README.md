@@ -1,6 +1,6 @@
 # AI Orchestrator for Multi-Source Data Automation
 
-> **End-to-end AI pipeline** that scrapes YouTube transcripts and audience comments at scale, extracts market intelligence using Claude AI, generates short-form video with voice cloning and motion graphics, and surfaces daily audience engagement opportunities — without human intervention.
+> **Orchestrated multi-model AI pipeline** that ingests YouTube transcripts and audience comments at scale, extracts structured insights via Claude, and generates short-form video through a chained LLM → voice-clone avatar → motion-graphics pipeline — with a human approval gate before anything is published.
 
 [![Tests](https://github.com/joatsaint/enterprise-ai-pipeline/actions/workflows/test-suite.yml/badge.svg)](https://github.com/joatsaint/enterprise-ai-pipeline/actions)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)
@@ -9,17 +9,19 @@
 
 ---
 
+**See also:** [PROMPT_ARCHITECTURE.md](PROMPT_ARCHITECTURE.md) — how this system was built through AI-directed development: spec-first methodology, prompt patterns, and validation strategy.
+
 ## What This Does
 
-Most market research tools tell you what people are saying. This system tells you what they're **actually asking** — extracted from real audience behavior at scale, then turned into content automatically.
+This is an orchestrated pipeline that ingests unstructured data at scale (video transcripts, audience comments), runs it through LLM-based extraction and classification, and produces structured, source-cited output — with downstream stages that turn that output into multi-modal generated content through the same orchestrator pattern.
 
-**In one command**, the research engine:
+**In one command**, the ingestion pipeline:
 - Downloads transcripts and top comments from any YouTube channel
 - Classifies and indexes content by topic category
-- Runs AI analysis to extract the most repeated questions, pain points, and desired outcomes
-- Generates a ranked intelligence report ready for product and content decisions
+- Runs AI analysis to extract the most repeated questions, pain points, and recurring themes
+- Generates a ranked, source-cited intelligence report
 
-**Result:** Market research that would take a human 40+ hours manually, completed in minutes.
+**Result:** Structured analysis that would take a human 40+ hours to compile manually, completed in minutes — with every AI-derived finding traceable back to a source transcript or comment.
 
 ### The full pipeline — research to published content
 
@@ -109,14 +111,14 @@ Step 6  FFmpeg stitcher       chromakey composite + drawtext captions + hook ove
 
 ## Daily Audience Radar
 
-Runs every morning. Scans Reddit (`r/sysadmin`, `r/ITCareerQuestions`) and Spiceworks for threads where Randy's audience is active:
+Runs every morning. Scans Reddit (`r/sysadmin`, `r/ITCareerQuestions`) and Spiceworks for threads relevant to the configured audience:
 
 ```
 Gather candidates → Score 5 dimensions (Audience Fit, Pain Level, Comment Opportunity,
 Freshness, Sales Risk) → Rank by priority score → Draft on-voice comments → Human approves
 ```
 
-Nothing auto-posts. Every comment draft goes through a human gate before Randy pastes it manually.
+Nothing auto-posts. Every comment draft goes through a human gate before it's posted manually.
 
 ---
 
@@ -298,7 +300,7 @@ Production-grade error handling across all external API calls:
 
 **Randy Skiles** — 25-year enterprise IT professional (infrastructure, systems, network operations) building AI automation tooling.
 
-This repo is the research and content engine behind a content business targeting IT professionals navigating the AI transition. Every architectural decision is documented. Every pain point finding comes from real audience data — 47,000+ comments analyzed, not assumed.
+Every architectural decision in this repo is documented (see `DECISIONS_LOG.md` and [PROMPT_ARCHITECTURE.md](PROMPT_ARCHITECTURE.md)). The pipeline runs against real data end-to-end — 47,000+ audience comments analyzed, not synthetic test fixtures.
 
 - LinkedIn: [linkedin.com/in/randy-skiles](https://linkedin.com/in/randy-skiles)
 - Actively developed — new pipeline stages added continuously
