@@ -162,7 +162,7 @@ reporting/content-ops tasks.
 | Topic groups | 4 |
 | Transcripts indexed | 1,014 |
 | Audience comments analyzed | 47,000+ |
-| Test coverage | **129 passing** |
+| Test coverage | **198 passing** |
 | Cost per full analysis run | ~$0.10 (Haiku) |
 | Cost per YouTube Short | ~16 HeyGen credits (~$0.50) |
 | Scheduled jobs | Daily digest · Daily radar · Weekly comment refresh · Weekly newsletter curation · Weekly YouTube content report (n8n) |
@@ -259,7 +259,7 @@ enterprise-ai-pipeline/
 │       └── atomic.py             # Atomic file writes
 ├── remotion/shorts/              # React/Remotion motion graphics project
 │   └── src/TextCard.tsx          # Animated brand-color section cards (1080×1920)
-├── tests/                        # 129 passing
+├── tests/                        # 198 passing
 ├── channels.example.json         # Template — real registry is git-ignored
 ├── newsletter_sources.example.json
 └── .env.example                  # All required env vars documented
@@ -305,4 +305,4 @@ This repo is the research and content engine behind a content business targeting
 
 ---
 
-*Built with Claude Code · 129 tests · Deployed on Windows Task Scheduler · Shorts rendered with HeyGen + Remotion + FFmpeg*
+*Built with Claude Code · 198 tests · Deployed on Windows Task Scheduler · Shorts rendered with HeyGen + Remotion + FFmpeg*

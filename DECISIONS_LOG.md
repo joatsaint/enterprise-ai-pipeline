@@ -39,6 +39,7 @@ Each ADR captures: the decision, the context that forced it, alternatives that w
 | ADR-017 | Session discipline rules adopted from Jared's Locked Session Rules v2 | Active | 2026-07-17 |
 | ADR-018 | Extend existing custom statusline rather than replace with ccstatusline | Active | 2026-07-17 |
 | ADR-025 | "Never suggest rest or stopping" rule strengthened with real Why + soft-phrasing closure | Active | 2026-07-22 |
+| ADR-026 | Canonical Project Backlog & Continuous Awareness System — MVP COMPLETE 2026-07-24: Phases 0-3 built, Phases 4-9 scope-cut after a direction review, 7 real active tasks migrated into production via existing capture workflow (zero new code), verified PASS. Frozen pending real-world usage feedback. | Active | 2026-07-23 |
 
 ---
 
@@ -779,3 +780,214 @@ easy to under-weight in a future session.
 - ⚠️ Depends on active application in the moment, same as any instruction —
   being in context reduces but doesn't guarantee zero future slips; this
   entry itself is the record if it needs sharpening again
+
+---
+
+## ADR-026 — Canonical Project Backlog & Continuous Awareness System
+
+**Date:** 2026-07-23
+**Status:** Active (requirements + architecture approved, implementation plan
+written, nothing built yet)
+
+**Decision Sign-Off addendum (2026-07-23, same day):** Randy ruled on all 6
+open architecture items and raised 2 additional requirements Claude had not
+anticipated. Ruling: (1) staleness is a warning, never a refusal — only
+structural failures (missing/corrupt file, broken references, unrecognized
+schema) refuse; (2) archive confirmed as a separate file; (3) task IDs use
+`PROJECTPREFIX-####` (`YTD`/`SWA`/`JAR`), never reused after archival;
+(4) referential-integrity checking is in scope and is a *structural*
+(hard-refusal) check, not soft; (5) lock-file staleness threshold is 30
+minutes — under 30 min a second writer is refused outright, over 30 min the
+lock is reported stale and requires explicit user confirmation to remove,
+never auto-deleted; (6) capture workflow (FR2.5, new) expanded to cover
+priority/status/dependency/due-date/project-focus changes on existing items,
+not just new-item detection; (7) every persistent file requires
+`schema_version`, unrecognized versions are structural failures, schema
+changes require real migration functions; (8) Root Claude is read + coordinate
+only, never a direct backlog writer even for its own suggestions — those flow
+through the same confirm workflow as anything else. All eight incorporated
+into `REQUIREMENTS_SPEC.md` and `ARCHITECTURE_DESIGN.md` the same day. A
+third document, `IMPLEMENTATION_PLAN.md`, was then written: 9 phases,
+migration sequenced 7th (after six earlier phases prove the mechanics on
+synthetic data) with a mandatory human review checkpoint before any real
+commit, full rollback story per phase, and all 24 acceptance tests mapped to
+the specific phase that must demonstrate each one. Still no code written.
+
+**Context:**
+A real, repeated failure: asked "what's next," Claude answered from
+session-salient conversation instead of the actual full backlog, missing the
+overdue Anthropic release check and the stalled AI Market Intelligence pivot
+until Randy explicitly asked to "dig deeper." The same day, a separate memory
+entry (the ART13 folder disposition) was found asserting something as fact
+that no longer matched reality. Randy named this as a repeated pattern —
+confident "here's the fix" promises that don't hold — and explicitly rejected
+another such promise, instead demanding a formal, adversarial process:
+requirements specification via structured Q&A first, with no design proposed
+until requirements were declared complete, followed by an architecture
+document that evaluates real storage alternatives and attacks its own design.
+
+**Decision:**
+Built and approved a full Requirements Specification (`docs/Canonical Backlog
+System/REQUIREMENTS_SPEC.md`) covering Goals, Non-Goals, Functional/
+Non-Functional Requirements, Failure Conditions, Success Criteria, and 17
+Acceptance Tests. Built an Architecture Design Document
+(`ARCHITECTURE_DESIGN.md`) selecting JSON storage (over Markdown and SQLite,
+evaluated on real grounds including a concrete Windows/network-path SQLite
+locking risk specific to this project's own folder structure), reusing the
+existing `src/utils/atomic.py` atomic-write pattern, defining a full data
+model, runtime workflows, a verification-gate system, failure handling, a
+migration architecture requiring accuracy review (not blind consolidation) of
+legacy memory content, a future root-Claude multi-project architecture, and a
+26-item self-attack failure analysis.
+
+**Alternatives considered:**
+- Another ad hoc promise/habit-based fix ("check the backlog every time").
+  Rejected by Randy directly — a promise isn't a mechanism, and this exact
+  pattern had already failed multiple times before.
+- SQLite-backed storage. Rejected — real mismatch to current scale, and a
+  concrete Windows-network-path locking risk given this project's actual
+  folder structure (contains a "Network Share" path segment).
+- Plain Markdown storage. Rejected as primary choice — no enforceable schema
+  without inventing an equivalent structured sub-format, at which point it
+  stops being simpler than JSON.
+
+**Reasoning:**
+Matches this project's own established principle (already applied to the
+date/time-accuracy rule) that a text instruction depending on being
+remembered in the moment is structurally weaker than a mechanical, verifiable
+gate. Also matches the Field-Failure-Driven Iteration pattern — a recurring
+failure (2+ times) is the trigger to stop patching ad hoc and build something
+real.
+
+**Consequences:**
+- ✅ A real, rigorous spec + architecture now exists, reviewable independent
+  of any single conversation's confident narration
+- ✅ Six specific ambiguities were caught and explicitly flagged for Randy's
+  decision rather than silently resolved by Claude's own judgment
+- ⚠️ Nothing is implemented yet — this ADR records the design phase only;
+  implementation requires the 6 open decisions ruled on first
+- ⚠️ A real, honest limitation acknowledged in the architecture itself: even a
+  working verification gate can't force correct downstream use of the data it
+  surfaces — that step remains Claude's judgment, the same judgment that
+  failed originally
+
+**Phase 0 + 0.5 addendum (2026-07-23, same day):** Phase 0 (foundation
+library — `src/backlog/{schema,store,lock,ids,verify,cli}.py`) built, 31
+tests passing. Randy approved Phase 0 and added a new gate, Phase 0.5 (Live
+Integration Validation), before Phase 1 could touch real project data —
+real subprocess calls against a real sandbox, not just pytest. Phase 0.5
+found and fixed a real bug: a Windows MAX_PATH failure on the *read* path
+(only the write path had the long-path fix from Phase 0), invisible to unit
+tests because pytest's `tmp_path` fixture never produces long-enough paths.
+Fixed by centralizing all filesystem access through one choke point.
+Demonstrated live: clean verification, corrupted-backlog refusal, unrelated
+work continuing unaffected, and five recovery scenarios (interrupted write,
+stale lock at the 30-minute threshold, missing backlog, corrupted JSON,
+wrong self-declared project identity). Full results:
+`docs/Canonical Backlog System/PHASE_0.5_RESULTS.md`. No real project data
+touched — migration remains Phase 7.
+
+**Phase 1 addendum (2026-07-23, same day):** real production bootstrap —
+`data/backlog/youtube-downloader/` created for real, zero invented backlog
+content. Empty backlog proven, via a permanent test not just a one-time
+check, to be structurally distinct from an unavailable one. Project
+isolation demonstrated against real data (a 5-test suite plus a live check
+confirming `swarmops-core` was never accidentally created and
+`youtube-downloader` stayed unaffected). `data/backlog/` confirmed still
+gitignored with real files present. 37/37 tests passing. Full results:
+`docs/Canonical Backlog System/PHASE_1_RESULTS.md`. Phase 2 is next;
+migration (Phase 7) still untouched, still requires its own go-ahead.
+
+**Phase 2 addendum (2026-07-24):** design doc written first
+(`docs/Canonical Backlog System/PHASE_2_DESIGN.md`) per Randy's explicit
+"do not immediately code" instruction, covering Planning Intent
+Classification, the honest real-vs-required trigger mapping, hook failure
+handling, human visibility rules, and a test plan — then implemented. Built
+`src/backlog/intent.py` (Tier 1 keyword classifier, deliberately
+over-inclusive, `uncertain` treated identically to `planning` per the
+fail-safe rule from the Verification Trigger Architecture ruling), a
+`check-intent` command in `cli.py`, and a new `UserPromptSubmit` hook
+(`.claude/hooks/backlog-planning-check.ps1`) registered in
+`.claude/settings.local.json` — no `UserPromptSubmit` hook existed in this
+project before this phase; the date/time-accuracy hook Claude sees fire
+every message is registered at the user level, outside this project's own
+config, and could be observed but not extended from here. Session-restore
+and project-switch were honestly documented as having no distinct native
+Claude Code event separate from `SessionStart` in this project's observed
+hook vocabulary, rather than assumed solved. Backlog-mutation-completed is
+enforced at the Python code level (future capture functions must call
+`run_verification()` themselves), not via an external hook. 11 new tests
+(185/185 passing project-wide). **Live-fire confirmed twice, unprompted** —
+Randy's own messages containing "status" triggered the real hook and the
+real verification block appeared in conversation context on its own, once
+before and once after a session date rollover, which is stronger evidence
+than a staged manual test would have been. Full design:
+`docs/Canonical Backlog System/PHASE_2_DESIGN.md`.
+
+**Phase 3 addendum (2026-07-24):** Randy authorized Phase 3 with additional
+requirements beyond the original implementation plan: a strict
+persist→verify→receipt sequence, deterministic idempotent-write protection
+(new AT-25), origin traceability (`origin_type`/`origin_reference`) on every
+task, and explicit failure handling (never claim success without a
+post-write verification pass). Built `src/backlog/capture.py`:
+`propose_task()` (writes nothing — returns a plain, user-editable Candidate
+dict) and `confirm_and_persist()` (the only function that writes; checks a
+`capture_key` — a deterministic hash of project+origin_type+origin_reference
++title — against active AND archived tasks before ever allocating an ID,
+so a replayed confirmation from a restart/crash/session-restore/hook-replay/
+repeated-confirmation always resolves to the same existing task rather than
+creating a duplicate). Rejection needed no dedicated function — a candidate
+the user doesn't confirm is simply never passed to `confirm_and_persist()`.
+
+Adding `origin_type`/`capture_key` to the Task Object required a real schema
+version bump (1.0 → 1.1) rather than a silent field addition under the same
+version, per FR11.2. Registered `schema.UPGRADE_FUNCTIONS["1.0"]` and wired
+`store.py`'s load functions to apply and persist the upgrade transparently
+on next load — demonstrated live against a real 1.0-declared file (existing
+production files silently carried this version and upgrade on their next
+load, zero data loss since the real backlog had zero tasks at the time).
+
+13 new capture tests + 2 upgrade-transparency tests, 198/198 passing
+project-wide. Live-demonstrated in a sandbox (not real production data,
+matching Phase 0.5's precedent): full detect→propose→confirm→persist→
+verify→receipt chain, then the exact same confirmation replayed and
+confirmed to produce zero duplicates (same `task_id` both times). Full
+review package: `docs/Canonical Backlog System/PHASE_3_REVIEW.md`. Per
+Randy's explicit instruction, Phase 4 does NOT begin automatically — this
+addendum documents Phase 3 completion pending his review. Migration
+(Phase 7) remains untouched.
+
+**MVP scope-cut + real migration addendum (2026-07-24, same day):** Randy
+requested a direction review — classify every remaining phase (4-9) as
+Essential/Valuable/Future-Architecture against the *original objective*
+("never confidently report nothing is pending when work exists"), not
+against the implementation plan's own ordering. Finding: Phase 7
+(migration) was the only phase that actually blocked the objective being
+true — the real canonical backlog was still nearly empty, so "what's next"
+would have returned a truthful-but-useless empty answer. Phases 4, 5, 6, 8,
+9 were all reclassified Valuable/Future-Architecture — real, but not
+required, and explicitly not built.
+
+Randy then cut migration itself down to MVP size: no `migrate.py` module,
+no Migration Record schema, no discovery/classification automation — a
+conversational quality pass instead. 34 real candidates were extracted from
+`HOT_STATE.md`/`MEMORY.md`, then filtered against "requires action / has
+enough clarity / real cost if forgotten / competes for attention" down to
+**7 Active**, 17 Future Ideas, 7 Needs Clarification, 3 Archive. Randy
+reviewed and approved the exact 7 Task Objects before anything was written.
+
+All 7 were persisted using the *already-built* Phase 3 `capture.py`
+functions (`propose_task`/`confirm_and_persist`) — zero new code — directly
+against real production data (`data/backlog/youtube-downloader/`), with
+`origin_type: "migration"`. Real verification afterward: **PASS, 7 open
+tasks (1 critical, 4 high, 2 medium)**, task IDs YTD-0001 through YTD-0007,
+no gaps or collisions. The 7 Needs-Clarification candidates were
+deliberately NOT persisted — `schema.STATUS_VALUES` has no status meaning
+"pending a decision, not yet real work" without inventing one, and Randy
+explicitly said not to invent one; they remain conversational until each
+decision is made.
+
+**This closes the Canonical Backlog System MVP.** Randy's explicit
+instruction: "Stop implementation work and wait for real-world usage
+feedback." No further phases begin without a real, demonstrated gap
+surfacing from actual use — not a resumption of the original 9-phase plan.
