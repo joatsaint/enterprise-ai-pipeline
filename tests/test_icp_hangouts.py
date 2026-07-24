@@ -9,7 +9,7 @@ from src.trend_finder import icp_hangouts as h
 
 
 def test_classify():
-    assert h.classify("https://www.linkedin.com/in/randy")[0] == "LinkedIn"
+    assert h.classify("https://www.linkedin.com/in/testprofile")[0] == "LinkedIn"
     lab, dom, spec = h.classify("https://youtube.com/@4sysops/videos")
     assert lab == "YouTube" and spec == "@4sysops"
     lab, dom, spec = h.classify("https://reddit.com/r/sysadmin/comments/x")

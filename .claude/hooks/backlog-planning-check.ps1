@@ -31,7 +31,7 @@
 # that log is the audit trail Randy can check directly if this script's own
 # behavior is ever in doubt.
 
-$repoRoot = "C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader"
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..\..")
 
 try {
     $stdinRaw = [Console]::In.ReadToEnd()

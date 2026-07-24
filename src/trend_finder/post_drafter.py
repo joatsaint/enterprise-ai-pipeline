@@ -1,7 +1,7 @@
 """
 Post Drafter — turns the top-ranked trending topic into a ready-to-edit
-LinkedIn post draft in Randy's voice, plus a short rationale note explaining
-why the topic was chosen.
+LinkedIn post draft in the configured voice, plus a short rationale note
+explaining why the topic was chosen.
 
 This module never publishes anything. It produces text for a human review
 queue (content-engine/content/) — the same review→approve→schedule→publish
@@ -27,7 +27,7 @@ _load_env()
 def _build_prompt(topic, voice_profile):
     voice_block = f"VOICE AND STYLE:\n{voice_profile}\n\n" if voice_profile else ""
 
-    return f"""{voice_block}You are drafting a LinkedIn post about a trending topic for Randy's audience
+    return f"""{voice_block}You are drafting a LinkedIn post about a trending topic for an audience
 of experienced IT/sysadmin professionals navigating the AI shift.
 
 TOPIC: {topic.get('title', '')}
@@ -58,7 +58,7 @@ POST:
 
 RATIONALE:
 <2-3 sentences: why this topic, why now, why this audience will care — for
-Randy's quick gut-check before he edits and schedules it>"""
+a quick gut-check before it's edited and scheduled>"""
 
 
 def draft_post(topic, voice_profile=None, model=None):
@@ -86,7 +86,7 @@ def draft_post(topic, voice_profile=None, model=None):
         response = client.messages.create(
             model=model,
             max_tokens=1200,
-            system="You are Randy Skiles, drafting a LinkedIn post in your own authentic voice. Follow the requested output format exactly.",
+            system="You are drafting a LinkedIn post in the given authentic voice. Follow the requested output format exactly.",
             messages=[{"role": "user", "content": _build_prompt(topic, voice_profile)}],
         )
         text = response.content[0].text.strip()

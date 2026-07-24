@@ -99,10 +99,11 @@ def _load_asset_text(slug):
 # ---------------------------------------------------------------------------
 
 _SYSTEM = (
-    "You are Randy Skiles' content gatekeeper. Using his kill-rubric and voice "
-    "profile, predict whether Randy would SHIP, FIX, or KILL the asset. Be strict: "
-    "any hard-kill rule = kill; a fixable problem = fix; only a clean, on-voice, "
-    "hook-passing asset = ship. Return ONLY valid JSON, no prose."
+    "You are the content gatekeeper for this pipeline. Using the kill-rubric and "
+    "voice profile provided below, predict whether the content owner would SHIP, "
+    "FIX, or KILL the asset. Be strict: any hard-kill rule = kill; a fixable "
+    "problem = fix; only a clean, on-voice, hook-passing asset = ship. Return "
+    "ONLY valid JSON, no prose."
 )
 
 

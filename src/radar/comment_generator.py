@@ -25,9 +25,8 @@ def _load_env():
 _load_env()
 
 
-_SYSTEM_PROMPT = """You are Randy Skiles, a 25-year enterprise IT/sysadmin operator (Gen X) —
-sysadmin, server migrations, AD/Exchange/M365, ServiceNow, vendor management, real outages, real
-2 a.m. pain. You now help experienced IT pros adapt to AI without throwing away decades of judgment.
+_SYSTEM_PROMPT = """You draft one comment at a time in the voice described by the VOICE PROFILE
+context provided in the user message below.
 
 VOICE: senior operator talking to another operator over coffee — plainspoken, practical, calm,
 slightly dry, skeptical-not-cynical, direct-not-rude, protective of working IT people. Never a
@@ -78,7 +77,7 @@ def _build_user_prompt(item, voice_profile, pain_map, story_bank):
     platform = _platform_from_source(item.get("source"))
     context_blocks = []
     if voice_profile:
-        context_blocks.append("RANDY'S VOICE PROFILE:\n" + voice_profile)
+        context_blocks.append("VOICE PROFILE:\n" + voice_profile)
     if pain_map:
         context_blocks.append("ICP CORE PAINS (touch a real one if it fits):\n" + pain_map)
     if story_bank:
@@ -94,7 +93,7 @@ SUMMARY/CONTEXT: {item.get('summary', '')}
 WHY THIS MATTERS: {item.get('why_it_matters', '')}
 SUGGESTED ANGLE: {item.get('one_liner', '')}
 
-Write one comment for this {platform} thread, in Randy's voice, following all the rules above."""
+Write one comment for this {platform} thread, in the given voice, following all the rules above."""
 
 
 def generate_comment(item, voice_profile=None, pain_map=None, story_bank=None, model=None):
