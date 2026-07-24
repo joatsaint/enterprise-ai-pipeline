@@ -154,6 +154,48 @@ exceptions.
    start), confirming captions are present, correctly synced to the
    transcript, positioned in the center-third, and not covering the face.
 9. Write `youtube_metadata.md`.
+10. Generate a plain-text transcript (`<slug>_transcript.txt` — no
+    timestamps, no styling markup, just the spoken words as readable
+    prose) from the same word-level data used for captions. Build it from
+    the already-generated `.ass`/caption data rather than re-running
+    Whisper — the words are already there.
+
+---
+
+## Post-Approval Cleanup
+
+**Trigger: only after Randy explicitly approves the final video AND
+thumbnail.** Never automatic, never speculative, never run mid-review. If
+a change is needed after approval, rebuild from the raw source — don't
+try to resurrect a deleted intermediate.
+
+**Always keep, never auto-delete:**
+- The raw source footage. Irreplaceable — everything else can be
+  regenerated from it, it can't be regenerated from anything.
+- The approved final video and thumbnail.
+- The plain-text transcript (`<slug>_transcript.txt`) — the primary reuse
+  asset for a follow-up post or article. Randy's own reasoning
+  (2026-07-24): a full transcript is raw material a different piece can
+  be freshly distilled from; an already-compressed YouTube description
+  has thrown away the texture/detail a good repurposed piece needs.
+  Starting from a summary and expanding it back out tends to read thin
+  and generic — starting from the full transcript and cutting a
+  *different* angle from it doesn't.
+- `youtube_metadata.md` — cheap to keep, and useful as a reference for
+  how the story was already framed publicly, so a follow-up piece stays
+  consistent with the YouTube version instead of quietly contradicting it.
+- The caption source (`.ass`) — small, cheap, saves a re-transcription
+  pass if the video itself is ever revisited. Lower priority than the
+  transcript.txt, but no real cost to keeping it.
+
+**Delete once the video + thumbnail are approved:**
+- The trimmed-but-uncaptioned intermediate video. Fully redundant once
+  the final captioned render exists — same trim, missing only the
+  caption burn. If ever needed again, it's a one-line `ffmpeg` re-trim
+  from the raw source using the cut timestamp already recorded in
+  `youtube_metadata.md`, not something worth keeping a 200MB copy of.
+- Any debug/test renders, thumbnail candidate frames that weren't chosen,
+  and other scratch output from the production process. Zero reuse value.
 
 ---
 
