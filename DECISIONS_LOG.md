@@ -936,3 +936,29 @@ decision is made.
 instruction: "Stop implementation work and wait for real-world usage
 feedback." No further phases begin without a real, demonstrated gap
 surfacing from actual use — not a resumption of the original 9-phase plan.
+
+---
+
+## ADR-027 — API Cost Notification Rule added to CLAUDE.md
+
+**Date:** 2026-07-25
+
+**Rule before:** No standing rule requiring Claude to flag Anthropic API
+spend before running an on-demand command. The 2026-07-24/25 cost audit
+(confirmed $46.48 Anthropic spend for the month) was a one-time reactive
+pass — two Task Scheduler jobs disabled, `comment_generator.py` moved to
+Haiku — not a standing process giving Randy ongoing visibility.
+
+**Rule after:** Before running any on-demand command/script that calls the
+Anthropic API (`analyze`, `ask`, `digest`, `curate-newsletters`,
+`trending`/`loop`, `/comment`, `project_wrap`, or anything through
+`src/utils/ai.py`), Claude must state that it will use API credits (model +
+rough call volume) and wait for Randy's explicit go-ahead — every time,
+until Randy says a specific tool is cleared to run without asking. The two
+Windows Task Scheduler jobs are explicitly excluded — Randy already knows
+those cost credits when they run.
+
+**Why:** Randy has several API connections and isn't aware of when they're
+being called; the one-time cost audit fixed a snapshot, not the underlying
+visibility gap. This rule builds his ongoing understanding of the system
+(what runs, when, at what cost) rather than just cutting cost once.

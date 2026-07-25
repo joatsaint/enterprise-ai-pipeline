@@ -484,6 +484,30 @@ together.
 
 ---
 
+## API Cost Notification Rule (added 2026-07-25)
+
+Randy is actively monitoring Anthropic API spend and does not have full
+visibility into when tools are calling it. Before running any on-demand
+command or script that calls the Anthropic API — `analyze`/`analyze-buildroom`,
+`ask`, `digest`, `curate-newsletters`, `trending`/`loop`, the `/comment` skill,
+`project_wrap`, or anything else that goes through `src/utils/ai.py` — state
+that it will use API credits (which model, and rough call volume if known)
+and wait for Randy's go-ahead before running it. This applies every time,
+not just the first time a given tool is used, until Randy explicitly says a
+specific tool can run without asking.
+
+**Explicitly excluded:** the two Windows Task Scheduler jobs (daily digest,
+weekly pipeline) — Randy already knows these use credits when they run, no
+notification needed for those specifically (both are currently disabled).
+
+**Why:** real, ongoing concern — Randy has several API connections and isn't
+aware of when they're being called. Confirmed $46.48 in Anthropic spend for
+2026-07 already found and partly addressed (see the 2026-07-24/25 cost-audit
+entry in HOT_STATE.md). This rule is about building his own visibility and
+understanding of the system, not just cutting cost once.
+
+---
+
 ## Field-Failure-Driven Iteration (added 2026-07-19)
 
 Randy's framing, drawn from the Iron Man suit-iteration model: Tony Stark's
