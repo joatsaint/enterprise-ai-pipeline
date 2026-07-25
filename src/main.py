@@ -11,6 +11,8 @@ Usage:
   python -m src.main index                      # build/rebuild knowledge base index
   python -m src.main analyze --group <name>     # run pain point analysis on a group
   python -m src.main analyze --all              # run pain point analysis on all groups
+  python -m src.main aggregate-pain-points       # Pass 3: merge all analyze reports into one ranked top-10, prune reports >90 days old
+  python -m src.main aggregate-pain-points --dry-run  # preview only, no writes/deletes
   python -m src.main ask "your question"        # Q&A against knowledge base (Sonnet)
   python -m src.main ask --fast "your question" # Q&A with Haiku (faster, cheaper)
   python -m src.main ask --group <name> "q"    # Q&A limited to a group
@@ -176,6 +178,14 @@ def main():
                 sys.exit(1)
             limit = int(args[idx + 1])
         run_catalog(limit=limit, force=force)
+        return
+
+    # ----------------------------------------------------------------
+    # aggregate-pain-points — Pass 3: cross-run merge of analyze reports
+    # ----------------------------------------------------------------
+    if cmd == "aggregate-pain-points":
+        from src.analyzer.pain_point_aggregator import run_aggregator
+        run_aggregator(dry_run="--dry-run" in args)
         return
 
     # ----------------------------------------------------------------
