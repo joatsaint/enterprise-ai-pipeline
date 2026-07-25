@@ -35,7 +35,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 VOICE_PATH = ROOT / "knowledge" / "me" / "voice.md"
 PAIN_MAP_PATH = ROOT / "knowledge" / "me" / "icp_pain_map.md"
 
-MODEL = os.environ.get("SHORTS_MODEL", "claude-sonnet-4-6")
+MODEL = os.environ.get("SHORTS_MODEL", "claude-sonnet-5")
 
 
 def _read_optional(path: Path) -> str:

@@ -79,7 +79,7 @@ def draft_post(topic, voice_profile=None, model=None):
     if not topic:
         return None, 0
 
-    model = model or os.getenv("TREND_DRAFTER_MODEL", "claude-sonnet-4-6")
+    model = model or os.getenv("TREND_DRAFTER_MODEL", "claude-sonnet-5")
     client = anthropic.Anthropic()
 
     try:
