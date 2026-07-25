@@ -43,7 +43,7 @@ def _load_env():
 
 _load_env()
 
-MODEL_DEFAULT = os.getenv("QUERY_MODEL", "claude-sonnet-4-6")
+MODEL_DEFAULT = os.getenv("QUERY_MODEL", "claude-sonnet-5")
 MODEL_FAST = "claude-haiku-4-5-20251001"
 
 

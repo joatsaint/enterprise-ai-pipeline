@@ -102,7 +102,7 @@ def generate_comment(item, voice_profile=None, pain_map=None, story_bank=None, m
 
     Returns (comment_text_or_None, tokens_used).
     """
-    model = model or os.getenv("RADAR_COMMENT_MODEL", "claude-sonnet-4-6")
+    model = model or os.getenv("RADAR_COMMENT_MODEL", "claude-sonnet-5")
     client = anthropic.Anthropic()
 
     try:
