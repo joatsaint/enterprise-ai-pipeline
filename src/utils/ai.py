@@ -114,6 +114,43 @@ def call_with_retry(client, *, model, max_tokens, system, messages, max_attempts
             raise
 
 
+def create_gemini(*, task, model, system, user, max_tokens=1200):
+    """
+    Gemini equivalent of create() -- for pipeline tasks explicitly moved off
+    Anthropic to avoid API cost (per Randy's 2026-07-25 request). Deliberately
+    NOT wired into the Anthropic cost ledger/cache above -- that machinery
+    exists specifically to track Anthropic spend, and mixing a different
+    provider's calls into it would make the weekly cost report misleading.
+    No retry-on-error, no fallback to Claude -- Randy's explicit choice: if
+    Gemini errors, this raises and the caller fails, rather than silently
+    costing an Anthropic call to recover.
+
+    Returns text only (no usage dict -- there's no Anthropic cost to record).
+    Requires GEMINI_API_KEY in the environment.
+    """
+    from google import genai as _genai
+    from google.genai import types as _genai_types
+
+    client = _genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+    resp = client.models.generate_content(
+        model=model,
+        contents=user,
+        config=_genai_types.GenerateContentConfig(
+            system_instruction=system,
+            max_output_tokens=max_tokens,
+            # Gemini 2.5 models spend part of max_output_tokens on internal
+            # "thinking" tokens even when not requested, which can silently
+            # truncate the actual response before it finishes (found live
+            # 2026-07-25 -- output cut off mid-sentence with plenty of
+            # max_tokens headroom left on paper). This task doesn't need
+            # reasoning, just direct writing, so disable it outright.
+            thinking_config=_genai_types.ThinkingConfig(thinking_budget=0),
+        ),
+    )
+    print(f"[ai] {task}: Gemini call ({model}), $0 Anthropic cost")
+    return resp.text
+
+
 def create(client, *, task, model, max_tokens, system, messages, use_cache=True):
     """
     Drop-in for client.messages.create that caches responses and ledgers cost.

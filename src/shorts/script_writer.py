@@ -27,15 +27,17 @@ import re
 import json
 from pathlib import Path
 
-import anthropic
-
-from src.utils.ai import create, record_usage
+from src.utils.ai import create_gemini
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 VOICE_PATH = ROOT / "knowledge" / "me" / "voice.md"
 PAIN_MAP_PATH = ROOT / "knowledge" / "me" / "icp_pain_map.md"
 
-MODEL = os.environ.get("SHORTS_MODEL", "claude-sonnet-5")
+# Moved off Anthropic to Gemini 2026-07-25 (Randy's request -- titles/
+# descriptions/scripts shouldn't cost Anthropic API credits). No fallback
+# to Claude on error, by Randy's explicit choice -- see create_gemini()'s
+# docstring in src/utils/ai.py.
+MODEL = os.environ.get("SHORTS_MODEL", "gemini-2.5-flash")
 
 
 def _read_optional(path: Path) -> str:
@@ -106,14 +108,12 @@ def write(pain_point: dict) -> dict:
         pain_summary=pain_point["pain_summary"],
     )
 
-    client = anthropic.Anthropic()
-    text, usage = create(
-        client,
+    text = create_gemini(
         task="shorts_script_writer",
         model=MODEL,
         max_tokens=1200,
         system=system,
-        messages=[{"role": "user", "content": user}],
+        user=user,
     )
 
     # Parse JSON — strip any accidental markdown fences
@@ -160,5 +160,5 @@ def write(pain_point: dict) -> dict:
         "slug": slug,
         "sections": sections,
         "word_count": word_count,
-        "tokens": usage,
+        "tokens": None,  # no Anthropic usage to report -- this now calls Gemini
     }
