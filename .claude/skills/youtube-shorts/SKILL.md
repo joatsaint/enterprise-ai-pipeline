@@ -5,19 +5,35 @@ Read this file before writing any YouTube Shorts script, generating a HeyGen vid
 
 ---
 
-## Required Deliverable — youtube_metadata.md
+## Required Deliverable — the video's description/metadata file
 
-Every Short must have a `youtube_metadata.md` file created **before the short is marked ready to upload**. No exceptions.
+Every Short must have a metadata file (description, tags, hashtags, etc.)
+created **before the short is marked ready to upload**. No exceptions.
+
+**Filename convention (added 2026-07-26, applies to every video type —
+Shorts, walk-and-talk, long-form, anything added later):** the file is
+named after the video's own title, not a generic name, so it's
+identifiable at a glance in a folder listing without opening it:
+`<video title, slugified>-description.md` — if the full title is short
+(roughly under 5-6 words / 40 characters), use the whole thing; if it's
+longer, use just the first three words of the title. Either way, end the
+filename with `-description`. Examples: a short title like "Feeding
+Squirrels Makes Me a Better Claude Code Developer" → first three words →
+`feeding-squirrels-makes-description.md`; a short enough title like
+"LayoffFear" stays as `layofffear-description.md`. This replaces the old
+generic `youtube_metadata.md` name used before 2026-07-26 — existing
+files already named that way are not required to be renamed
+retroactively, only new ones follow this convention.
 
 **Location (corrected 2026-07-24 — see `[[project_video_production_folder_convention]]`):**
-`video-production/shorts/<slug>/youtube_metadata.md` — inside the video's
-own per-video project folder, alongside the final render, thumbnail, and
-every other asset for that video. **Not** `content-engine/content/
-SHORT_{slug}/` — that split-location convention was the gap identified
-and closed 2026-07-24: all assets for one video, including its publish
-metadata, live in one folder for easy tracking and access. No exceptions,
-this applies to every format (HeyGen-avatar Shorts, `short-walk-and-talk`,
-and anything added later).
+`video-production/shorts/<slug>/<title>-description.md` — inside the
+video's own per-video project folder, alongside the final render,
+thumbnail, and every other asset for that video. **Not**
+`content-engine/content/SHORT_{slug}/` — that split-location convention
+was the gap identified and closed 2026-07-24: all assets for one video,
+including its publish metadata, live in one folder for easy tracking and
+access. No exceptions, this applies to every format (HeyGen-avatar
+Shorts, `short-walk-and-talk`, and anything added later).
 
 **Required fields:**
 - `Title` — under 40 chars; declarative statement; echo the hook
@@ -30,7 +46,31 @@ and anything added later).
 
 **Template:** `video-production/shorts/LayoffFear/youtube_metadata.md`
 (migrated 2026-07-24 into the current-convention location, along with the
-Remotion render outputs it referenced).
+Remotion render outputs it referenced — kept at its old pre-2026-07-26
+filename since existing files aren't renamed retroactively; treat it as a
+content/structure template only, not a filename example).
+
+## Standing first-comment template (locked 2026-07-26)
+
+Every video — Shorts and long-form both, no exceptions — gets this exact
+first comment posted by Randy after upload, link first, then the pitch
+below it (Randy's own reasoning: link-first lets a viewer highlight the
+URL and right-click-search/open it immediately, no scrolling past text
+first):
+
+```
+rskiles.com/the-riddle-of-steel
+
+Grab The Riddle of Steel — (free workbook):
+Uncover the Skills That AI Can't Replace
+```
+
+Draft this into the metadata file as its own clearly separate section
+(`## First Comment`), ready to copy-paste — but never merge it into the
+Description field itself, since they're two separate CTAs in two separate
+places (Description still carries its own CTA per Required Fields above).
+Randy posts the actual comment himself after upload; this is not
+automated.
 
 ---
 
@@ -119,11 +159,20 @@ Videos that hook in the first 15 seconds retain 65% of viewers through 3 minutes
           Optional: soft CTA ("link in bio" or "follow for more") — keep it 1 line.
 ```
 
-**Script length → duration guide:**
+**Script length → duration guide (a default, not a ceiling — see below):**
 - 120 words ≈ 55–60 seconds
 - 150 words ≈ 70–75 seconds
 - 200 words ≈ 90–100 seconds
 - 300 words ≈ 135–150 seconds
+
+**Complete the payoff over hitting a duration target (Randy's explicit instruction,
+2026-07-30):** never truncate or rush a script's payoff just to land at 60 seconds.
+If the topic genuinely needs two or three minutes to deliver a complete, promised
+payoff, let it run long — report the real estimated runtime honestly rather than
+force-fitting it to the target. Randy would rather post one fewer video a month
+(more HeyGen credits per video) than ship one that cuts off before the payoff lands,
+the exact failure mode he's naming in videos that get "AI slop"/incomplete-thought
+complaints in the comments. See `[[feedback_complete_payoff_over_runtime_target]]`.
 
 **Voice rules (Randy's operator voice — always apply):**
 - Short sentences. No filler.
@@ -131,6 +180,15 @@ Videos that hook in the first 15 seconds retain 65% of viewers through 3 minutes
 - No motivational-speaker cadence — calm, direct, experienced
 - One idea per Short — don't try to cover the whole article
 - Read `knowledge/me/voice.md` before drafting
+- Read `knowledge/me/script_line_edit_patterns.md` before drafting — real line-level
+  edits Randy has made to past scripts, with the principle behind each one
+- Read `knowledge/me/carlin_technique.md` before finalizing a hook — check whether it
+  reveals a real mechanism behind something the audience assumes is neutral, not just
+  a stated fact
+- **Toolkit, not a formula (Randy's explicit instruction, 2026-07-30):** war stories,
+  Carlin-style truth-in-joke-format, Paul's humor layer, and Randy's own plain direct
+  voice are four available tools, not mandatory ingredients — pick per topic, ad hoc.
+  Some Shorts genuinely just need clear, direct info with none of the above.
 
 ---
 
@@ -209,4 +267,5 @@ Each article → at least 1 Short. Atom the sharpest single idea, not a summary 
 - **Captions must avoid the bottom 25%** of the frame — that's where YouTube's like/comment/share buttons overlay in the Shorts feed.
 - **youtube_metadata.md must be created in the same session as the render** — not deferred to upload day. ShortsLayoffFear was caught missing title/description/tags at upload time. Template: `video-production/shorts/LayoffFear/youtube_metadata.md`.
 - **`youtube_metadata.md` lives in the video's own project folder** (`video-production/shorts/<slug>/`), not `content-engine/content/SHORT_{slug}/` — that split caused Randy to have to ask whether a video's assets were even fully created, since the metadata was invisible sitting in a different folder than the video itself. Fixed 2026-07-24 — see Required Deliverable above. The one pre-existing case (`SHORT_LayoffFear`) was migrated the same day: `youtube_metadata.md` moved into `video-production/shorts/LayoffFear/`, and its Remotion render outputs (previously left sitting in the tool's own `remotion/out/` folder, never consolidated) were copied in alongside it.
+- **The metadata filename itself must name the video (added 2026-07-26).** A folder full of generically-named `youtube_metadata.md` files across many videos gave Randy no way to tell which was which at a glance — fixed by naming the file after the video's own title (or its first 3 words if long) plus `-description`, e.g. `ai-not-taking-your-description.md`. See Required Deliverable above for the exact rule. Applies to every video type, not just Shorts.
 - **TransitionSeries timing must use `linearTiming()`, not a plain object.** `timing={{ type: "in-out", durationInFrames: N }}` throws `getDurationInFrames is not a function`. Always import `linearTiming` from `@remotion/transitions` and use `const timing = linearTiming({ durationInFrames: TRANS })` — then pass that variable to every `<TransitionSeries.Transition>`.

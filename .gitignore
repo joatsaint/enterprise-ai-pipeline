@@ -121,6 +121,12 @@ Jarvis Project/
 # journal/ above. Banked 2026-07-20.
 brain-droppings-vault/
 
+# pain-point-miner/ — standalone giveaway spinout, its own independent
+# nested git repo (github.com/joatsaint/pain-point-miner), never tracked by
+# this repo's own git. Same nested-but-separate pattern as voice-line.
+# Banked 2026-07-28.
+pain-point-miner/
+
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
 

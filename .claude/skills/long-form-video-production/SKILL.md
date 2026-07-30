@@ -208,8 +208,32 @@ of the title.
 
 ## Stage 7 — YouTube publish metadata (title, description, tags)
 
-Write to `<slug>/youtube_metadata.md`, then lock the final title into
-`metadata.json`.
+Write to `<slug>/<video title, slugified>-description.md`, then lock the
+final title into `metadata.json`.
+
+**Filename convention (added 2026-07-26, same rule across every video
+type — Shorts, walk-and-talk, long-form):** name the file after the
+video's own title, not a generic name, so Randy can identify which video
+it belongs to at a glance in a folder listing without opening it. Use the
+whole title if short (roughly under 5-6 words / 40 characters); if
+longer, use just the first three words. Always ends in `-description`.
+Replaces the old generic `youtube_metadata.md` name for anything created
+from 2026-07-26 onward — existing files keep their old name, not renamed
+retroactively. Full rule + rationale: `youtube-shorts` skill's Required
+Deliverable section.
+
+**Standing first-comment template (locked 2026-07-26, same as
+`youtube-shorts` — applies to every video type, no exceptions):** link
+first, then the pitch, drafted into the metadata file as its own `##
+First Comment` section (never merged into Description):
+```
+rskiles.com/the-riddle-of-steel
+
+Grab The Riddle of Steel — (free workbook):
+Uncover the Skills That AI Can't Replace
+```
+Randy posts it himself after upload — not automated. Full rationale:
+`youtube-shorts` skill's own section on this.
 
 **Title:** run through the `youtube-script` skill's title fact-check rule —
 verify every claim in the title against the actual script/description
