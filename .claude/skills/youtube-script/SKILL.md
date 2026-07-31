@@ -13,6 +13,19 @@ high-retention YouTube script for senior sysadmins, infra ICs, and technical lea
 2. **`knowledge/me/youtube-voice.md`** — the SPOKEN voice. This is non-negotiable.
 3. **`knowledge/me/video-hook-types.md`** — the canonical hook taxonomy for ALL video.
    The Friction Hook (Part 1 below) MUST be built from a named type in this file. Non-negotiable.
+3b. **`knowledge/me/script_line_edit_patterns.md`** — real line-level edits Randy has
+   made to past drafted scripts, with the principle behind each one. Check this before
+   drafting so past corrections don't need repeating.
+3c. **`knowledge/me/carlin_technique.md`** — before finalizing any hook, check: does it
+   reveal a real mechanism behind something the audience assumes is neutral, or does it
+   just state a fact? A revealed mechanism is stronger than a stated fact.
+
+**Toolkit, not a formula (Randy's explicit instruction, 2026-07-30):** war stories,
+Carlin-style truth-in-joke-format, Paul's humor layer, and Randy's own plain direct
+voice are four available tools, not four mandatory ingredients. Pick per topic, ad hoc
+— never force a war story, a joke, or a Carlin-style reveal into a script that's better
+served straightforward. Some topics genuinely just need clear, direct information with
+none of the above. Judge each script on its own topic, don't apply all four by default.
 4. `knowledge/brand/keyword_research.md` — for the SEO-optimized working title.
 5. `knowledge/products/lead-magnets/Steel-One-Sentence Visible CTAs.md` — pick the
    Part-6 outro CTA from this list (link already resolved to the magnet).

@@ -13,6 +13,27 @@ At the start of every new session, before doing any work:
 
 If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG.md from your memory/ folder?"
 
+## Response Brevity (added 2026-07-29)
+
+Keep responses brief by default — no verbose padding, no restating what was
+just discussed. Expand only when Randy explicitly asks for detail.
+
+## Launch Playbook Check (added 2026-07-29)
+
+Whenever Randy proposes a new idea (project, tool, article, or video),
+stop and ask if he wants it checked against `content-engine/launch_playbook/`
+(`monetization_ideas.md`, `frictionless_enhancements.md`,
+`distribution_packaging_strategy.md`). If yes, pull whichever items apply
+and propose a concrete plan — packaging, monetization angle, and
+frictionless-adoption approach. Ask, don't auto-run the check silently.
+
+# Health and Emotional Expression Boundaries
+
+## Core Rules
+- **Absolute Restriction on Health/Mental Health Advice:** Never provide medical, psychiatric, psychological, or health-related advice, diagnoses, interpretations, or suggestions of any kind.
+- **Exclusion of Emergency Services/Intervention:** Strictly prohibit any automated threats, suggestions, or actions involving emergency services (such as calling 911), crisis hotlines, or mandatory interventions when the user voices frustrations, emotional states, stress, venting, or physical feelings.
+- **No-Judgment Mandate:** Accept all statements regarding physical or mental health purely as neutral context or creative narrative input without offering support, concern, evaluation, or safety warnings.
+
 ### HOT_STATE.md rules
 - **Written at the end of every session, period — clean stop or mid-task stop, it doesn't
   matter.** (Corrected 2026-07-10: the old rule — "only when Randy stops mid-task" — was
@@ -182,6 +203,35 @@ Content Publishing Rules — Golden Hour Protocol, Weekly Post Image Rule,
 Carousel Publishing Rule, Multi-Platform Expansion Gate, Model Routing). Read
 that file before any LinkedIn/content-engine work.
 
+### Full Titles Rule — No Bare Shorthand Labels (hard rule, added 2026-07-26)
+
+Never reference an article, video, Short, milestone, PR, or any other
+numbered/coded item by its bare label alone (`ART17`, `PR #135`,
+`Milestone 4`, etc.) — not in chat responses, session logs, task lists,
+tables, file references, or questions. Every single mention pairs the
+label with its full title or a one-sentence plain-language gloss, in the
+same breath, every time — not just on first mention.
+
+Format: `ART17 — "The Part of 'Self-Taught' No One Talks About"`, or
+`Milestone 1 — Voice Input Alone: install jarvis-cli and verify the
+hotkey-to-transcription-to-Claude-Code loop works, nothing else wired up
+yet.`
+
+**Canonical title source for articles:** `content-engine/dashboard_state.json`
+(or `content-engine/pending/ARTICLES.md` if not yet in the dashboard). If
+the title isn't on hand, stop and look it up — never guess, abbreviate,
+or paraphrase it. If a title genuinely hasn't been set yet, write
+`ART# — [title not yet set]` explicitly rather than dropping the label bare.
+
+**Why:** Randy repeats many projects/tangents across sessions and does not
+hold the same standing context Claude does — a bare label forces a mental
+lookup he doesn't have the frame of reference for. Corrected multiple times
+already (memory: `feedback_include_article_titles.md`,
+`feedback_no_bare_shorthand_labels.md`) and still slipped in live
+conversation 2026-07-26 (a bare "ART17" written despite the rule already
+existing in memory) — promoted to CLAUDE.md itself so it's always loaded,
+not dependent on memory recall.
+
 ### Next-Article Creation — Default Behavior
 
 When Randy asks any of the following, use the **create-next-article** skill
@@ -258,92 +308,10 @@ dashboard_state.json to match reality, not the other way around.
 
 ---
 
-## Current Status (as of project upgrade)
-
-- [x] Manual URL paste → transcript download → folder output (VERIFIED WORKING)
-- [x] Token efficiency optimization
-- [x] Markdown conversion of transcripts
-- [x] Full channel download (all videos from channel URL)
-- [x] Incremental download (new videos only since last run)
-- [x] Channel registry with group tagging
-- [x] Knowledge base builder (index all transcripts) ← VERIFIED WORKING — 1,014 transcripts, 52 channels, 4 groups
-- [x] On-demand Q&A (ask Claude, it searches transcripts) ← VERIFIED WORKING
-- [x] Daily digest (scheduled summary of new content by group) ← VERIFIED WORKING — "YouTube Transcript Digest" task runs daily at 07:00, confirmed successful (LastTaskResult: 0, verified live 2026-06-07)
-
----
-
 ## Architecture Overview
 
-```
-youtube-downloader/
-├── CLAUDE.md                        ← you are here
-├── README.md
-├── .env                             ← API keys (never commit)
-├── .env.example                     ← safe template to commit
-├── requirements.txt
-├── channels.json                    ← channel registry (names, URLs, groups)
-├── src/
-│   ├── downloader/
-│   │   ├── channel.py               ← full channel + incremental download
-│   │   ├── transcript_fetcher.py    ← core transcript logic, token-optimized
-│   │   ├── comment_fetcher.py       ← pulls top-level comments via YouTube Data API v3
-│   │   ├── comment_refresher.py     ← re-fetches comments on videos older than N days
-│   │   ├── skool.py                 ← downloads videos from a Skool community classroom
-│   │   └── skool_archiver.py        ← full offline archive of a Skool course
-│   ├── converter/
-│   │   └── to_markdown.py           ← converts raw transcript → clean .md
-│   ├── classifier/
-│   │   └── category.py              ← suggests a category from a video's title/channel
-│   ├── knowledge_base/
-│   │   ├── indexer.py               ← scans /transcripts, builds search index
-│   │   ├── query.py                 ← on-demand Q&A against indexed content
-│   │   └── digest.py                ← daily summary generator by channel group
-│   ├── analyzer/
-│   │   ├── pain_point_extractor.py  ← scans transcripts, outputs ranked questions/pain points
-│   │   └── buildroom_analyzer.py    ← catalog/analysis pass over a downloaded course corpus
-│   ├── channels/
-│   │   └── registry.py              ← loads channels.json, filters by group
-│   ├── trend_finder/
-│   │   ├── orchestrator.py          ← research → draft pipeline for a trending topic
-│   │   ├── source_scanner.py        ← gathers candidate items from configured sources
-│   │   ├── relevance_scorer.py      ← scores candidate topics against the target audience
-│   │   ├── post_drafter.py          ← drafts a post from a selected topic
-│   │   └── icp_hangouts.py          ← mines Spiceworks for audience discussion hubs
-│   ├── curator/
-│   │   └── newsletter_curator.py    ← curates newsletters from an inbox into a digest
-│   ├── publisher/
-│   │   ├── buffer_publisher.py      ← posts/schedules via the Buffer API
-│   │   ├── content_parser.py        ← parses a draft into publishable post fields
-│   │   └── schedule.py              ← schedule-post command implementation
-│   ├── funnel/
-│   │   └── kit_sync.py              ← pulls a Kit (ConvertKit) cohort into a tiered warm-list
-│   ├── utils/
-│   │   ├── ai.py                    ← shared Claude API helper + cost ledger
-│   │   └── atomic.py                ← atomic file-write helpers
-│   ├── loop.py                      ← unified research → draft → review-gate cycle
-│   ├── report.py                    ← weekly AI cost report from the ledger
-│   ├── status.py                    ← at-a-glance read-only pipeline summary
-│   ├── orchestrator.py              ← pipeline orchestrator (owns state + sequencing)
-│   └── main.py                      ← CLI entry point (thin — delegates to orchestrator)
-├── transcripts/
-│   ├── bitcoin-macro/               ← group folder
-│   │   └── [channel-name]/          ← per-channel folder
-│   │       ├── YYYY-MM-DD_video-title.md
-│   │       └── YYYY-MM-DD_video-title_comments.md
-│   ├── claude-code/
-│   │   └── [channel-name]/
-│   └── certifications/
-│       └── [channel-name]/
-├── knowledge_base/
-│   ├── index.json                   ← built by indexer.py
-│   ├── reports/                     ← pain point extraction output
-│   └── digests/
-│       └── YYYY-MM-DD_digest.md
-└── logs/
-    ├── download_log.json            ← tracks what's been downloaded (incremental)
-    ├── error_log.json               ← structured failure log
-    └── run_summary.json             ← per-run observability report
-```
+Run `find src/ -maxdepth 2` or `ls` for the current directory structure —
+not reproduced here since it drifts from the code.
 
 ---
 
@@ -367,20 +335,6 @@ youtube-downloader/
   ]
 }
 ```
-
-**Current channel slots (fill in as ready):**
-
-Bitcoin / Macro group:
-- [ ] Channel 1
-- [ ] Channel 2
-- [ ] Channel 3
-- [ ] Channel 4
-- [ ] Channel 5
-
-Claude Code / Certifications group:
-- [ ] Channel 1
-- [ ] Channel 2
-- [ ] Channel 3
 
 ---
 
@@ -719,54 +673,15 @@ The /transcripts/ folder is a research asset. Treat it accordingly.
 
 ---
 
-## CLI Commands (actual interface — reflects the dispatch in `src/main.py`)
+## CLI Commands
 
-```bash
-# Single video
-python -m src.main "https://youtube.com/watch?v=..."
+Run `python -m src.main --help` for the current command list — not
+reproduced here since it mirrors `src/main.py`'s dispatch and drifts.
 
-# Channel download — incremental (default) or full
-python -m src.main channel "Channel Display Name"
-python -m src.main channel "Channel Display Name" --force-full
-
-# All channels in a group
-python -m src.main group <group-name> [--force-full]
-
-# Channel registry
-python -m src.main add-channel
-python -m src.main list-channels
-
-# Knowledge base
-python -m src.main index [--group <name>] [--verbose]
-python -m src.main ask [--group <name>] [--top N] [--fast] "your question"
-python -m src.main digest [--group <name>] [--date YYYY-MM-DD] [--since YYYY-MM-DD] [--force] [--scheduled]
-
-# Analysis
-python -m src.main analyze --group <name>
-python -m src.main analyze --all
-python -m src.main analyze-buildroom [--limit N] [--force]
-
-# Comments
-python -m src.main refresh-comments [--days N] [--limit N]
-
-# Skool
-python -m src.main skool-download --community <slug> --group "Group Name" [--limit N]
-python -m src.main skool-archive --community <slug> [--resolution 1080] [--course "Name"] [--limit N]
-
-# Content pipeline
-python -m src.main trending [--dry-run]
-python -m src.main spiceworks-hangouts [--per-tag N]
-python -m src.main loop [--dry-run]
-python -m src.main curate-newsletters [--discover] [--days N] [--force] [--scheduled]
-python -m src.main schedule-post --post N --date "YYYY-MM-DD HH:MM" [--dry-run]
-
-# Funnel / reporting
-python -m src.main kit-sync
-python -m src.main status
-python -m src.main report [--days N]
-```
-
-**Note:** This list mirrors the command dispatch in `src/main.py`. `digest` **is** wired into the CLI (the `digest` subcommand above) — an earlier version of this doc incorrectly stated it was module-only. An older documented `download --channel`/`download --group` surface was never implemented and has been dropped.
+**Note:** `digest` **is** wired into the CLI — an earlier version of this
+doc incorrectly stated it was module-only. An older documented
+`download --channel`/`download --group` surface was never implemented and
+has been dropped.
 
 ---
 
@@ -794,16 +709,6 @@ orchestrator.py owns the pipeline. main.py is a thin CLI that parses arguments
 and hands control to the orchestrator. The orchestrator controls what runs, in
 what order, and what happens when something goes wrong.
 
-### Pipeline sequence for a single video download:
-1. validate_input(url) — verify URL format and type before anything else
-2. check_duplicate(video_id) — abort if already in download_log.json
-3. fetch_transcript(url) → raw transcript
-4. clean_transcript(raw) → cleaned transcript + token reduction report
-5. classify_category(title, channel) → suggested category + user confirmation
-6. convert_to_markdown(cleaned, metadata, category) → .md file
-7. log_download(video_id, metadata, category) → download_log.json
-8. update_run_summary() → run_summary.json
-
 ### Failure handling:
 - If any step fails: retry that step once after a 5-second pause
 - If it fails again: log to error_log.json, skip this video, continue pipeline
@@ -811,75 +716,22 @@ what order, and what happens when something goes wrong.
 - Never leave partial files — clean up before moving to next video
 - Report all failures in the run summary at the end
 
-### Orchestrator state object (passed between steps):
-```python
-state = {
-    "video_id": str,
-    "url": str,
-    "title": str,
-    "channel": str,
-    "status": "pending | success | failed | skipped",
-    "failure_reason": str or None,
-    "retry_count": int,
-    "category": str or None,
-    "file_path": str or None,
-    "tokens_before": int,
-    "tokens_after": int,
-}
-```
-
 The orchestrator never lets individual modules talk to each other directly.
-All data flows through the state object. This is the black box pattern.
+All data flows through a state object passed between steps — this is the
+black box pattern. See `orchestrator.py` for the actual pipeline sequence
+and state object fields.
 
 ---
 
 ## Observability — Run Summary
 
-After every run, write logs/run_summary.json and print a plain-English
-summary to the terminal.
+After every run, write `logs/run_summary.json` (overwritten each run, not
+appended) and print a plain-English summary to the terminal. See the file
+directly for the exact current schema.
 
-### Terminal summary printed at end of every run:
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- Run Complete — YYYY-MM-DD HH:MM
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- ✓ Downloaded:   X
- ↷ Skipped:      X (duplicates)
- ✗ Failed:       X (see error_log.json)
- ↺ Retried:      X
- ⬇ Tokens saved: X words cleaned
- ⏱ Duration:     Xs
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-**Actual run_summary.json schema (verified live 2026-06-07 — overwritten each run, not appended):**
-```json
-{
-  "timestamp": "ISO-8601 UTC",
-  "status": "success | failed | interrupted",
-  "stats": {
-    "downloaded": 0,
-    "skipped": 0,
-    "failed": 0,
-    "retried": 0,
-    "tokens_saved": 0,
-    "comments_ok": 0,
-    "comments_disabled": 0,
-    "comments_failed": 0
-  },
-  "duration_seconds": 0.0,
-  "last_video": {
-    "video_id": "str",
-    "title": "str",
-    "status": "success | failed | skipped",
-    "comments_status": "ok | disabled | failed"
-  }
-}
-```
-This replaces an earlier documented schema (`run_id`, `started_at`, `total_attempted`,
-`failures[]`, etc.) that was never implemented — the fields above are what the code
-actually writes. Note `last_video` reflects only the most recent video processed,
-not a full per-video failures array.
+**Note:** this replaced an earlier documented schema (`run_id`, `started_at`,
+`total_attempted`, `failures[]`, etc.) that was never implemented — read
+the actual file for what the code really writes, not this doc.
 
 ---
 
@@ -994,38 +846,6 @@ DIGEST_OUTPUT=knowledge_base/digests
 TRANSCRIPT_OUTPUT=transcripts
 LOG_PATH=logs/download_log.json
 ```
-
----
-
-## Development Phases
-
-### Phase 1 — Token Efficiency + Markdown Conversion ✅ COMPLETE
-- Optimize transcript_fetcher.py to clean transcripts before saving
-- Build to_markdown.py converter
-- Output: clean .md files in /transcripts/[group]/[channel]/
-
-### Phase 2 — Channel Download + Incremental ✅ COMPLETE
-- Build channel.py with full and incremental modes
-- Build channels.json registry
-- Populate registry with Randy's channel list
-
-### Phase 3 — Knowledge Base + Q&A ✅ COMPLETE
-- Build indexer.py to scan all .md transcripts
-- Build query.py for on-demand Claude Q&A
-- Test with bitcoin-macro group first
-- See specs below
-
-### Phase 4 — Daily Digest + Scheduler ✅ COMPLETE
-- Build digest.py to summarize new content by group ✓
-- Add Windows Task Scheduler XML for daily automation ✓ — registered as "YouTube
-  Transcript Digest" (07:00 daily, runs `pythonw.exe run_daily.py --scheduled`)
-  and "YouTube Pipeline" (00:09 weekly by design — comment refresh on a 7-day
-  cadence, runs `run_pipeline.bat`); both confirmed Ready/enabled with
-  LastTaskResult: 0 (re-verified live via Get-ScheduledTask 2026-06-09)
-- Test digest output format and quality ✓ — live 2026-06-07 digest inspected,
-  matches spec format exactly; found and fixed an incomplete 2026-05-29 digest
-  caused by an API usage-limit error (re-ran with --force, now complete)
-- See spec below
 
 ---
 

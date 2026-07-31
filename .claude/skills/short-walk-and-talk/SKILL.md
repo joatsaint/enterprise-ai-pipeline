@@ -141,14 +141,37 @@ avoid bottom 25%, 99%+ sync) with two format-specific overrides:
 
 ## Required deliverable
 
-Same as `youtube-shorts`: `youtube_metadata.md`, same session as the
-render, no exceptions.
+Same as `youtube-shorts`: a description/metadata file, same session as
+the render, no exceptions.
+
+**Filename convention (added 2026-07-26, same rule as `youtube-shorts` —
+applies here too, not just Shorts):** name the file after the video's
+own title, not a generic name — `<video title, slugified>-description.md`.
+Use the whole title if short (roughly under 5-6 words / 40 characters);
+if longer, use just the first three words. Always ends in `-description`.
+Lets Randy identify which video a file belongs to at a glance in a folder
+listing, without opening it. Replaces the old generic
+`youtube_metadata.md` name for anything created from 2026-07-26 onward —
+existing files keep their old name, not renamed retroactively.
+
+**Standing first-comment template (locked 2026-07-26, same as
+`youtube-shorts` — applies to every video type, no exceptions):** link
+first, then the pitch, drafted into the metadata file as its own `##
+First Comment` section (never merged into Description):
+```
+rskiles.com/the-riddle-of-steel
+
+Grab The Riddle of Steel — (free workbook):
+Uncover the Skills That AI Can't Replace
+```
+Randy posts it himself after upload — not automated. Full rationale:
+`youtube-shorts` skill's own section on this.
 
 **Location — single folder, no exceptions (locked 2026-07-24):**
-`youtube_metadata.md` lives in the **same folder as every other asset for
-that video** — the final render, thumbnail, captions, and transcript —
-not a separate `content-engine/content/` location. This is the actual
-per-video project folder from `[[project_video_production_folder_convention]]`
+the description/metadata file lives in the **same folder as every other
+asset for that video** — the final render, thumbnail, captions, and
+transcript — not a separate `content-engine/content/` location. This is
+the actual per-video project folder from `[[project_video_production_folder_convention]]`
 (`video-production/shorts/<slug>/` or `video-production/long-form/<slug>/`
 depending on the length decision). One folder holds the whole video: copy
 that one folder and everything needed for tracking, review, or re-upload
@@ -191,7 +214,8 @@ moment before being caught and fixed the same session it was noticed.
    framerate/audio params, concat it onto the front of the captioned
    video, and verify the seam (frame during the freeze + frame just after
    it ends) before treating the render as final.
-10. Write `youtube_metadata.md`.
+10. Write the description/metadata file (`<title>-description.md` — see
+    Required Deliverable above for the naming rule).
 11. Generate a plain-text transcript (`<slug>_transcript.txt` — no
     timestamps, no styling markup, just the spoken words as readable
     prose) from the same word-level data used for captions. Build it from
