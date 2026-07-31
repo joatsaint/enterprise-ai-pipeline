@@ -962,3 +962,82 @@ those cost credits when they run.
 being called; the one-time cost audit fixed a snapshot, not the underlying
 visibility gap. This rule builds his ongoing understanding of the system
 (what runs, when, at what cost) rather than just cutting cost once.
+
+---
+
+## ADR-028 — Video description/metadata filenames now name the video, not a generic name
+
+**Date:** 2026-07-26
+
+**Rule before:** every video's YouTube description/tags/metadata file was
+named the same generic `youtube_metadata.md` regardless of which video it
+was for, across Shorts, walk-and-talk, and long-form. Randy had no way to
+tell which file belonged to which video from a folder listing alone.
+
+**Rule after:** the file is named after the video's own title —
+`<video title, slugified>-description.md`. Use the whole title if short
+(roughly under 5-6 words / 40 characters); if longer, use just the first
+three words. Applies across every video type — youtube-shorts,
+short-walk-and-talk, and long-form-video-production skills all updated
+identically. Existing files keep their old `youtube_metadata.md` name,
+not renamed retroactively — only new ones follow this convention.
+
+**Why:** Randy wants to identify which video a metadata file belongs to,
+and that it's the description file, at a glance without opening it.
+
+---
+
+## ADR-029 — Standing first-comment template locked for every video
+
+**Date:** 2026-07-26
+
+**Rule before:** no formal, locked first-comment template existed in any
+skill file — only an ad-hoc "link in my channel profile" phrasing noted
+in a memory file, inconsistent across videos.
+
+**Rule after:** every video, Shorts and long-form alike, gets this exact
+first comment after upload — link first, then the pitch (Randy's own
+reasoning: link-first lets a viewer highlight-and-right-click-search the
+URL immediately, no scrolling past text first):
+
+```
+rskiles.com/the-riddle-of-steel
+
+Grab The Riddle of Steel — (free workbook):
+Uncover the Skills That AI Can't Replace
+```
+
+Drafted into each video's metadata file as its own `## First Comment`
+section, kept separate from the Description field. Randy posts it
+himself after upload — not automated. Locked identically across
+`youtube-shorts`, `short-walk-and-talk`, and `long-form-video-production`
+skills.
+
+**Why:** Randy wants one consistent, frictionless CTA across every video
+going forward, not a slightly different phrasing each time.
+
+---
+
+## ADR-030 — Audience-building and product/monetization work unlocked to equal, parallel priority
+
+**Date:** 2026-07-29
+
+**Rule before:** locked sequential priority order (2026-07-14): audience
+growth → gather stats → refine content → products. Products/monetization
+work waited until earlier tiers had real, shipped output — reinforced
+across multiple memory files (`project_content_system_priority_tiers.md`,
+`feedback_audience_first_then_overflow.md`, `project_paid_product_strategy.md`)
+and quoted approvingly by Randy himself earlier the same day ("no use in
+continuing to build new projects if no one sees the built projects").
+
+**Rule after:** audience-building and product/monetization work now run at
+**equal priority, in parallel** — neither gates the other. Randy's explicit
+instruction, a deliberate reversal, not an oversight.
+
+**Why:** Randy's own call — no additional rationale given beyond the
+instruction itself.
+
+**Files updated same session:** `project_content_system_priority_tiers.md`,
+`feedback_audience_first_then_overflow.md`, `feedback_finish_video_series_before_new_projects.md`
+(citation only — its own separate "finish the video series first" commitment
+was not reversed), `project_monte_swarmops.md`, `project_paid_product_strategy.md`.

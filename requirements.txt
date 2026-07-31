@@ -16,6 +16,7 @@ playwright
 faster-whisper
 defusedxml
 python-docx
+pdfplumber
 
 # System dependency (not pip): ffmpeg — required by skool-archive to merge
 # video+audio (Loom/YouTube 1080p). Install on Windows with:
