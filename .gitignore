@@ -130,6 +130,13 @@ pain-point-miner/
 # Chrome extension reference files — used during development only
 docs/chrome_extensions/
 
+# obsidian-vault/ — personal Obsidian vault, kepano/obsidian-skills installed
+# into its own .claude/ (portable, self-contained, same nested-but-separate
+# pattern as journal/, brain-droppings-vault/). Purpose still undecided
+# (personal notes only vs. absorbing the daily-notes memory mechanic) —
+# banked 2026-07-31, see project_note_taking_system_idea.md.
+obsidian-vault/
+
 # Substack archiver + Google Drive fetcher — local-only personal research tools, not for public portfolio
 src/downloader/substack_archiver.py
 src/downloader/substack_link_fetcher.py
