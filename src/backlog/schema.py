@@ -36,6 +36,7 @@ PROJECT_PREFIXES = {
     "youtube-downloader": "YTD",
     "swarmops-core": "SWA",
     "voice-line": "JAR",
+    "demo": "DEM",
 }
 
 TASK_REQUIRED_FIELDS = {

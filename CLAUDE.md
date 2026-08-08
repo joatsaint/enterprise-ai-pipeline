@@ -630,6 +630,9 @@ These rules apply to every module. No exceptions.
   summary: what was attempted, what failed, and what to do next.
 - **Retry limit is 2.** If a request fails, retry once after a 5-second pause.
   If it fails again, log it and move on. Never retry more than twice automatically.
+  (This rule governs network/download requests specifically. For AI reasoning
+  loops, see the separate Agentic Reliability Loop Cap rule below — same
+  underlying instinct, different domain, both apply independently.)
 - **Known failure modes — handle each explicitly:**
   - No captions available → log as "no_captions", skip silently, notify user
   - Private or deleted video → log as "unavailable", skip silently, notify user
@@ -637,6 +640,24 @@ These rules apply to every module. No exceptions.
   - Region-locked video → log as "region_locked", skip, notify user
   - API rate limit hit → pause 60 seconds, retry once, then stop and notify user
   - Network timeout → retry after 10 seconds, then log and skip
+
+### Agentic Reliability Loop Cap (added 2026-08-02)
+
+Applies to AI reasoning/self-correction loops (act → observe → verify →
+retry), not network requests — see the Retry limit rule above for that.
+
+- **Hard cap: 3-4 real AI-reasoning attempts on the same problem, then stop
+  and surface it for human review** rather than retrying indefinitely.
+  Real, expensive AI re-reasoning counts against the cap; cheap, deterministic
+  checks (did the file get created, did the test pass) do not.
+- **Stop earlier than the cap if an attempt is just repeating the prior one** —
+  identical error, no new information, no closer to solved. Don't burn the
+  full budget on a loop that's stuck, not iterating.
+- **Why:** verify/retry loops can double or triple token cost versus a
+  single-shot attempt (real tradeoff, not free). An uncapped loop on a
+  genuinely unsolvable problem is a silent, unbounded cost — the same failure
+  mode the network-retry rule above already exists to prevent, just for AI
+  reasoning instead of HTTP requests.
 
 ---
 
