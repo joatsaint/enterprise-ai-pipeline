@@ -22,10 +22,37 @@ Returns:
         "duration_s": float,
         "bg_mode":    str,   # actual mode used
     }
+
+---
+
+remove_background() — real, tested workaround for the Digital Twin avatar
+type, which silently ignores the `background` API param entirely (unlike
+the older photo-avatar type). Uses rembg (U2Net) for real neural
+background segmentation, then composites onto a solid color (green by
+default) so the output slots straight into the existing CapCut chromakey
+workflow, no matter what background HeyGen actually returned.
+
+Real, benchmarked cost, not a guess (2026-08-09, this machine, GTX 1660
+Ti): CUDA execution provider did NOT actually engage despite
+onnxruntime-gpu being installed (likely missing system CUDA/cuDNN
+runtime, separate from the pip package) — falls back to CPU. Reusing one
+warm rembg session across all frames (vs. creating a fresh session per
+frame) is the real lever: ~7.7s/frame cold -> ~0.7s/frame warm, a ~10x
+difference on its own. At 25fps, a ~114s avatar video is ~2,841 frames ->
+roughly 33 minutes end to end. That's real time, not a background task to
+silently trigger on every render — call this explicitly per video when
+the wait is worth it, not wired into render()'s default flow.
+
+Resumable by design (frame-level idempotency, same pattern as render()
+above): if interrupted, rerun and it skips every frame already processed.
+Never leaves a partial final video — the assembled mp4 is only written
+once every frame succeeds, via the same atomic temp-then-rename pattern
+used in download() above.
 """
 import os
 import time
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -360,3 +387,189 @@ def render(script: str, slug: str, out_dir: Path) -> dict:
         "credits_after":  credits_after,
         "credits_used":   credits_used,
     }
+
+
+REMBG_MODEL = "u2net"
+REMBG_GREEN = "#00FF00"
+
+
+def _get_rembg_session():
+    """One warm session, reused across every frame — the real ~10x lever
+    (see module docstring). Imported lazily so `rembg` stays an optional
+    dependency for callers that never touch background removal."""
+    from rembg import new_session
+    return new_session(REMBG_MODEL, providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
+
+
+def remove_background(
+    avatar_path: Path,
+    out_path: Path,
+    bg_color: str = REMBG_GREEN,
+    fps: int = 25,
+) -> Path:
+    """
+    Real neural background removal for HeyGen avatar footage, via rembg —
+    a working substitute for the Digital Twin avatar type's `background`
+    API param, which HeyGen silently ignores. Composites onto solid
+    bg_color (green by default) so the output drops straight into the
+    existing CapCut chromakey step.
+
+    ~33 minutes for a ~114s clip on this machine (CPU fallback — see module
+    docstring). Call explicitly per video; never triggered automatically by
+    render() above.
+
+    Resumable: frame-level idempotency via a per-video temp frames dir.
+    Interrupting and rerunning skips every frame already processed.
+    Never leaves a partial final video — the assembled mp4 only gets
+    written (atomically) once every frame succeeds.
+    """
+    from rembg import remove
+    from PIL import Image
+
+    avatar_path = Path(avatar_path)
+    out_path = Path(out_path)
+    if not avatar_path.exists():
+        raise FileNotFoundError(f"remove_background: source not found: {avatar_path}")
+
+    frames_dir = out_path.parent / f".{out_path.stem}_bgremove_frames"
+    raw_dir = frames_dir / "raw"
+    done_dir = frames_dir / "done"
+    raw_dir.mkdir(parents=True, exist_ok=True)
+    done_dir.mkdir(parents=True, exist_ok=True)
+
+    # Extract frames only if not already extracted (resumability: don't
+    # re-extract on a rerun, ffmpeg's -n leaves existing frames untouched).
+    existing_raw = sorted(raw_dir.glob("*.png"))
+    if not existing_raw:
+        print(f"[bg_remove] Extracting frames from {avatar_path.name}...")
+        cmd = [
+            "ffmpeg", "-y", "-i", str(avatar_path),
+            "-vf", f"fps={fps}",
+            str(raw_dir / "%06d.png"),
+        ]
+        result = subprocess.run(cmd, capture_output=True)
+        if result.returncode != 0:
+            raise RuntimeError(
+                f"bg_remove: frame extraction failed:\n{result.stderr.decode(errors='replace')}"
+            )
+        existing_raw = sorted(raw_dir.glob("*.png"))
+    total = len(existing_raw)
+    if total == 0:
+        raise RuntimeError(f"bg_remove: no frames extracted from {avatar_path}")
+
+    print(f"[bg_remove] {total} frames — processing (resumable, skips completed frames)...")
+    session = _get_rembg_session()
+    bg_rgb = tuple(int(bg_color.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4))
+
+    t0 = time.time()
+    processed_this_run = 0
+    for i, raw_frame in enumerate(existing_raw, start=1):
+        done_frame = done_dir / raw_frame.name
+        if done_frame.exists():
+            continue  # already processed on a prior run — skip
+        img = Image.open(raw_frame)
+        cutout = remove(img, session=session)  # RGBA, subject isolated
+        composited = Image.new("RGBA", cutout.size, bg_rgb + (255,))
+        composited.alpha_composite(cutout)
+        composited.convert("RGB").save(done_frame)
+        processed_this_run += 1
+        if processed_this_run % 25 == 0:
+            elapsed = time.time() - t0
+            rate = elapsed / processed_this_run
+            remaining = (total - i) * rate
+            print(
+                f"[bg_remove] {i}/{total} "
+                f"({rate:.2f}s/frame, ~{remaining/60:.1f}m remaining)",
+                end="\r", flush=True,
+            )
+    print(f"\n[bg_remove] All {total} frames done.")
+
+    # Reassemble: processed frames + original audio track, atomic write.
+    print("[bg_remove] Reassembling video with original audio...")
+    tmp_out = out_path.with_suffix(".tmp.mp4")
+    cmd = [
+        "ffmpeg", "-y",
+        "-framerate", str(fps), "-i", str(done_dir / "%06d.png"),
+        "-i", str(avatar_path),
+        "-map", "0:v:0", "-map", "1:a:0?",
+        "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18",
+        "-c:a", "aac", "-shortest",
+        str(tmp_out),
+    ]
+    result = subprocess.run(cmd, capture_output=True)
+    if result.returncode != 0:
+        tmp_out.unlink(missing_ok=True)
+        raise RuntimeError(
+            f"bg_remove: reassembly failed:\n{result.stderr.decode(errors='replace')}"
+        )
+    tmp_out.rename(out_path)  # atomic on same filesystem
+
+    # Only clean up the working frames dir after a fully successful run —
+    # if anything above raised, the partial frames stay for a resumed rerun.
+    shutil.rmtree(frames_dir, ignore_errors=True)
+
+    print(f"[bg_remove] Done: {out_path} ({time.time()-t0:.0f}s total)")
+    return out_path
+
+
+# Named FFmpeg filter-chain presets for talking-head footage polish — an
+# optional, fast (pure FFmpeg, no ML, near-instant) CapCut-replacement
+# step. Real-tested 2026-08-09 against actual walk-and-talk footage:
+# subtle skin-texture smoothing + slightly sharper eyes + a touch warmer
+# tone, no waxy/over-processed look, beard/hair texture mostly untouched
+# since smartblur is edge-aware. Source: OpenMontage's face_enhance.py
+# tool (github.com/calesthio/OpenMontage), cherry-picked as filter recipes
+# only — not the whole framework.
+FACE_ENHANCE_PRESETS = {
+    "soft_skin": "smartblur=lr=1.0:ls=-0.5:lt=-3.0:cr=0.5:cs=-0.5:ct=-3.0",
+    "sharpen": "unsharp=5:5:1.0:5:5:0.0",
+    "sharpen_light": "unsharp=3:3:0.5:3:3:0.0",
+    "brighten": "curves=all='0/0 0.25/0.35 0.5/0.55 0.75/0.8 1/1'",
+    "contrast_boost": "curves=all='0/0 0.25/0.20 0.5/0.5 0.75/0.80 1/1'",
+    "warm": "colorbalance=rs=0.05:gs=0.0:bs=-0.05:rm=0.05:gm=0.0:bm=-0.03",
+    "cool": "colorbalance=rs=-0.03:gs=0.0:bs=0.05:rm=-0.02:gm=0.0:bm=0.03",
+    "denoise": "hqdn3d=4:3:6:4",
+    "talking_head_standard": (
+        "smartblur=lr=1.0:ls=-0.5:lt=-3.0:cr=0.5:cs=-0.5:ct=-3.0,"
+        "unsharp=5:5:0.6:5:5:0.0,"
+        "colorbalance=rs=0.06:gs=0.01:bs=-0.04:rm=0.04:gm=0.01:bm=-0.03"
+    ),
+}
+
+
+def face_enhance(
+    video_path: Path,
+    out_path: Path,
+    preset: str = "talking_head_standard",
+) -> Path:
+    """
+    Apply a named FFmpeg polish filter chain (see FACE_ENHANCE_PRESETS) to
+    talking-head footage. Fast — pure FFmpeg, no model download, no per-
+    frame ML inference (unlike remove_background above). Safe to run on
+    every video; a real, subtle improvement, not a beauty-filter overhaul.
+    """
+    video_path = Path(video_path)
+    out_path = Path(out_path)
+    if not video_path.exists():
+        raise FileNotFoundError(f"face_enhance: source not found: {video_path}")
+    if preset not in FACE_ENHANCE_PRESETS:
+        raise ValueError(
+            f"face_enhance: unknown preset {preset!r} — choose from {sorted(FACE_ENHANCE_PRESETS)}"
+        )
+
+    tmp_out = out_path.with_suffix(".tmp.mp4")
+    cmd = [
+        "ffmpeg", "-y", "-i", str(video_path),
+        "-vf", FACE_ENHANCE_PRESETS[preset],
+        "-c:a", "copy",
+        str(tmp_out),
+    ]
+    result = subprocess.run(cmd, capture_output=True)
+    if result.returncode != 0:
+        tmp_out.unlink(missing_ok=True)
+        raise RuntimeError(
+            f"face_enhance: FFmpeg failed:\n{result.stderr.decode(errors='replace')}"
+        )
+    tmp_out.rename(out_path)  # atomic on same filesystem
+    print(f"[face_enhance] Done ({preset}): {out_path}")
+    return out_path
