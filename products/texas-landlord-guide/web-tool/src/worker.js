@@ -211,6 +211,8 @@ export default {
     if (url.pathname === "/ask" && request.method === "POST") {
       return handleAsk(request, env);
     }
-    return new Response(PAGE_HTML, { headers: { "content-type": "text/html" } });
+    return new Response(PAGE_HTML, {
+      headers: { "content-type": "text/html", "cache-control": "no-store" },
+    });
   },
 };

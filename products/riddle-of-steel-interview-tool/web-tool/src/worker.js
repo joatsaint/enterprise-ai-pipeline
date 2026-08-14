@@ -397,6 +397,8 @@ export default {
     if (url.pathname === "/finalize" && request.method === "POST") {
       return handleFinalize(request, env);
     }
-    return new Response(PAGE_HTML, { headers: { "content-type": "text/html" } });
+    return new Response(PAGE_HTML, {
+      headers: { "content-type": "text/html", "cache-control": "no-store" },
+    });
   },
 };
