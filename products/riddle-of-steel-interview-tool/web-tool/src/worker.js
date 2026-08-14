@@ -25,12 +25,13 @@
 
 // RATE_LIMIT_PER_DAY counts /chat calls only (/finalize doesn't increment
 // it — the 4-turn interview requirement is what naturally throttles that).
-// A real interview session uses ~4-8 /chat calls (INTERVIEW_TURNS_BEFORE_OFFER
-// exchanges, plus follow-ups on thin answers, plus any restart). 10 was
-// tested live 2026-08-13 and ran out mid-session — raised to 30 (roughly
-// 4-5 full sessions/day/IP) so one real visitor testing the flow doesn't
-// get blocked by their own normal use.
-const RATE_LIMIT_PER_DAY = 30;
+// 10, then 30, both ran out during Randy's own repeated same-day testing
+// (each restart burns another 4+ calls, all from the same IP). Raised to
+// 100 for this Stage 1 validation period specifically — cheap enough in
+// real API cost to not worry about one person iterating on it, and this
+// value should come back DOWN (10-20) once this is real public traffic,
+// not testing. Flagged here so it isn't forgotten before a real launch.
+const RATE_LIMIT_PER_DAY = 100;
 const INTERVIEW_TURNS_BEFORE_OFFER = 4; // real visitor answers before "generate my brief" appears
 const PRIMARY_MODEL = "claude-sonnet-4-6";
 const GEMINI_MODEL = "gemini-2.5-flash";
