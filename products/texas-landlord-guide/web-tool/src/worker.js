@@ -63,7 +63,7 @@ const PAGE_HTML = `<!doctype html>
 <body>
 <h1>Texas Landlord Advisor</h1>
 <p>Ask a real Texas landlord-tenant question. Free, no signup.</p>
-<textarea id="q" placeholder="e.g. Can I keep a security deposit if the tenant left owing rent?"></textarea><br>
+<textarea id="q" placeholder="e.g. Can I keep a security deposit if the tenant left owing rent? (Enter to ask, Shift+Enter for a new line)" onkeydown="if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); ask(); }"></textarea><br>
 <button onclick="ask()">Ask</button>
 <div id="status"></div>
 <div id="answer"></div>

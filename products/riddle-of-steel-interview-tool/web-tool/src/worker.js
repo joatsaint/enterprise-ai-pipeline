@@ -99,7 +99,7 @@ answer a few real questions about your IT career, get a real incident brief
 and resume language back.</p>
 
 <div id="chat"></div>
-<textarea id="answer" placeholder="Type your answer..."></textarea><br>
+<textarea id="answer" placeholder="Type your answer... (Enter to send, Shift+Enter for a new line)" onkeydown="handleAnswerKeydown(event)"></textarea><br>
 <button id="sendBtn" onclick="send()">Send</button>
 <div id="status"></div>
 
@@ -110,7 +110,7 @@ and resume language back.</p>
 
 <div id="emailGate">
   <p>Where should this go? (also adds you to early access for the full field manual)</p>
-  <input type="email" id="email" placeholder="you@example.com">
+  <input type="email" id="email" placeholder="you@example.com" onkeydown="if (event.key === 'Enter') { event.preventDefault(); finalize(); }">
   <button onclick="finalize()">Get My Brief</button>
 </div>
 
@@ -138,6 +138,13 @@ function renderMsg(role, text) {
   div.appendChild(body);
   chat.appendChild(div);
   chat.scrollTop = chat.scrollHeight;
+}
+
+function handleAnswerKeydown(event) {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
+    send();
+  }
 }
 
 async function send() {
