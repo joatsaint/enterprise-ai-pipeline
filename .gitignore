@@ -34,6 +34,12 @@ __pycache__/
 # Environment / secrets
 .env
 pipeline_secrets.env
+.youtube_oauth_token.json
+*.key
+*.secret
+
+# Wrangler (Cloudflare Workers) local cache/auth state — never commit
+.wrangler/
 
 # Logs — runtime data, not source
 logs/
