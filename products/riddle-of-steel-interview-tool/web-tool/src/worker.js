@@ -23,7 +23,14 @@
 // actually go (KV only, for now — no ESP wired up yet), and the deploy
 // go-ahead itself.
 
-const RATE_LIMIT_PER_DAY = 10; // placeholder — confirm with Randy before launch
+// RATE_LIMIT_PER_DAY counts /chat calls only (/finalize doesn't increment
+// it — the 4-turn interview requirement is what naturally throttles that).
+// A real interview session uses ~4-8 /chat calls (INTERVIEW_TURNS_BEFORE_OFFER
+// exchanges, plus follow-ups on thin answers, plus any restart). 10 was
+// tested live 2026-08-13 and ran out mid-session — raised to 30 (roughly
+// 4-5 full sessions/day/IP) so one real visitor testing the flow doesn't
+// get blocked by their own normal use.
+const RATE_LIMIT_PER_DAY = 30;
 const INTERVIEW_TURNS_BEFORE_OFFER = 4; // real visitor answers before "generate my brief" appears
 const PRIMARY_MODEL = "claude-sonnet-4-6";
 const GEMINI_MODEL = "gemini-2.5-flash";
@@ -113,6 +120,11 @@ and resume language back.</p>
 let history = [];
 let turnCount = 0;
 
+// Real, hardcoded opener — no API call needed for this, and it means the
+// visitor sees a question the instant the page loads instead of a blank
+// chat box waiting for them to type first (real gap found 2026-08-13).
+const OPENING_QUESTION = "Let's start simple: how many years have you been in sysadmin or IT ops, and what's your current role?";
+
 function renderMsg(role, text) {
   const chat = document.getElementById('chat');
   const div = document.createElement('div');
@@ -132,9 +144,11 @@ async function send() {
   const box = document.getElementById('answer');
   const text = box.value.trim();
   if (!text) return;
+  const btn = document.getElementById('sendBtn');
   renderMsg('user', text);
   history.push({ role: 'user', content: text });
   box.value = '';
+  btn.disabled = true;
   document.getElementById('status').textContent = 'Thinking...';
   try {
     const res = await fetch('/chat', {
@@ -160,6 +174,8 @@ async function send() {
     }
   } catch (e) {
     document.getElementById('status').textContent = 'Network error — try again.';
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -173,6 +189,8 @@ async function finalize() {
     alert('Enter a real email to get your brief.');
     return;
   }
+  const btns = document.querySelectorAll('#emailGate button, #offer button');
+  btns.forEach(function(b) { b.disabled = true; });
   document.getElementById('status').textContent = 'Building your brief...';
   try {
     const res = await fetch('/finalize', {
@@ -196,8 +214,16 @@ async function finalize() {
     result.innerHTML = banner + data.briefHtml;
   } catch (e) {
     document.getElementById('status').textContent = 'Network error — try again.';
+  } finally {
+    btns.forEach(function(b) { b.disabled = false; });
   }
 }
+
+// Show the first question immediately on load — no API call, no rate-limit
+// cost, and the visitor never sees an empty chat box (real gap found
+// 2026-08-13: previously nothing appeared until after their first reply).
+renderMsg('assistant', OPENING_QUESTION);
+history.push({ role: 'assistant', content: OPENING_QUESTION });
 </script>
 </body>
 </html>`;
