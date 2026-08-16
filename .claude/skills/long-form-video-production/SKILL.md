@@ -235,7 +235,7 @@ First Comment` section (never merged into Description):
 ```
 rskiles.com/operator
 
-Grab The Riddle of Steel — (free workbook):
+Grab The Operator Evidence Interviewer — (free prompt kit):
 Uncover the Skills That AI Can't Replace
 ```
 Randy posts it himself after upload — not automated. Full rationale:
