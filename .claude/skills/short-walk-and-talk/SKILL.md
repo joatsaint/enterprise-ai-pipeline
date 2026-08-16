@@ -111,6 +111,11 @@ This is a decision, not a default. Work it in this order:
 - Target: spoken CTA under ~10 seconds. Randy's own instruction (2026-07-24):
   practice it down to that length before recording, rather than relying on
   editing to fix it after.
+- Since this format is unscripted, `style-selector` only applies *before*
+  recording — if Randy wants help shaping the spoken CTA line he's about to
+  practice, `guide-positioning`'s objection-preemption move is the most
+  likely fit. There is no post-hoc drafting step to attach it to once
+  footage is in hand.
 - **If the recorded CTA runs long and doesn't fit inside the 180s budget
   alongside the payload:** cut the CTA entirely. Do not force an
   over-cap video, and do not splice an awkward partial sentence to make a
@@ -154,12 +159,18 @@ listing, without opening it. Replaces the old generic
 `youtube_metadata.md` name for anything created from 2026-07-26 onward —
 existing files keep their old name, not renamed retroactively.
 
+**Extended to every asset in the folder (added 2026-08-11, see
+`youtube-shorts`'s "All assets in a video folder get topic-named"
+section):** not just the description file — no generic `script.md`,
+`SOURCES.md`, etc. anywhere in a video's project folder. Only exception is
+`metadata.json` (machine-read, not opened for editing context).
+
 **Standing first-comment template (locked 2026-07-26, same as
 `youtube-shorts` — applies to every video type, no exceptions):** link
 first, then the pitch, drafted into the metadata file as its own `##
 First Comment` section (never merged into Description):
 ```
-rskiles.com/the-riddle-of-steel
+rskiles.com/operator
 
 Grab The Riddle of Steel — (free workbook):
 Uncover the Skills That AI Can't Replace
@@ -258,6 +269,24 @@ try to resurrect a deleted intermediate.
   `youtube_metadata.md`, not something worth keeping a 200MB copy of.
 - Any debug/test renders, thumbnail candidate frames that weren't chosen,
   and other scratch output from the production process. Zero reuse value.
+
+---
+
+## Pre-Upload Checklist (required, run before publish)
+
+Run the `video-distribution-checklist` skill before this video goes live
+— hook-in-first-second, length target (past 50s AVD, not under it), and
+turning on YouTube's native Test and Compare tool. Run this after
+Post-Approval Cleanup, before the video actually gets uploaded.
+
+**If the format-freeze test is active** (see
+`memory/project_format_freeze_test_2026-08-13.md`), add a row to
+`content-engine/research/format_freeze_tracking.csv` at upload time —
+date, platform, video_id (fill in once known post-upload), title, topic,
+format, thumbnail style, length. The weekly `Format Freeze Stats Refresh`
+scheduled task fills in views/likes/comments automatically after that,
+but only for rows that already exist — a video never logged here never
+gets tracked.
 
 ---
 

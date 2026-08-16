@@ -29,15 +29,20 @@ here. Read (in order): `content-engine/CONTENT_PUBLISHING_RULES.md`,
 `knowledge/brand/keyword_research.md`. Output: the 6-segment
 Friction-Hook→Outro structure, spoken-voice narration.
 
-Write the finished script straight into `<slug>/script.md`, split into
-scenes/segments matching what will actually be submitted to HeyGen as
-separate jobs. Include a title (even a working one) and note format
-(long-form, 16:9) at the top. Also write `<slug>/metadata.json` — see the
-folder-convention memory for the schema.
+youtube-script's own `style-selector` step (run before drafting) already
+covers this stage — no separate style-selection step needed here.
 
-**Do not proceed to Stage 2 until script.md exists on disk.** A script only
-in the conversation is not saved — this is the exact failure this skill
-was built to prevent.
+Write the finished script straight into `<slug>/<title>-script.md` (topic-
+named per `youtube-shorts`'s all-assets filename convention, added
+2026-08-11 — no generic `script.md`), split into scenes/segments matching
+what will actually be submitted to HeyGen as separate jobs. Include a
+title (even a working one) and note format (long-form, 16:9) at the top.
+Also write `<slug>/metadata.json` — see the folder-convention memory for
+the schema (this one stays generic, it's machine-read).
+
+**Do not proceed to Stage 2 until the script file exists on disk.** A
+script only in the conversation is not saved — this is the exact failure
+this skill was built to prevent.
 
 **Alternate path for build/demo videos — two-pass live-capture-then-polish
 (added 2026-07-12).** When the video IS a live build (running code, seeing
@@ -48,7 +53,8 @@ best-performing content shape, see `youtube-script/SKILL.md`'s title/hook
 research). Instead:
 1. **Pass 1 — live capture.** At each build checkpoint (see the Stage 2+
    recording-segment convention below), write the real explanation into
-   `script.md` as it actually happens — raw, accurate, not polished yet.
+   the topic-named script file (`<title>-script.md`) as it actually
+   happens — raw, accurate, not polished yet.
 2. **Pass 2 — Kallaway/Illusion-of-Novelty polish**, only after the whole
    real story is known (can't apply contrast framing or the "213 ordering"
    trick until you know what actually happened, especially at the "it
@@ -227,7 +233,7 @@ Deliverable section.
 first, then the pitch, drafted into the metadata file as its own `##
 First Comment` section (never merged into Description):
 ```
-rskiles.com/the-riddle-of-steel
+rskiles.com/operator
 
 Grab The Riddle of Steel — (free workbook):
 Uncover the Skills That AI Can't Replace
@@ -269,6 +275,22 @@ valid if the specific claim inside it is true of the story being told.
   track record in X before the pitch, not after it — see
   `[[reference_mccoy_avatar_intro_pattern]]`. Don't restate the whole bio —
   one or two specific, checkable facts, not a general claim of expertise.
+
+## Stage 8 — Pre-Upload Checklist (required, run before publish)
+
+Run the `video-distribution-checklist` skill before this video goes live
+— hook-in-first-second, ~20-min-or-under complete-thought length target,
+and turning on YouTube's native Test and Compare tool. This is the last
+stage, not an optional add-on.
+
+**If the format-freeze test is active** (see
+`memory/project_format_freeze_test_2026-08-13.md`), add a row to
+`content-engine/research/format_freeze_tracking.csv` at upload time —
+date, platform, video_id (fill in once known post-upload), title, topic,
+format, thumbnail style, length. The weekly `Format Freeze Stats Refresh`
+scheduled task fills in views/likes/comments automatically after that,
+but only for rows that already exist — a video never logged here never
+gets tracked.
 
 ## Gotchas
 

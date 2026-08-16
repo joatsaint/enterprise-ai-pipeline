@@ -1041,3 +1041,175 @@ instruction itself.
 `feedback_audience_first_then_overflow.md`, `feedback_finish_video_series_before_new_projects.md`
 (citation only — its own separate "finish the video series first" commitment
 was not reversed), `project_monte_swarmops.md`, `project_paid_product_strategy.md`.
+
+---
+
+## ADR-031 — CLAUDE.md trimmed for standing token overhead (ghost-token audit)
+
+**Date:** 2026-08-12
+
+**Rule before:** 11 sections in `CLAUDE.md` carried their enforceable rule
+plus a full backstory/justification essay, all loaded on every single
+message regardless of relevance. File was 6,873 words (~9,141 tokens).
+
+**Rule after:** each rule's enforceable instruction is unchanged. The
+narrative justification below was moved here (or, where a memory file
+already had it in full, replaced with a pointer to that file instead).
+File is now 6,062 words (~811 words / ~11.8% cut, roughly 1,079 tokens),
+lower than the 30-40% estimate given in the pre-change announcement — an
+honest actual result, not the optimistic projection.
+
+**Why:** prompted by running the `ghost-token-audit` skill
+(`docs/Jimmy Garcia III/ghost-token-audit-starter/`, installed 2026-08-12)
+against this project. Its own third rule — "a warning addressed to a
+human is not enforcement" — named exactly what these 11 sections were
+doing: persuading a human reader once, then re-paying that persuasion's
+token cost on every subsequent message forever.
+
+**The relocated reasoning, preserved in full:**
+
+1. **HOT_STATE.md rule correction (2026-07-10):** the old rule — "only
+   when Randy stops mid-task" — was too narrow to fire during a long
+   continuous session with many completed sub-tasks and no clean
+   mid-task break, which is exactly why it went stale for three sessions
+   in a row. A council review confirmed this was the root cause, not a
+   one-off lapse.
+
+2. **Automated Check Maintenance Rule origin (2026-07-10):** the prior
+   SESSION_LOG.md Stop hook was disabled after one false positive and
+   stayed disabled for days with zero automated freshness check running
+   in the gap. A disabled check with no replacement looks the same as
+   "everything's fine" from the outside.
+
+3. **Search Before Assuming Rule (2026-07-12):** `docs/` alone holds 80+
+   topic folders, each clearly named — the information is almost always
+   already there and discoverable; the failure mode is not searching,
+   not a missing index. A hand-maintained catalog was explicitly
+   rejected (same lesson as the council-reviewed manifest-hook rejection,
+   2026-07-10) — a static list would go stale the moment something new
+   is added and not logged, recreating the exact staleness problem the
+   rule exists to prevent.
+
+4. **External Prior-Art Rule (2026-07-13):** the Claude Code Memory Plan
+   (found by Randy on his own, not surfaced by Claude first) is a real
+   example of the gap this rule closes — a specific creator's product
+   Claude had no reason to suspect existed, since nothing prompted a
+   search for it. Search finds things well when you know roughly what to
+   look for; it's weak at surfacing a category you didn't know existed
+   at all. Matches the standard already applied to SwarmOps's
+   governance-layer positioning (Neo Agent, MSPbots, Atera found this
+   way) and the AEO/AI-visibility niche research.
+
+5. **20-Minute MVP Staging Rule (2026-07-21):** named after a real
+   failure — the Trojan Horse Popcorn Calculator Short stalled because
+   one blocked piece (an open platform question) held up the whole asset
+   instead of shipping the validated core and handling the blocker
+   separately.
+
+6. **Simplest-Path-First Rule (2026-07-13):** surfaced from Jared Rhod's
+   "prompts + Claude Code + Obsidian, no custom infrastructure" approach
+   to his Jarvis agent — not a new idea, an old, well-documented one
+   (Richard P. Gabriel's 1989 "Worse is Better" essay; also MVP/Lean
+   Startup, Extreme Programming), applied at the right moment. People
+   don't default to it because technical culture rewards sophistication
+   as a status signal, and because people import scale/rigor assumptions
+   from contexts that don't apply to the actual problem in front of them.
+   Real caveat, not survivorship-bias-blind: plenty of people try the
+   simple version and get no attention — visible success isn't proof the
+   idea was novel, just that the execution and timing landed.
+
+7. **Full Titles Rule (2026-07-26):** Randy repeats many projects/
+   tangents across sessions and does not hold the same standing context
+   Claude does — a bare label forces a mental lookup he doesn't have the
+   frame of reference for. Corrected multiple times already before this
+   (memory: `feedback_include_article_titles.md`,
+   `feedback_no_bare_shorthand_labels.md`) and still slipped in live
+   conversation 2026-07-26 (a bare "ART17" written despite the rule
+   already existing in memory) — which is why it got promoted into
+   CLAUDE.md itself instead of staying memory-only.
+
+8. **Field-Failure-Driven Iteration (2026-07-19):** Randy's framing,
+   drawn from the Iron Man suit-iteration model — Tony Stark's suits
+   improved because a specific field failure (ice forms on the Mark II
+   mid-flight) became the literal design spec for the next build (Mark
+   III's alloy fixes exactly that), and recurring distinct threats
+   eventually justified dedicated specialized suits rather than one
+   generalist suit patched forever (Iron Man 3's House Party Protocol).
+   Not a new system — Skill Gotchas sections are already Mark I → Mark
+   II in practice, `DECISIONS_LOG.md` already records why a redesign
+   happened, and the skills directory itself is the House Party Protocol
+   (Citation Guard split out of `create-next-article` once
+   fabrication-checking proved a distinct enough recurring problem).
+   Real caveat: Tony's failures were immediate and binary; most of what
+   happens in this project is slower and fuzzier, so this transfers
+   cleanly to fast-feedback problems (a script bug, a skill misfiring)
+   but needs conscious adaptation for slow-feedback bets (audience
+   growth, a career pivot).
+
+9. **API Cost Notification Rule (2026-07-25):** confirmed $46.48 in
+   Anthropic spend for 2026-07 already found and partly addressed (see
+   the 2026-07-24/25 cost-audit entry in HOT_STATE.md) — this rule is
+   about building Randy's own visibility into the system, not just
+   cutting cost once.
+
+10. **Never Suggest Rest (added 2026-07-17, hardened 2026-07-22):** full
+    reasoning already lived in `memory/feedback_never_suggest_rest_real_why.md`
+    before this trim — CLAUDE.md now points there instead of duplicating
+    it. That memory file is the canonical source; nothing new relocated
+    here.
+
+11. **CLI Commands / Observability historical notes:** both were
+    stale-schema corrections (`digest` wrongly documented as module-only;
+    an early `run_summary.json` schema — `run_id`, `started_at`,
+    `total_attempted`, `failures[]` — that was never implemented) kept
+    only as a "don't trust this doc" flag. Condensed to one line each
+    rather than fully relocated — low-value narrative, not worth a full
+    ADR entry of its own.
+
+**Files updated same session:** `CLAUDE.md` (the 11 sections above).
+
+---
+
+## ADR-032 — Standing lead-magnet CTA link switched to the Operator Evidence Interviewer funnel
+
+**Decision:** every standing CTA link used in future assets (Shorts,
+long-form video, walk-and-talk, articles/posts, the CTA-card generator,
+the AI Advantage Assessment freebie) now points to
+`rskiles.com/operator` instead of `rskiles.com/the-riddle-of-steel`,
+effective 2026-08-16, until further notice.
+
+**Context:** Randy built a second, separate funnel (verified live
+2026-08-16): a free "Operator Evidence Interviewer Prompt Kit" opt-in
+(`rskiles.com/operator` → Kit form) leading to a $7 tripwire for the full
+"Steel and the Server Room" guide via Gumroad
+(`joatsaint.gumroad.com/l/steel`). Same underlying source material as
+[[project_riddle_of_steel_interview_tool]]'s live interactive web tool,
+delivered here as a static PDF prompt kit instead.
+
+**Explicit scope, Randy's call:** swap the LINK only — all existing CTA
+copy (the 12-entry rotation in `knowledge/products/lead-magnets/Steel-One-
+Sentence Visible CTAs.md`, and every "Grab The Riddle of Steel" phrasing
+elsewhere) stays worded exactly as-is. The destination page name
+("Operator Evidence Interviewer") technically differs from the CTA text
+("Riddle of Steel"), which was flagged as a real mismatch before this
+change — Randy chose link-only anyway, so this is a known, accepted
+tradeoff, not an oversight.
+
+**What did NOT change:** the original, frozen Riddle-of-Steel funnel
+(landing page, Kit form, PDF) is untouched — this new link is a second,
+parallel path to related content, not a replacement. Already-published
+content (articles, posted videos, `dashboard_state.json`,
+`POSTED_LOG.md`) was not retroactively edited — only templates/rules
+governing future assets.
+
+**Files updated:** `.claude/skills/youtube-shorts/SKILL.md`,
+`.claude/skills/long-form-video-production/SKILL.md`,
+`.claude/skills/short-walk-and-talk/SKILL.md`,
+`.claude/skills/youtube-script/SKILL.md`,
+`knowledge/products/lead-magnets/Steel-One-Sentence Visible CTAs.md`
+(all 12 CTA entries), `knowledge/brand/brandscript.md`,
+`content-engine/rules/CONTENT_PUBLISHING_RULES.md`,
+`content-engine/generate_cta_card.py` (`DEF_URL` constant),
+`freebies/ai-advantage-assessment/ai-advantage-assessment_PROMPT.md`.
+Verified clean via a full grep sweep for the old link string across all
+target files/folders — zero remaining instances.
