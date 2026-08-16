@@ -37,7 +37,7 @@ Shorts, `short-walk-and-talk`, and anything added later).
 
 **Required fields:**
 - `Title` — under 40 chars; declarative statement; echo the hook
-- `Description` — 3–4 sentences hitting the pain point + lead magnet CTA (`rskiles.com/the-riddle-of-steel`) + channel CTA (`Like and subscribe to Future-Proof Yourself from AI`)
+- `Description` — 3–4 sentences hitting the pain point + lead magnet CTA (`rskiles.com/operator`) + channel CTA (`Like and subscribe to Future-Proof Yourself from AI`)
 - `Tags` — comma-separated, 10–15 tags; ICP keywords (IT career, sysadmin, AI layoffs, enterprise IT, etc.)
 - `Hashtags` — 3–5 max; always include `#Shorts`; paste at end of description
 - `Upload Checklist` — CapCut steps + YouTube Studio paste steps + Golden Hour reminder
@@ -50,6 +50,38 @@ Remotion render outputs it referenced — kept at its old pre-2026-07-26
 filename since existing files aren't renamed retroactively; treat it as a
 content/structure template only, not a filename example).
 
+## All assets in a video folder get topic-named — no generic filenames (added 2026-08-11)
+
+Randy's explicit rule, extending the 2026-07-26 description-file convention
+above to **every** file in a video's project folder, not just the metadata
+file: **no generic names like `script.md` or `SOURCES.md`.** If a folder is
+titled `ai-cant-tell-you-what-it-doesnt-know/`, every asset inside it must
+carry a name that reflects that topic — so Randy always knows which video a
+file belongs to the moment he has it open for editing, without needing the
+folder name for context.
+
+**Applies to every video type — Shorts, walk-and-talk, long-form.**
+
+**Pattern:** same truncation rule as the description file — `<video title
+or working title, slugified/truncated>-<asset type>.md`. Examples for a
+video folder titled `ai-cant-tell-you-what-it-doesnt-know/`:
+- `script.md` → `ai-cant-tell-script.md`
+- `SOURCES.md` → `ai-cant-tell-sources.md`
+- `thumbnail-spec.md` → `ai-cant-tell-thumbnail-spec.md`
+- `teleprompter-script.md` → `ai-cant-tell-teleprompter.md`
+
+**Exception — machine-read pipeline files stay generic:** `metadata.json`
+is not renamed. It's read by generator scripts expecting that exact
+filename, and it's not the kind of file Randy opens for editing context —
+same logic as not renaming `package.json` or `.gitignore`. If a future
+asset type is genuinely machine-read-only and never opened for human
+editing, treat it the same way; anything Randy might open to read or edit
+gets a topic name.
+
+**Not retroactive.** Existing video folders keep their current filenames —
+this applies to new assets going forward only, same as the 2026-07-26
+description-file rule above.
+
 ## Standing first-comment template (locked 2026-07-26)
 
 Every video — Shorts and long-form both, no exceptions — gets this exact
@@ -59,7 +91,7 @@ URL and right-click-search/open it immediately, no scrolling past text
 first):
 
 ```
-rskiles.com/the-riddle-of-steel
+rskiles.com/operator
 
 Grab The Riddle of Steel — (free workbook):
 Uncover the Skills That AI Can't Replace
@@ -252,6 +284,24 @@ Each article → at least 1 Short. Atom the sharpest single idea, not a summary 
 **ART7 → Short:** "You Already Know Kung Fu" (the 1999 first-mover frame)
 **ART8 → Short:** TBD
 **ART9 → Short:** TBD
+
+---
+
+## Pre-Upload Checklist (required, run before publish)
+
+Run the `video-distribution-checklist` skill before this Short goes live —
+hook-in-first-second, length target (past 50s AVD, not under it), and
+turning on YouTube's native Test and Compare tool. Don't treat this as
+optional or skip it because the video "feels" done.
+
+**If the format-freeze test is active** (see
+`memory/project_format_freeze_test_2026-08-13.md`), add a row to
+`content-engine/research/format_freeze_tracking.csv` at upload time —
+date, platform, video_id (fill in once known post-upload), title, topic,
+format, thumbnail style, length. The weekly `Format Freeze Stats Refresh`
+scheduled task fills in views/likes/comments automatically after that,
+but only for rows that already exist — a video never logged here never
+gets tracked.
 
 ---
 

@@ -26,6 +26,11 @@ voice are four available tools, not four mandatory ingredients. Pick per topic, 
 — never force a war story, a joke, or a Carlin-style reveal into a script that's better
 served straightforward. Some topics genuinely just need clear, direct information with
 none of the above. Judge each script on its own topic, don't apply all four by default.
+3d. Run `style-selector` (`.claude/skills/style-selector/SKILL.md`) to check
+   whether a technique skill (most likely `guide-positioning` for the Part 6
+   outro, or a `lateral` technique if the angle itself feels stuck) applies
+   before drafting. Recommending none is a valid outcome for a
+   straightforward tutorial/build script.
 4. `knowledge/brand/keyword_research.md` — for the SEO-optimized working title.
 5. `knowledge/products/lead-magnets/Steel-One-Sentence Visible CTAs.md` — pick the
    Part-6 outro CTA from this list (link already resolved to the magnet).
@@ -65,7 +70,7 @@ is sitting in the description for copy-paste, then bridge to the broader playboo
 
 **Part 6 — Operational Challenge Outro (4:15–end).** Give one concrete homework task for their
 next shift. Close with a **single-sentence CTA from the Steel CTA list, link fully visible**
-(`https://rskiles.com/the-riddle-of-steel`). Match the CTA style to the video's angle
+(`https://rskiles.com/operator`). Match the CTA style to the video's angle
 (story-led video → #2/#6; pain-led → #8; deliverable-led → #4).
 
 **Before finalizing the CTA line and description copy, run them through the
@@ -216,6 +221,14 @@ curiosity-driven + 5 high-click titles, ranked strongest to weakest by
 expected click-through. Score each on Curiosity (1-10), Clarity (1-10),
 Credibility (1-10). Recommend one and explain why it should outperform the
 others.
+
+**Thumbnail text (added 2026-08-11):** once the title is locked, run
+`youtube-title-hook-generator`'s thumbnail-text step (2-4 words) to get
+options for the on-thumbnail text overlay. **Titles only, never
+thumbnails, are covered by the curiosity-gap rule above** — do not run
+that skill's title-generation step here, only its thumbnail step. Check
+`docs/Mark Savant/thumbnail-phrase-bank.md` first to avoid repeating an
+already-used phrase.
 
 ## Output + review gate (status-change safety)
 - Write the draft to `content-engine/content/<slug>/youtube-script.md` (new or existing slug).
