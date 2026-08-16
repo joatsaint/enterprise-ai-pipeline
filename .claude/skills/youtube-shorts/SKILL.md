@@ -93,7 +93,7 @@ first):
 ```
 rskiles.com/operator
 
-Grab The Riddle of Steel — (free workbook):
+Grab The Operator Evidence Interviewer — (free prompt kit):
 Uncover the Skills That AI Can't Replace
 ```
 
