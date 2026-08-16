@@ -69,6 +69,10 @@ company names, customer data, credentials, IP addresses, hostnames, or
 security details into this tool</strong> — sanitize your story the same way
 the guide itself tells you to. Verify anything time-sensitive with your own
 judgment before using it in a resume, interview, or internal document.
+</p>
+<p style="font-size:13px;margin-top:12px;">
+Grab the free
+<a href="https://rskiles.com/operator" target="_blank" rel="noopener">Operator Evidence Interviewer prompt kit</a>.
 </p>`;
 
 const PAGE_HTML = `<!doctype html>
