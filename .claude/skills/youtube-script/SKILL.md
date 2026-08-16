@@ -1,6 +1,6 @@
 ---
 name: youtube-script
-description: Convert an article, LinkedIn post, or topic into a slow-paced, high-retention YouTube script for senior IT / infrastructure veterans (the Steel / AI-era sysadmin audience). Use when Randy asks to "make a YouTube script", "turn this article into a video script", "script this for YouTube", "convert to a video", or mentions YouTube scripting / video scripts. Produces a [VISUAL]/[AUDIO] production script using the 6-segment Friction-Hook→Outro structure, in Randy's SPOKEN voice, ending in a one-sentence visible CTA to the Steel lead magnet.
+description: Convert an article, LinkedIn post, or topic into a slow-paced, high-retention YouTube script for senior IT / infrastructure veterans (the Steel / AI-era sysadmin audience). Use when Randy asks to "make a YouTube script", "turn this article into a video script", "script this for YouTube", "convert to a video", or mentions YouTube scripting / video scripts. Produces a spoken-lines-only production script (no visual staging directions) using the 6-segment Friction-Hook→Outro structure, in Randy's SPOKEN voice, ending in a one-sentence visible CTA to the Steel lead magnet.
 ---
 
 # YouTube Script Converter
@@ -125,8 +125,8 @@ If the source has context but no concrete, copy-paste prompt or step-by-step:
    this project's security rules.)
 
 ## Formatting / output directives
-- Use **[VISUAL]** blocks for what's on screen (terminal share, browser, talking head) and
-  **[AUDIO]** blocks for the exact spoken lines.
+- **No `[VISUAL]` staging directions (standing rule, added 2026-08-16).** Randy handles his own
+  shot composition — scripts are spoken lines only, no camera/screen-share/B-roll direction blocks.
 - Conversational. Contractions. Short, punchy phrases; calm, measured, breakroom voice.
 - Strip ALL hype — no exclamation spam, no "revolutionary / game-changing," no clickbait.
 - Title: pull a real keyword from `keyword_research.md` (sysadmin / enterprise-ai / ai-proof
@@ -242,13 +242,11 @@ already-used phrase.
 _Source: <article/slug> · Voice: youtube-voice.md · Draft for review_
 
 ### Part 1 — Friction Hook
-- **[VISUAL]:** ...
-- **[AUDIO]:** "..."
+"..."
 ### Part 2 — Contrast & Definition
 ...
 ### Part 6 — Operational Challenge Outro
-- **[VISUAL]:** end screen with the resource link
-- **[AUDIO]:** "...My challenge for your next shift is ... " + one-sentence CTA from the Steel list
+"...My challenge for your next shift is ... " + one-sentence CTA from the Steel list
 ```
 
 ## Hook & Sequencing Addendum (verified July 2026 — Ramonov, McCoy, VidIQ research)
