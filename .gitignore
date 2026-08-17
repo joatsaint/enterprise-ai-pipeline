@@ -205,6 +205,14 @@ docs/Project Reports and Progress/*.docx
 # Local agent config
 .agents/
 
+# Facebook Reel Transcriber — downloaded video files and raw transcript
+# output, local-only data artifacts, same as video-production/'s binaries
+facebook-reel-transcriber/downloads/
+facebook-reel-transcriber/transcripts.txt
+facebook-reel-transcriber/transcripts_*.txt
+facebook-reel-transcriber/run_log*.txt
+facebook-reel-transcriber/facebook_cookies.txt
+
 # n8n local launcher — personal path, not for public repo
 run_n8n.bat
 
