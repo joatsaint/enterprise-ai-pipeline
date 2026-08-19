@@ -57,6 +57,12 @@ in this file:**
   the legibility job, not a color swap away from the brand green.
 - **No animated Remotion compositions for this format** — text overlays and
   burned captions only. Matches the minimalist principle above.
+- **Prompt card overlay:** when a video shows the viewer a prompt to
+  copy, cut to a full black card with left-aligned bright-green text and
+  reveal it in short line groups — see `long-short-pair`'s "Build the
+  prompt card overlay" section for the full spec. Confirmed 2026-08-18
+  against a real published Short. Distinct from the burned-caption style
+  above — reserve it for copy-paste prompts, not general narration.
 
 ## Thumbnail formula
 
