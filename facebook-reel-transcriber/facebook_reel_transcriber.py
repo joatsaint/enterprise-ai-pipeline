@@ -56,6 +56,21 @@ PROXY_URL = _resolve_proxy_url()
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "base")
 
 
+def _load_proxy_list(path: Path) -> list[str]:
+    """One proxy per line (host:port or user:pass@host:port, with or
+    without a scheme -- defaults to http://). Blank lines and #-comments
+    ignored."""
+    proxies = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "://" not in line:
+            line = f"http://{line}"
+        proxies.append(line)
+    return proxies
+
+
 def _page_slug(page_url: str) -> str:
     """Derives a filesystem-safe slug from a Facebook page URL, e.g.
     'https://www.facebook.com/alisa.cohn/reels/' -> 'alisa.cohn'. Used to
@@ -71,7 +86,7 @@ def _page_slug(page_url: str) -> str:
     return "reels"
 
 
-def download_reel(url: str, cookies_path: Path, out_dir: Path) -> Path | None:
+def download_reel(url: str, cookies_path: Path, out_dir: Path, proxy: str | None = None) -> Path | None:
     out_dir.mkdir(parents=True, exist_ok=True)
     ydl_opts = {
         "outtmpl": str(out_dir / "%(id)s.%(ext)s"),
@@ -79,8 +94,9 @@ def download_reel(url: str, cookies_path: Path, out_dir: Path) -> Path | None:
         "noprogress": True,
         "cookiefile": str(cookies_path),
     }
-    if PROXY_URL:
-        ydl_opts["proxy"] = PROXY_URL
+    effective_proxy = proxy if proxy is not None else PROXY_URL
+    if effective_proxy:
+        ydl_opts["proxy"] = effective_proxy
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=True)
@@ -102,9 +118,19 @@ def main() -> None:
     parser.add_argument("--min-delay", type=float, default=4.0)
     parser.add_argument("--max-delay", type=float, default=9.0)
     parser.add_argument("--limit", type=int, default=None, help="Only process the first N reels (testing)")
+    parser.add_argument(
+        "--proxy-list",
+        default=None,
+        help="Path to a file of proxies (one per line, host:port or user:pass@host:port). "
+        "If set, overrides PROXY_URL/Webshare env vars -- a random proxy from this list "
+        "is picked per download, with one retry on a different proxy on failure.",
+    )
     args = parser.parse_args()
 
     cookies_path = Path(args.cookies)
+    proxy_list = _load_proxy_list(Path(args.proxy_list)) if args.proxy_list else None
+    if proxy_list:
+        print(f"Using {len(proxy_list)} proxies from {args.proxy_list} (random pick per download).")
 
     # Per-page namespacing (added 2026-08-16): each page gets its own
     # downloads subfolder + transcript file, derived from the URL, so
@@ -145,7 +171,17 @@ def main() -> None:
     with open(transcript_path, "a", encoding="utf-8") as out:
         for i, url in enumerate(urls, 1):
             print(f"[{i}/{len(urls)}] {url}")
-            video_path = download_reel(url, cookies_path, out_dir)
+            if proxy_list:
+                proxy = random.choice(proxy_list)
+                video_path = download_reel(url, cookies_path, out_dir, proxy=proxy)
+                if video_path is None or not video_path.exists():
+                    # Retry limit is 2 (project standing rule): one retry,
+                    # 5s pause, on a different proxy from the list.
+                    time.sleep(5)
+                    retry_proxy = random.choice([p for p in proxy_list if p != proxy] or proxy_list)
+                    video_path = download_reel(url, cookies_path, out_dir, proxy=retry_proxy)
+            else:
+                video_path = download_reel(url, cookies_path, out_dir)
             if video_path is None or not video_path.exists():
                 continue
 
