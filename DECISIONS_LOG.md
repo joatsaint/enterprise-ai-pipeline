@@ -1213,3 +1213,54 @@ governing future assets.
 `freebies/ai-advantage-assessment/ai-advantage-assessment_PROMPT.md`.
 Verified clean via a full grep sweep for the old link string across all
 target files/folders — zero remaining instances.
+
+---
+
+## ADR-033 — Operator Evidence Interviewer freebie renamed to "Hockey Puck Thinking"
+
+**Decision:** the free prompt-kit lead magnet at `rskiles.com/operator`
+is renamed from "The Operator Evidence Interviewer" to "Hockey Puck
+Thinking," effective 2026-08-20, until further notice. Same offer, same
+URL, same underlying prompt content — name only.
+
+**Context:** part of a real, multi-day experiment Randy is running
+starting 2026-08-20 — a verbal "comment PUCK below" CTA added to videos
+(Shorts and long-form), with Randy manually replying with the freebie
+link while comment volume is low. "Hockey Puck Thinking" ("skate to
+where the puck is going, not where it's been") is the working name for
+that freebie under the new mechanic. Full detail:
+[[project_youtube_comment_answering_idea]] and
+[[project_lead_magnet_funnel]].
+
+**Explicit scope, Randy's call, via a clarifying question:** the standing
+CTA link rule (ADR-032) is unchanged — `rskiles.com/operator` stays the
+link, and the "comment PUCK" ask runs ADDITIVE alongside it, not as a
+replacement. This resolves the open naming decision flagged in the
+2026-08-19 funnel audit (`project_lead_magnet_funnel.md`) — "Hockey Puck
+Thinking" IS the renamed Operator Evidence Interviewer, not a third,
+separate offer.
+
+**What did NOT change:** the $7 tripwire product
+(`joatsaint.gumroad.com/l/steel`, "14-Day Operator Proof Sprint") stays
+completely untouched — Randy's own explicit scope lock from the source
+brain-dropping. The original frozen Riddle of Steel PDF funnel is a
+separate, unrelated asset, also untouched.
+
+**Randy's own authorization for this pass:** explicit in-chat "override
+any other outstanding rules... regarding content creation" — applied
+narrowly to this rename's Key Document changes (skipped the full
+Pre-Change Notification table format), not treated as blanket standing
+authorization for future changes.
+
+**Files updated:** `.claude/skills/youtube-shorts/SKILL.md`,
+`.claude/skills/long-form-video-production/SKILL.md`,
+`.claude/skills/short-walk-and-talk/SKILL.md`,
+`products/riddle-of-steel-interview-tool/web-tool/src/worker.js`
+(deployed live).
+
+**Not yet done — real gap, needs Randy's own action:** the actual live
+landing page copy at `rskiles.com/the-operator-evidence-interviewer/` is
+built and hosted by Randy directly (Kit, not this repo) — still reads
+"Operator Evidence Interviewer" until he edits it himself. This ADR
+covers every repo-side/deployed-by-Claude-Code reference; the live page
+text is outside Claude Code's reach.

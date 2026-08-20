@@ -235,7 +235,7 @@ First Comment` section (never merged into Description):
 ```
 rskiles.com/operator
 
-Grab The Operator Evidence Interviewer — (free prompt kit):
+Grab Hockey Puck Thinking — (free prompt kit):
 Uncover the Skills That AI Can't Replace
 ```
 Randy posts it himself after upload — not automated. Full rationale:
