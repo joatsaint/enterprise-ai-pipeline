@@ -125,9 +125,13 @@ loudnorm=I=-14:TP=-1:LRA=11
   target. Always keep this last in the chain — it needs the signal
   already shaped by everything before it.
 
-These filter values are a reasonable starting chain, not tuned against a
-real clip yet — treat the gain numbers as a first pass and adjust once
-you've actually listened to the result on a real video.
+**Tested and confirmed 2026-08-19** against a real clip (the CTA segment
+of "The AI Job Threat Is Real") — Randy's verdict: "sounds good, I like
+it." Measured before/after: integrated loudness moved from -15.4 LUFS to
+-14.2 LUFS (right at the -14 LUFS YouTube target), true peak dropped from
+0.0 dBTP (clipping) to -1.0 dBTP, loudness range tightened from 3.1 to 1.9
+LU. These gain values are the confirmed default now, not just a first
+pass — no changes needed unless a future clip sounds off.
 
 ## Build the prompt card overlay
 
