@@ -84,6 +84,51 @@ every story, example, and analogy from the raw footage.
   repeated line, a technical glitch. Don't preserve an error just because
   a prior reference video had it.
 
+## Run the audio-processing chain on the final render
+
+Apply this chain once, on the final full-quality render only — it needs a
+real re-encode, so don't run it on stream-copy preview checkpoints.
+Adopted 2026-08-19 from a third-party Claude-Code-video-editor writeup
+(`docs/Claude Code AI Video Editor (Full Setup Guide) - Sandy Lee AI  Slee
+Automation/`); this project didn't have any audio enhancement before this
+— every earlier pass was cuts and overlays only, silent on audio quality.
+
+Chain, in order, as an ffmpeg `-af` filter graph:
+
+```
+highpass=f=80,
+equalizer=f=400:t=q:w=1.5:g=-3,
+equalizer=f=200:t=q:w=1:g=2,
+equalizer=f=4000:t=q:w=1:g=3,
+treble=g=3:f=10000,
+deesser,
+acompressor=threshold=-18dB:ratio=3:attack=5:release=50,
+alimiter=limit=-1dB,
+loudnorm=I=-14:TP=-1:LRA=11
+```
+
+- **Low-cut** (`highpass=f=80`) — strips rumble below 80Hz.
+- **De-mud** (`equalizer=f=400...g=-3`) — cuts boxiness around 400Hz.
+- **Warmth** (`equalizer=f=200...g=2`) — a small lift around 200Hz for a
+  fuller voice.
+- **Presence** (`equalizer=f=4000...g=3`) — lifts clarity in the
+  3-5kHz range.
+- **Air** (`treble=g=3:f=10000`) — a gentle high-shelf lift for brightness.
+- **De-esser** (`deesser`) — softens harsh S/T sounds. Needs an ffmpeg
+  build with the `deesser` filter compiled in — check with
+  `ffmpeg -filters | grep deesser` before relying on it; fall back to
+  skipping this one step if it's missing rather than failing the whole
+  chain.
+- **Compressor** (`acompressor`) — evens out volume swings.
+- **Limiter** (`alimiter`) — a hard ceiling so nothing clips.
+- **Loudnorm** (`loudnorm=I=-14`) — normalizes to YouTube's -14 LUFS
+  target. Always keep this last in the chain — it needs the signal
+  already shaped by everything before it.
+
+These filter values are a reasonable starting chain, not tuned against a
+real clip yet — treat the gain numbers as a first pass and adjust once
+you've actually listened to the result on a real video.
+
 ## Build the prompt card overlay
 
 Use this treatment whenever a video shows the viewer a prompt to copy —
@@ -146,6 +191,35 @@ long-form video for the full picture, not to cover the topic on its own.
 - Add captions to the Short. Follow the burn-in and timing rules in the
   `youtube-shorts` skill. The long-form video is the one that skips
   captions, not the Short.
+
+## Overlay ideas beyond the prompt card (banked, not built)
+
+The prompt card above is the only overlay treatment actually built and
+tested so far. These are additional overlay categories worth considering
+for future videos, banked as ideas from the same third-party writeup
+referenced above — not adopted as a system, just names and concepts
+worth having on hand when a video calls for something the prompt card
+doesn't fit:
+
+- **Word pop** — a single word or short phrase punches onto the screen
+  for emphasis, then clears.
+- **Lower third** — a small persistent label (a name, a stat, a
+  timestamp) anchored to the bottom of the frame instead of a full-screen
+  card.
+- **Browser mockup** — a stylized browser window showing a URL or a
+  screenshot, for videos that reference a website or tool.
+- **Stat card** — a number or data point presented as its own visual
+  beat, similar in spirit to the prompt card but for a single figure
+  instead of a block of text.
+- **Step progress** — a numbered list that fills in one item at a time,
+  for videos walking through a sequence.
+- **Alert/news-flash style** — a high-urgency visual treatment for a
+  single startling claim or warning.
+
+None of these are built. Pick one only when a specific video's content
+calls for it, and build it the same way the prompt card was built: derive
+the real spec from what the video actually needs, don't build the whole
+menu speculatively.
 
 ## Correct the transcript before you generate captions
 
