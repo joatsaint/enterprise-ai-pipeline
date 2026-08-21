@@ -57,6 +57,13 @@ Thinking (real threat isn't the tech) · 7 Unreplaceable Skill (operational logi
 Collapse to 8 when the article's beats merge (ART3 does). End on a P1/P3 empowerment
 reframe — same spine as `/video-explainer`.
 
+## Style Selection (before mapping slide 9)
+
+Run `style-selector` (`.claude/skills/style-selector/SKILL.md`) before the
+MAP & APPROVE gate below — most relevant to slide 9 (Hype Filter / CTA),
+where `guide-positioning`'s objection-preemption stage can sharpen the
+transition into the CTA. Recommending none is a valid outcome.
+
 ## Build workflow
 
 **STEP 1 — MAP & APPROVE (gate).** Map the article to the arc; draft each slide's

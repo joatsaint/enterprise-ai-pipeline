@@ -22,7 +22,13 @@ import requests
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 DEFAULT_MODEL = "llama3.2:3b"
-MAX_CHARS = 24000  # ~6000 words — well within 128K context, keeps response fast
+MAX_CHARS = 24000  # ~6000 words / ~7-8K tokens — fits the real num_ctx=8192
+                   # set on the Ollama call below (see _call_ollama), with
+                   # room left for the prompt template + model output.
+                   # Corrected 2026-08-12: this used to claim "well within
+                   # 128K context" while Ollama's actual runtime default is
+                   # 4,096 tokens — the model supports 128K, the server
+                   # wasn't configured to use it. num_ctx is now explicit.
 RESEARCH_CARDS_DIR = Path("knowledge_base/research_cards")
 
 SCREENER_PROMPT = """You are a research intake screener for an IT professional named Randy Skiles.
@@ -149,7 +155,7 @@ def _call_ollama(document_text: str, model: str) -> str:
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": 0.2, "num_predict": 2048},
+        "options": {"temperature": 0.2, "num_predict": 2048, "num_ctx": 8192},
     }
     try:
         resp = requests.post(OLLAMA_URL, json=payload, timeout=120)
