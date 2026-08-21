@@ -123,6 +123,26 @@ journal/
 # this repo's own git.
 Jarvis Project/
 
+# asset-anomaly-detector/ — its own independent nested git repo, same
+# nested-but-separate pattern as voice-line. Never tracked by this repo's
+# own git. Found during the 2026-08-21 local-pile sort.
+asset-anomaly-detector/
+
+# bitcoin-dashboard/ — its own independent nested git repo, contains a real
+# .env secret file. Same nested-but-separate pattern as voice-line. Found
+# during the 2026-08-21 local-pile sort.
+bitcoin-dashboard/
+
+# oz-vault/ — personal finance/life-tracking data (rentals, eBay, job
+# search, journal) for the Oz character skill. Kept private alongside the
+# oz skill itself (.claude/skills/oz/, also gitignored). Found during the
+# 2026-08-21 local-pile sort.
+oz-vault/
+
+# .impeccable/ — the impeccable design skill's own cache/config state, not
+# content. Found during the 2026-08-21 local-pile sort.
+.impeccable/
+
 # brain-droppings-vault/ — local-only personal ideas mirror, its own
 # independent nested git repo (no remote, never pushed), same rationale as
 # journal/ above. Banked 2026-07-20.
