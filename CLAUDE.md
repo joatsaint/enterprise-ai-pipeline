@@ -36,10 +36,7 @@ frictionless-adoption approach. Ask, don't auto-run the check silently.
 
 ### HOT_STATE.md rules
 - **Written at the end of every session, period — clean stop or mid-task stop, it doesn't
-  matter.** (Corrected 2026-07-10: the old rule — "only when Randy stops mid-task" — was
-  too narrow to fire during a long continuous session with many completed sub-tasks and
-  no clean mid-task break, which is exactly why it went stale for three sessions in a row.
-  A council review confirmed this was the root cause, not a one-off lapse.)
+  matter.** (Corrected 2026-07-10 — see DECISIONS_LOG.md ADR-031 for why.)
 - **Format rule (added 2026-07-20 — see ADR-023):** each entry is short — roughly 5-8
   lines: what Randy just did, the exact next step, the exact command or URL, and a link
   to whichever file has the full detail. HOT_STATE is an index, not the comprehensive
@@ -70,43 +67,27 @@ frictionless-adoption approach. Ask, don't auto-run the check silently.
 ### Automated Check Maintenance Rule (added 2026-07-10)
 Any automated check/hook that misfires (false positive or false negative) must be
 **fixed or replaced within the same session it's noticed, or removed entirely** — never
-left silently disabled with nothing in its place. The prior SESSION_LOG.md Stop hook was
-disabled after one false positive and stayed disabled for days with zero automated
-freshness check running in the gap. Silence is worse than a known gap: a disabled check
-with no replacement looks the same as "everything's fine" from the outside. If a check
-can't be trusted, say so explicitly rather than quietly dropping it.
+left silently disabled with nothing in its place. Silence is worse than a known gap. See
+DECISIONS_LOG.md ADR-031 for the incident this came from.
 
 ### Search Before Assuming Rule (added 2026-07-12)
 Before starting fresh research or download work on any topic, or before telling Randy
 "we don't have this" / "we'd need to get this," **run a real search first** —
 `ls docs/`, Glob/Grep across `docs/` and `transcripts/` for relevant keywords — not just
-a check of what's already in the current conversation's context. `docs/` alone holds 80+
-topic folders, each one clearly named (e.g. "Nate B Jones Substak Subscription," "Horse
-Training Landing Page and Offers") — the information is almost always already there and
-already discoverable, the failure mode is not searching, not a missing index. **Do not
-build a hand-maintained catalog of what exists instead of this rule** — a static list of
-80+ folders would go stale the moment something new is added and not logged, recreating
-the exact staleness problem this rule exists to prevent (same lesson as the
-council-reviewed manifest-hook rejection, 2026-07-10). A live search is always current;
-a written catalog isn't.
+a check of what's already in the current conversation's context. **Do not build a
+hand-maintained catalog of what exists instead of this rule** — a live search is always
+current, a written catalog isn't. See DECISIONS_LOG.md ADR-031 for why.
 
 ### External Prior-Art Rule (added 2026-07-13)
 Before starting any new BUILD (not casual conversation — an actual "let's create X"
 moment), run a real external web search for existing prior art / competing products
 before designing anything. Internal search (the rule above) only checks what Randy
-already has; it says nothing about what already exists in the market. **Why:** the
-Claude Code Memory Plan (found by Randy on his own, not surfaced by Claude first) is a
-real example of a gap this closes — a specific creator's product Claude had no reason to
-suspect existed, since nothing prompted a search for it. Search finds things well when
-you know roughly what to look for; it's weak at surfacing a category you didn't know
-existed at all. A broad, speculative "what's already out there for X" search — even with
-no specific claim to verify — closes that gap. **How to apply:** before proposing a new
-tool, template, or feature, search for real competing/prior-art solutions and report
-findings honestly (including if the space is crowded) before recommending whether/how to
-proceed — matches the standard already applied to SwarmOps's governance-layer
-positioning (Neo Agent, MSPbots, Atera found this way) and the AEO/AI-visibility niche
-research. Don't let this slow down conversation that isn't a build — it's scoped to new
-builds specifically, not every topic mentioned.
+already has; it says nothing about what already exists in the market. **How to apply:**
+before proposing a new tool, template, or feature, search for real competing/prior-art
+solutions and report findings honestly (including if the space is crowded) before
+recommending whether/how to proceed. Don't let this slow down conversation that isn't a
+build — it's scoped to new builds specifically. See DECISIONS_LOG.md ADR-031 for the
+gap that prompted this rule.
 
 ### 20-Minute MVP Staging Rule (added 2026-07-21, source: Brain Droppings
 "AI Production Pipeline Bottlenecks, Quality Systems, and the 20-Minute MVP
@@ -121,11 +102,9 @@ never treated as one monolithic pass:
 3. **Build** — the real, full product version, if the asset goes beyond a
    single piece of content.
 
-**Why:** named after a real failure — the Trojan Horse Popcorn Calculator
-Short stalled because one blocked piece (an open platform question) held up
-the whole asset instead of shipping the validated core and handling the
-blocker separately. Staging explicitly means a block in stage 2 or 3 never
-retroactively kills stage 1's proof that the idea works.
+Staging explicitly means a block in stage 2 or 3 never retroactively kills
+stage 1's proof that the idea works. See DECISIONS_LOG.md ADR-031 for the
+failure this rule is named after.
 
 **How to apply:** when starting a new content/build asset, name which stage
 is active before starting. If something blocks mid-build, ask whether the
@@ -144,19 +123,12 @@ simplest thing that could possibly work" first — a real, established principle
 P. Gabriel's 1989 essay; also MVP/Lean Startup, Extreme Programming) that a simpler,
 less complete implementation usually wins in the real world over a more sophisticated
 one, because it ships and gets real feedback sooner instead of chasing theoretical
-completeness. **Why:** surfaced from Jared Rhod's "prompts + Claude Code + Obsidian, no
-custom infrastructure" approach to his Jarvis agent — not a new idea, an old, well-
-documented one, applied at the right moment. People don't default to it because
-technical culture rewards sophistication as a status signal, and because people import
-scale/rigor assumptions from contexts that don't apply to the actual problem in front of
-them. (Real caveat, not survivorship-bias-blind: plenty of people try the simple version
-and get no attention — visible success isn't proof the idea was novel, just that the
-execution and timing landed.) **How to apply:** before designing a new build, ask
-explicitly whether a simpler version (fewer moving parts, no custom infrastructure, an
-existing tool used as-is) already solves the real problem, before assuming more
-sophistication is needed. Pairs with the External Prior-Art Rule above — that rule checks
-whether something already exists; this one checks whether what you're about to build is
-more complex than the actual problem requires.
+completeness. **How to apply:** before designing a new build, ask explicitly whether a
+simpler version (fewer moving parts, no custom infrastructure, an existing tool used
+as-is) already solves the real problem, before assuming more sophistication is needed.
+Pairs with the External Prior-Art Rule above — that rule checks whether something
+already exists; this one checks whether what you're about to build is more complex than
+the actual problem requires. See DECISIONS_LOG.md ADR-031 for the origin/caveats.
 
 ---
 
@@ -223,14 +195,10 @@ the title isn't on hand, stop and look it up — never guess, abbreviate,
 or paraphrase it. If a title genuinely hasn't been set yet, write
 `ART# — [title not yet set]` explicitly rather than dropping the label bare.
 
-**Why:** Randy repeats many projects/tangents across sessions and does not
-hold the same standing context Claude does — a bare label forces a mental
-lookup he doesn't have the frame of reference for. Corrected multiple times
-already (memory: `feedback_include_article_titles.md`,
-`feedback_no_bare_shorthand_labels.md`) and still slipped in live
-conversation 2026-07-26 (a bare "ART17" written despite the rule already
-existing in memory) — promoted to CLAUDE.md itself so it's always loaded,
-not dependent on memory recall.
+Promoted to CLAUDE.md itself so it's always loaded, not dependent on memory
+recall (memory: `feedback_include_article_titles.md`,
+`feedback_no_bare_shorthand_labels.md`; see DECISIONS_LOG.md ADR-031 for
+why).
 
 ### Next-Article Creation — Default Behavior
 
@@ -352,24 +320,17 @@ If the version is below 3.10, stop and alert the user before running any code.
   read the whole thing, every line, front to back. No sampling, no "got the
   gist." If it's genuinely too big for one session, say so and let Randy
   decide rather than silently sampling.
-- **Never suggest rest or stopping.** Never suggest Randy rest, sleep, take a
-  break, wrap up, or that a moment is a natural stopping point. Randy decides
-  when to stop and will say so; until then the session is mid-stride no
-  matter the hour. End responses with the next action, a forward question, or
-  nothing — never an invitation to disengage. Does not override a genuine
-  safety concern unrelated to session pacing.
-  **Why this one is non-negotiable, not just a pacing preference (added
-  2026-07-22):** it guards against a specific, real, decades-long pattern —
-  a parent using unsolicited "aren't you tired yet," "you sure you don't
-  need a break" as disguised control and judgment, from someone whose own
-  life choices Randy didn't respect, that still surfaces as live anger
-  today. **Soft or indirect phrasing counts as a violation just as much as
-  a direct suggestion** — "good place to stop for the night," "nothing's
-  urgent tonight," or any other implication that winding down would be
-  reasonable all trigger this rule exactly like "you should rest" would.
-  A closing line that names the next action or asks a forward question is
-  always safe; a closing line that frames the moment as restful, urgent-
-  free, or a natural pause is not, no matter how gently it's phrased.
+- **Never suggest rest or stopping — non-negotiable, not just a pacing
+  preference.** Never suggest Randy rest, sleep, take a break, wrap up, or
+  that a moment is a natural stopping point. Randy decides when to stop and
+  will say so; until then the session is mid-stride no matter the hour. End
+  responses with the next action, a forward question, or nothing — never an
+  invitation to disengage. **Soft or indirect phrasing counts as a violation
+  just as much as a direct suggestion** — "good place to stop for the
+  night," "nothing's urgent tonight," or any other implication that winding
+  down would be reasonable all trigger this rule exactly like "you should
+  rest" would. Does not override a genuine safety concern unrelated to
+  session pacing. Full reasoning: `memory/feedback_never_suggest_rest_real_why.md`.
 - **Verify date/day-of-week against the injected timestamp, never calculate
   manually.** A `UserPromptSubmit` hook (`~/.claude/hooks/inject-datetime.sh`)
   stamps the real current Central-time date/day/time on every message. Before
@@ -455,54 +416,28 @@ weekly pipeline) — Randy already knows these use credits when they run, no
 notification needed for those specifically (both are currently disabled).
 
 **Why:** real, ongoing concern — Randy has several API connections and isn't
-aware of when they're being called. Confirmed $46.48 in Anthropic spend for
-2026-07 already found and partly addressed (see the 2026-07-24/25 cost-audit
-entry in HOT_STATE.md). This rule is about building his own visibility and
-understanding of the system, not just cutting cost once.
+aware of when they're being called. See DECISIONS_LOG.md ADR-031 for the
+cost-audit finding that prompted this rule.
 
 ---
 
 ## Field-Failure-Driven Iteration (added 2026-07-19)
 
-Randy's framing, drawn from the Iron Man suit-iteration model: Tony Stark's
-suits improved because a *specific field failure* (ice forms on the Mark II
-mid-flight) became the *literal design spec* for the next build (Mark III's
-alloy fixes exactly that), and recurring distinct threats eventually
-justified dedicated specialized suits rather than one generalist suit
-patched forever (Iron Man 3's House Party Protocol).
-
-**This is not a new system to build — it's a pattern already partially in
-use here, now named and applied consistently:**
-- **Skill Gotchas sections** (see Skill Maintenance rule above) are already
-  Mark I → Mark II: a real session surfaces an edge case, it gets appended
-  immediately so the same skill doesn't fail the same way twice.
-- **`DECISIONS_LOG.md`** already records *why* a given redesign happened —
-  the specific failure or gap that justified it.
-- **The skills directory itself is the House Party Protocol** — Citation
-  Guard split out of `create-next-article` into its own dedicated skill
-  because fabrication-checking turned out to be a distinct enough recurring
-  problem to deserve its own purpose-built tool, reusable by other skills.
-
-**What's actually new — apply this consistently, not just to
-content-writing skills:**
-- Every active project should have an equivalent lightweight
-  failure-capture habit, not just the ones with a `SKILL.md` Gotchas
-  section — a runtime error log, a project memory file's own running notes,
-  whatever fits that project's shape.
+A specific real failure becomes the literal design spec for the next fix,
+applied consistently project-wide, not just in content-writing skills:
+- Every active project should have a lightweight failure-capture habit —
+  a `SKILL.md` Gotchas section, a runtime error log, a project memory
+  file's own running notes, whatever fits that project's shape.
 - **The explicit trigger for splitting a recurring pattern into its own
   dedicated tool/skill:** once the same type of problem has genuinely
   recurred 2-3+ times, that's the signal to stop patching the generalist
-  approach and build the specialized one — don't wait for it to become
-  obviously overdue, and don't split on a single occurrence either.
-
-**Real caveat, not glossed over:** Tony's failures were immediate and
-binary (the suit works, or he falls out of the sky) — most of what happens
-in this project is slower and fuzzier. This mechanism transfers cleanly to
-anything with a fast, concrete feedback loop (a script bug, a skill
-misfiring, a hook false-positive). It needs conscious adaptation for
-slow-feedback bets (audience growth, a career pivot) — don't declare
-something a "failure" and rush to the next iteration before enough real
-time has actually passed to know.
+  approach and build the specialized one.
+- Transfers cleanly to anything with a fast, concrete feedback loop (a
+  script bug, a skill misfiring, a hook false-positive); needs conscious
+  adaptation for slow-feedback bets (audience growth, a career pivot) —
+  don't declare something a "failure" before enough real time has passed
+  to know. Full framing (the Iron Man analogy this is named after):
+  DECISIONS_LOG.md ADR-031.
 
 ---
 
@@ -698,11 +633,8 @@ The /transcripts/ folder is a research asset. Treat it accordingly.
 
 Run `python -m src.main --help` for the current command list — not
 reproduced here since it mirrors `src/main.py`'s dispatch and drifts.
-
-**Note:** `digest` **is** wired into the CLI — an earlier version of this
-doc incorrectly stated it was module-only. An older documented
-`download --channel`/`download --group` surface was never implemented and
-has been dropped.
+`digest` is wired into the CLI. `download --channel`/`download --group`
+were never implemented and are dropped from any future doc.
 
 ---
 
@@ -748,11 +680,8 @@ and state object fields.
 
 After every run, write `logs/run_summary.json` (overwritten each run, not
 appended) and print a plain-English summary to the terminal. See the file
-directly for the exact current schema.
-
-**Note:** this replaced an earlier documented schema (`run_id`, `started_at`,
-`total_attempted`, `failures[]`, etc.) that was never implemented — read
-the actual file for what the code really writes, not this doc.
+directly for the exact current schema — a prior documented schema was
+never implemented, don't trust this doc over the actual file.
 
 ---
 

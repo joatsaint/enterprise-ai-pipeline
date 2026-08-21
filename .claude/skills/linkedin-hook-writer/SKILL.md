@@ -265,6 +265,15 @@ Whether media is attached changes which formats fit best. It does NOT change the
 
 ## Workflow
 
+### Style Selection (topic-only path, before extracting raw material)
+
+If the user gives a bare TOPIC (not a draft) and the angle feels stuck or
+repeated, run `style-selector` (`.claude/skills/style-selector/SKILL.md`) —
+its Ideation phase (`lateral` and its sub-techniques) is the only part
+relevant here, since this skill writes hooks only and never CTAs. Skip
+this step entirely when a draft already exists or the angle is already
+clear; recommending none is normal.
+
 ### When the user gives a DRAFT post
 
 1. Read the entire draft first.

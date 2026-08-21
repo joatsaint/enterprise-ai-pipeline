@@ -21,6 +21,9 @@ Verified working — the reference render is `remotion-test/out/how-ai-agents-wo
    ```
 3. Node present (v24 verified). Render cost = Claude tokens only; Remotion is
    free for solo use (free for teams ≤3).
+4. Run `style-selector` (`.claude/skills/style-selector/SKILL.md`) against
+   the topic before scripting — an explainer's closing beat is a common fit
+   for `guide-positioning`. Recommending none is a valid outcome.
 
 ## Build workflow
 

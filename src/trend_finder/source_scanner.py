@@ -56,6 +56,25 @@ SUBREDDITS = [
     "cscareerquestions",
     "artificial",
     "iiiiiiitttttttttttt",
+    # Landlord/real estate -- added 2026-08-03, matches Randy's real active
+    # Facebook Q&A work (Texas landlord group) and the AI-trend-watchlist
+    # spontaneous-video format (real question first, trend as answer layer).
+    "Landlord",
+    "realestateinvesting",
+    # GLP-1/tirzepatide -- added 2026-08-03, matches Randy's real active
+    # Facebook Q&A work (GLP-1 tracker prompt group).
+    "Zepbound",
+    "Mounjaro",
+    "tirzepatide",
+    "tirzepatidecompound",
+    # AI-future/agentic-reliability signal -- added 2026-08-03, selected from
+    # a real "ai future" Reddit search Randy reviewed. NOTE: "ArtificialIntelligence"
+    # is a distinct subreddit from "artificial" above -- both real, kept separate.
+    # Explicitly did NOT add r/antiai (ideologically-framed, not pain-point-mining)
+    # or r/ChatGPT (too broad/noisy relative to signal in the reviewed sample).
+    "ArtificialIntelligence",
+    "webdev",
+    "ClaudeAI",
 ]
 
 RSS_FEEDS = [
