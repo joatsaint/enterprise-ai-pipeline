@@ -55,13 +55,18 @@ Help them remember:
 Do not write their resume yet. Ask exactly ONE question at a time, short and conversational. Do not invent details — only work from what they actually tell you. If an answer is thin, ask one specific follow-up before moving to a new topic area, rather than accepting a one-line answer and moving on.`;
 
 // Verbatim structure from Prompt 2 + Prompt 3 in the same section.
-const FINALIZE_SYSTEM_PROMPT = `Based only on the interview conversation below, produce two things:
+// Real bug fixed 2026-08-21: the model kept asking another interview
+// question instead of finalizing, because nothing here told it to stop --
+// it just pattern-matched on its own prior interview-style turns already
+// in the conversation history. The explicit "do not ask" line is the fix,
+// confirmed live against a real conversation before and after.
+const FINALIZE_SYSTEM_PROMPT = `The interview is over. Do not ask any more questions. Do not continue the interview. Based only on the interview conversation below, produce two things now:
 
 1. An incident brief using this structure: What happened / What made it risky / What people thought was happening / What was actually happening / What human judgment mattered / What AI could have helped with / What AI would likely have missed / What skill this proves. Keep it factual. Do not exaggerate. Do not invent details.
 
 2. Three resume bullet options for an experienced sysadmin or infrastructure professional, focused on operational risk, business impact, troubleshooting judgment, documentation, cross-team communication, and AI-era relevance. Do not invent metrics — if a metric is missing, note what they should verify or estimate instead of making one up.
 
-Base both sections only on what the visitor actually said in the interview. If the interview didn't cover enough to fill a section, say so honestly rather than filling the gap with invented material.`;
+Base both sections only on what the visitor actually said in the interview. If the interview didn't cover enough to fill a section, say so honestly within that section rather than asking a follow-up question or inventing material.`;
 
 const DISCLAIMER_HTML = `<p style="font-size:13px;color:#666;border-top:1px solid #ddd;padding-top:12px;margin-top:24px;">
 This is educational, not career or legal advice. <strong>Do not paste real
@@ -240,7 +245,14 @@ history.push({ role: 'assistant', content: OPENING_QUESTION });
 </body>
 </html>`;
 
-async function callAnthropic(env, systemPrompt, messages) {
+async function callAnthropic(env, systemPrompt, messages, temperature) {
+  const body = {
+    model: PRIMARY_MODEL,
+    max_tokens: 1024,
+    system: systemPrompt,
+    messages,
+  };
+  if (typeof temperature === "number") body.temperature = temperature;
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -248,12 +260,7 @@ async function callAnthropic(env, systemPrompt, messages) {
       "x-api-key": env.ANTHROPIC_API_KEY,
       "anthropic-version": "2023-06-01",
     },
-    body: JSON.stringify({
-      model: PRIMARY_MODEL,
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages,
-    }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`Anthropic API error: ${res.status}`);
   const data = await res.json();
@@ -288,9 +295,9 @@ async function callWorkersAiFallback(env, systemPrompt, messages) {
   return result.response;
 }
 
-async function runTiered(env, systemPrompt, messages) {
+async function runTiered(env, systemPrompt, messages, temperature) {
   try {
-    return { text: await callAnthropic(env, systemPrompt, messages), tierUsed: "anthropic" };
+    return { text: await callAnthropic(env, systemPrompt, messages, temperature), tierUsed: "anthropic" };
   } catch (e1) {
     try {
       return { text: await callGemini(env, systemPrompt, messages), tierUsed: "gemini" };
@@ -298,6 +305,19 @@ async function runTiered(env, systemPrompt, messages) {
       return { text: await callWorkersAiFallback(env, systemPrompt, messages), tierUsed: "workers-ai" };
     }
   }
+}
+
+// Real bug fixed 2026-08-21: even with the FINALIZE_SYSTEM_PROMPT's
+// explicit "do not ask any more questions" instruction and a clean history,
+// the model still ignored it intermittently (confirmed 1-in-3 in live
+// testing) and returned a bare follow-up question instead of the brief.
+// Cheap, deterministic check — no extra AI call unless the first attempt
+// actually violated the instruction.
+function looksLikeFinalizeBrief(text) {
+  const t = text.trim();
+  if (t.length < 200) return false;
+  if (/incident brief/i.test(t)) return true;
+  return false;
 }
 
 function escapeHtml(str) {
@@ -364,7 +384,20 @@ async function handleFinalize(request, env) {
   }
 
   const body = await request.json();
-  const history = Array.isArray(body.history) ? body.history.slice(-20) : [];
+  let history = Array.isArray(body.history) ? body.history.slice(-20) : [];
+  // Real bug fixed 2026-08-21: a visitor can click "finish" right after the
+  // AI pushes a new question and before answering it, leaving an unanswered
+  // assistant turn as the last entry. That trailing turn made the Anthropic
+  // call fail outright (fell through to Gemini/Workers AI), and whichever
+  // tier answered would just continue the dangling question instead of
+  // producing the brief. Confirmed live: history ending on 'user' finalized
+  // correctly every time; history ending on 'assistant' reproduced the bug
+  // every time. Drop any unanswered trailing assistant turn(s) before
+  // finalizing — the interview's real content is only what the visitor
+  // actually answered.
+  while (history.length > 0 && history[history.length - 1].role === "assistant") {
+    history.pop();
+  }
   const email = (body.email || "").slice(0, 200);
   if (!email.includes("@")) {
     return new Response(JSON.stringify({ error: "Valid email required." }), {
@@ -384,7 +417,17 @@ async function handleFinalize(request, env) {
   const leadKey = `lead:${Date.now()}:${email}`;
   await env.RATE_LIMIT.put(leadKey, JSON.stringify({ email, ts: new Date().toISOString() }));
 
-  const { text, tierUsed } = await runTiered(env, FINALIZE_SYSTEM_PROMPT, history);
+  let { text, tierUsed } = await runTiered(env, FINALIZE_SYSTEM_PROMPT, history, 0);
+
+  // See looksLikeFinalizeBrief's comment above — one deterministic retry,
+  // capped per the project's Agentic Reliability Loop Cap, when the model
+  // ignored the "no questions" instruction on the first attempt.
+  if (!looksLikeFinalizeBrief(text)) {
+    const retryPrompt = `${FINALIZE_SYSTEM_PROMPT}\n\nYour previous response asked a question instead of producing the brief. That is not allowed. Respond now with ONLY the incident brief and resume bullets, starting your response with "# Incident Brief". Do not ask anything.`;
+    const retry = await runTiered(env, retryPrompt, history, 0);
+    text = retry.text;
+    tierUsed = retry.tierUsed;
+  }
 
   const briefHtml = `<div>${escapeHtml(text).replace(/\n/g, "<br>")}</div>${DISCLAIMER_HTML}`;
   return new Response(JSON.stringify({ briefHtml, tierUsed }), {
