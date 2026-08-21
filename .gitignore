@@ -53,6 +53,7 @@ knowledge_base/index.json
 knowledge_base/reports/*.md
 knowledge_base/digests/*.md
 knowledge_base/research_cards/
+knowledge_base/pain_point_history.json
 
 # Session logs and memory — internal working notes, never commit
 memory/
