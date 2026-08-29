@@ -1,0 +1,318 @@
+---
+name: long-form-video-production
+description: End-to-end pipeline for producing a long-form (16:9) HeyGen-avatar YouTube build video — title/hook/script through HeyGen generation, screen-recording SRT, motion-graphic overlays, and CapCut assembly. Use when Randy says "build a new video", "let's make the next long-form video", "start a video project", or asks to produce assets for a build/tutorial-style YouTube video with his HeyGen avatar. Chains the youtube-script skill (writing) with the HeyGen/Remotion/CapCut asset pipeline (production) into one repeatable process. Not for Shorts — see youtube-shorts / shorts-script for those.
+---
+
+# Long-Form Video Production Pipeline
+
+One entry point for the whole process, so no step depends on remembering
+what happened in a past session. Built 2026-07-10 after two scripts were
+lost mid-production because they only ever existed in chat — every step
+below writes to a file before moving on.
+
+## Stage 0 — Create the project folder FIRST
+
+Before writing a single word of script, create:
+```
+video-production/long-form/<slug>/
+  heygen/  overlays/  srt/  screen-recordings/  final/
+```
+This folder is portable and tool-free — no `.tsx` source, no skill files,
+nothing but the video's own assets, so it can be copied wholesale to a
+local CapCut machine. See `[[project_video_production_folder_convention]]`.
+
+## Stage 1 — Title, hook, script structure
+
+Use the **youtube-script** skill for this stage — don't duplicate its rules
+here. Read (in order): `content-engine/CONTENT_PUBLISHING_RULES.md`,
+`knowledge/me/youtube-voice.md`, `knowledge/me/video-hook-types.md`,
+`knowledge/brand/keyword_research.md`. Output: the 6-segment
+Friction-Hook→Outro structure, spoken-voice narration.
+
+youtube-script's own `style-selector` step (run before drafting) already
+covers this stage — no separate style-selection step needed here.
+
+Write the finished script straight into `<slug>/<title>-script.md` (topic-
+named per `youtube-shorts`'s all-assets filename convention, added
+2026-08-11 — no generic `script.md`), split into scenes/segments matching
+what will actually be submitted to HeyGen as separate jobs. Include a
+title (even a working one) and note format (long-form, 16:9) at the top.
+Also write `<slug>/metadata.json` — see the folder-convention memory for
+the schema (this one stays generic, it's machine-read).
+
+**Do not proceed to Stage 2 until the script file exists on disk.** A
+script only in the conversation is not saved — this is the exact failure
+this skill was built to prevent.
+
+**Alternate path for build/demo videos — two-pass live-capture-then-polish
+(added 2026-07-12).** When the video IS a live build (running code, seeing
+what breaks, fixing it) and the outcome genuinely isn't known in advance,
+don't pre-write the full script before recording — it means guessing at
+what breaks, which defeats the point of letting it be real (today's proven
+best-performing content shape, see `youtube-script/SKILL.md`'s title/hook
+research). Instead:
+1. **Pass 1 — live capture.** At each build checkpoint (see the Stage 2+
+   recording-segment convention below), write the real explanation into
+   the topic-named script file (`<title>-script.md`) as it actually
+   happens — raw, accurate, not polished yet.
+2. **Pass 2 — Kallaway/Illusion-of-Novelty polish**, only after the whole
+   real story is known (can't apply contrast framing or the "213 ordering"
+   trick until you know what actually happened, especially at the "it
+   broke" step). Run the full script back through that framework, apply
+   the "AI caught what humans missed" twist device where honestly earned
+   (both in `youtube-script/SKILL.md`), then proceed to Stage 3 normally.
+
+## Stage 2 — HeyGen avatar/voice — verify before submitting, don't trust cached names
+
+**Known trap:** a saved name like "Randy_DigitalTwin_v2" may refer to the
+*voice*, not the *avatar* — they can share a name. Before submitting
+anything, confirm live:
+1. `mcp__heygen__get_current_user` — confirm account + credit balance.
+2. `mcp__heygen__list_avatar_groups` (ownership: private) — list avatar
+   groups.
+3. `mcp__heygen__list_avatar_looks` (ownership: private) — find the actual
+   `avatar_id` (a specific look inside a group), not just the group name.
+4. `mcp__heygen__list_voices` (type: private) — find the `voice_id`,
+   confirm it matches the avatar's `default_voice_id` if you want them paired.
+5. Note the avatar's native orientation (portrait/landscape) from the look's
+   `image_width`/`image_height` — ask Randy whether to match it or force the
+   opposite aspect ratio before submitting (this changes the whole
+   downstream CapCut canvas).
+
+Submit each scene via `mcp__heygen__create_video_from_avatar` with the
+confirmed `avatarId`/`voiceId`. **Always confirm settings with Randy before
+submitting** — this costs real credits (see `feedback_heygen_ask_before_submit`).
+
+**Before submitting, also check the script against the Text-to-Speech
+Formatting Rules in `youtube-script/SKILL.md`** — numbers spelled out, no
+ambiguous hyphenated ranges/shorthand. Cheaper to catch in the text than
+after a real render.
+Consider submitting Scene 1 alone as a test before batch-generating the
+rest, so a framing/lip-sync problem doesn't cost credits across every scene.
+
+**Avatar disclosure — non-negotiable.** The avatar's name is **Phigmund**
+(same character as the Command Deck persona — see `[[project_phigmund]]` —
+now also appearing as the live HeyGen avatar, not a separate identity).
+Every video where Phigmund delivers the opening must open with the
+**locked standard template: `knowledge/me/phigmund-avatar-intro.md`**
+(confirmed 2026-07-10) — hook may be swapped per video, the disclosure +
+credibility-transfer + channel-thesis paragraphs are fixed and reused
+verbatim unless Randy explicitly asks for a rewrite. Written in Stage 1
+(script), not bolted on here — see the `youtube-script` skill's
+credibility-stamp rule.
+
+Poll `mcp__heygen__get_video` until `status: completed`, download each mp4
+with `curl`, and save directly into `<slug>/heygen/`.
+
+## Stage 3 — Screen recording + SRT
+
+Randy records the actual screen-capture footage for the parts of the video
+that aren't the avatar talking, and assembles a rough cut in CapCut
+(avatar clips + screen recording, in whatever order the script implies).
+
+Once that rough cut exists, generate captions in CapCut (Auto Captions →
+export as .srt, unchecking video export so only the caption file is
+produced) and save it into `<slug>/srt/`. This SRT is the master timeline
+for Stage 4 — read every caption's start/end time directly from it, never
+estimate.
+
+**Two different situations you'll find in the SRT — check which one applies:**
+- **Gap-based:** real silence exists between caption blocks where the
+  screen recording plays without narration. Build motion graphics sized to
+  fill those exact silent durations.
+- **Continuous narration (found on the file-organizer-build video):** no
+  meaningful silence exists — narration runs wall-to-wall. In this case
+  build a **persistent overlay system** (a card/panel that evolves with the
+  story) synced to caption *content*, not caption *gaps*. Compute this by
+  diffing every consecutive caption's end/start time — if gaps are all
+  under ~1s, you're in the continuous case.
+
+## Stage 4 — Overlay storyboard + Remotion render
+
+Design a segment-by-segment storyboard: `[start] – [end]: visual
+description`, timed directly off SRT caption boundaries (not estimated).
+Get Randy's sign-off on the storyboard before rendering anything.
+
+**Spatial rule:** confirm where Randy appears in frame (this varies per
+video — e.g. right 25% in this one) and keep all graphics out of that zone.
+
+**Render technique:** motion graphics render on **pure `#00FF00`**
+background (chroma-key), composited in CapCut exactly like the HeyGen
+avatar layer already is. Never use green tones inside the graphic itself.
+
+**Build with Remotion — never VidIQ's render tool** (see
+`[[feedback_remotion_not_vidiq]]` — hit a hard credit wall the one time it
+was tried). Reuse `video-production/remotion/src/FileOrganizerShared.tsx`
+as the pattern for a new shared-style file per video series: exported
+`COLORS`, card geometry constants, `SpringIn`/`Divider`/`Pill`/`TraceLine`
+animation helpers. Each segment gets its own component file exporting the
+component + a `_DIMS` constant (`W`, `H`, `FRAMES`), registered as a
+`<Composition>` in `Root.tsx`. Match frame counts to the SRT segment
+duration (`seconds * 30`, at the project's standard 30fps).
+
+Render each with `npx remotion render <CompositionId> out/<Name>.mp4` from
+`video-production/remotion/`, then copy the output into `<slug>/overlays/`
+— never leave it referenced only in `remotion/out/`, since that breaks the
+project folder's portability.
+
+## Stage 5 — CapCut assembly
+
+Randy assembles in CapCut: HeyGen avatar layer (chroma-keyed) + background
+(screen recording or Randy's chosen image) + overlay layer (chroma-keyed,
+confined to the non-avatar zone) + any audio. Final export goes in
+`<slug>/final/`.
+
+Update `metadata.json`'s `status` field as the project moves through
+in-production → ready → published, and fill in `title`/`publish_date` once
+locked.
+
+## Stage 6 — Hero/background image + thumbnail
+
+Two SEPARATE images, not one — they have opposite requirements:
+
+- **In-video background** (behind the avatar, seen full-size): detail-rich is
+  good — legible file names, readable text, busy scenes all work because the
+  viewer has time and screen size to take it in.
+- **Thumbnail** (seen at ~120-150px wide in a mobile feed, half-second glance):
+  needs the opposite — one dominant expressive face, huge bold text, minimal
+  fine detail. Fine text that's legible in the in-video version will NOT
+  survive thumbnail compression. Generate these as two separate images, not
+  one image doing both jobs.
+
+**Tool:** `content-engine/generate_hook_background.py` — a 16:9 (1920x1080)
+counterpart to `generate_short_card.py`/`generate_carousel_images.py` (reuses
+their `generate_image()`/`load_dotenv_env()` helpers, same `--quality low`
+default rule). Generates a textless photographic scene; bake any text on
+top with Pillow as a separate step afterward (same two-pass pattern as the
+Shorts cards) — don't rely on the AI model to render legible text directly,
+it garbles filenames/words unreliably above a handful of characters.
+
+**Copyright:** never reproduce a recognizable copyrighted character (e.g.
+Bill Lumbergh/Office Space) even via AI generation — real legal and
+image-gen-policy risk. Build an *original* archetype that evokes the same
+trope instead (generic corporate-manager visual cues, an original line in
+the same rhythm) — gets the same recognition without reproducing the IP.
+
+**Recurring character — "the operator":** a consistent visual identity used
+across LinkedIn article images (`04_operator.png` in several `content-engine/
+content/` article folders) and this video's assets: man in his 50s, short
+gray/salt-and-pepper beard, dark polo shirt, IT-office/server-room setting.
+Keep new generations consistent with this description rather than
+re-deriving it from scratch each time.
+
+**Before generating the thumbnail, confirm the destination is
+`video-production/long-form/<slug>/`, not the Shorts-card folder** — see the
+image-prompt skill's "three questions before any image run" and its Gotcha
+on the same real bug (fixed 2026-07-15).
+
+**Title/thumbnail-text pairing:** once the video title is locked, thumbnail
+text should complement it, not repeat it — title carries the stakes/hook,
+thumbnail text is the shortest possible resolution/punch (e.g. title "Your
+Company Has a Truth Problem" + thumbnail text "AI FIXED IT"). Don't lock
+thumbnail text before the title, and don't finalize it as pure duplication
+of the title.
+
+## Stage 7 — YouTube publish metadata (title, description, tags)
+
+Write to `<slug>/<video title, slugified>-description.md`, then lock the
+final title into `metadata.json`.
+
+**Filename convention (added 2026-07-26, same rule across every video
+type — Shorts, walk-and-talk, long-form):** name the file after the
+video's own title, not a generic name, so Randy can identify which video
+it belongs to at a glance in a folder listing without opening it. Use the
+whole title if short (roughly under 5-6 words / 40 characters); if
+longer, use just the first three words. Always ends in `-description`.
+Replaces the old generic `youtube_metadata.md` name for anything created
+from 2026-07-26 onward — existing files keep their old name, not renamed
+retroactively. Full rule + rationale: `youtube-shorts` skill's Required
+Deliverable section.
+
+**Standing first-comment template (locked 2026-07-26, same as
+`youtube-shorts` — applies to every video type, no exceptions):** link
+first, then the pitch, drafted into the metadata file as its own `##
+First Comment` section (never merged into Description):
+```
+rskiles.com/operator
+
+Grab Hockey Puck Thinking — (free prompt kit):
+Uncover the Skills That AI Can't Replace
+```
+Randy posts it himself after upload — not automated. Full rationale:
+`youtube-shorts` skill's own section on this.
+
+**Title:** run through the `youtube-script` skill's title fact-check rule —
+verify every claim in the title against the actual script/description
+before presenting it as an option. A curiosity-gap title shape is only
+valid if the specific claim inside it is true of the story being told.
+
+**Description SEO rules:**
+- **First sentence carries the most search-ranking weight** — lead with the
+  primary keyword (pull from `knowledge/brand/keyword_research.md`), not
+  the CTA. CTA goes in the second sentence — still inside the visible
+  portion before YouTube's "Show more" cutoff, so it doesn't lose
+  visibility, it just isn't in the highest-SEO-value position.
+- **CTA:** pull from `knowledge/products/lead-magnets/Steel-One-Sentence
+  Visible CTAs.md`, matched to the video's awareness stage per that file's
+  rotation table (top 4 to lead with: #8, #2, #5, #4).
+- **Chapters/timestamps:** include `0:00 Label` format lines — YouTube
+  auto-generates chapters from these (first one must start at 0:00, need
+  at least 3), and they measurably improve watch time + search surfacing.
+  Recalculate against the actual final CapCut cut, not the draft script
+  timing.
+- **Hashtags:** cap at 3 in the description — YouTube only displays the
+  first 3 above the title, more than that in-body doesn't add value there.
+- **Tags:** pull from `keyword_research.md`'s lowest-competition targets
+  first (e.g. `sysadmin` comp 22, `enterprise ai implementation` comp 16),
+  then content-specific secondary tags. ~15-20 total, stay under YouTube's
+  ~500-character combined limit.
+- **Proof stack:** lead the description's second paragraph (right after the
+  SEO-keyword-first sentence + CTA) with 1-2 lines of concrete, lived proof
+  before anything else — real ops experience (25 years keeping production
+  alive), a named specific story (the Lamar University source-of-truth
+  failure), or a build shown working in public (SwarmOps). Verified pattern:
+  the creators who credibly sell "I help you do X" all lead with their own
+  track record in X before the pitch, not after it — see
+  `[[reference_mccoy_avatar_intro_pattern]]`. Don't restate the whole bio —
+  one or two specific, checkable facts, not a general claim of expertise.
+
+## Stage 8 — Pre-Upload Checklist (required, run before publish)
+
+Run the `video-distribution-checklist` skill before this video goes live
+— hook-in-first-second, ~20-min-or-under complete-thought length target,
+and turning on YouTube's native Test and Compare tool. This is the last
+stage, not an optional add-on.
+
+**If the format-freeze test is active** (see
+`memory/project_format_freeze_test_2026-08-13.md`), add a row to
+`content-engine/research/format_freeze_tracking.csv` at upload time —
+date, platform, video_id (fill in once known post-upload), title, topic,
+format, thumbnail style, length. The weekly `Format Freeze Stats Refresh`
+scheduled task fills in views/likes/comments automatically after that,
+but only for rows that already exist — a video never logged here never
+gets tracked.
+
+## Gotchas
+
+- HOT_STATE.md dual-copy rule applies to any resume-state written mid-project
+  — see `[[feedback_hot_state_dual_copy]]`.
+- If files get moved between folders (e.g. during a reorg like the one that
+  created this skill), any CapCut project already referencing the old paths
+  will show offline media — warn Randy before moving anything mid-edit.
+- Avatar orientation may not match the intended video format — always check
+  before choosing aspect ratio, don't assume from the avatar's name.
+- **Title generation** (Stage 1) needs a fact-check pass against the actual
+  script/description before presenting — see the fact-check rule and Gotcha
+  entry in the `youtube-script` skill (a suggested title once misattributed
+  "AI" to a story event that had no AI involvement, caught by Randy).
+- **When a build video's demo relies on a promised file count or dataset
+  size, verify the real number before locking the script — don't trust an
+  earlier video's stated promise.** The File Organizer Build video promised
+  "350 real files" for the follow-up; when Randy actually staged them, the
+  real count was 152 `.txt` files (plus 2 stray PDFs that had to be pulled
+  since the tool reads files in plain text mode and can't extract real
+  content from PDF/DOCX — dumps garbage instead). Script and hook got
+  corrected to the true number rather than padding the file set to
+  artificially hit the original promise. If a build tool has a real file-type
+  limitation like this, check for it explicitly before staging test data —
+  don't assume dropping in extra files of any type will just work.

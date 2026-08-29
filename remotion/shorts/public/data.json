@@ -1,0 +1,51 @@
+{
+  "fps": 30,
+  "durationInFrames": 1350,
+  "width": 1080,
+  "height": 1920,
+  "bgColor": "#0C0C0E",
+  "textHook": "I built an app. Nobody noticed.",
+  "textHookEndFrame": 300,
+  "sections": [
+    {
+      "label": "hook",
+      "text": "In 2014 I built two mobile apps with zero coding background.",
+      "startFrame": 0,
+      "endFrame": 217,
+      "color": "#39ff14",
+      "size": "large"
+    },
+    {
+      "label": "problem",
+      "text": "Most people think a skill like that gets noticed on its own.",
+      "startFrame": 217,
+      "endFrame": 313,
+      "color": "#f8f9fa",
+      "size": "medium"
+    },
+    {
+      "label": "insight",
+      "text": "The people who needed the apps to work knew exactly what almost went wrong",
+      "startFrame": 313,
+      "endFrame": 666,
+      "color": "#FF6700",
+      "size": "medium"
+    },
+    {
+      "label": "implication",
+      "text": "But here is the thing",
+      "startFrame": 666,
+      "endFrame": 1216,
+      "color": "#f8f9fa",
+      "size": "medium"
+    },
+    {
+      "label": "cta",
+      "text": "Write it down before you need it on a resume.",
+      "startFrame": 1216,
+      "endFrame": 1350,
+      "color": "#39ff14",
+      "size": "small"
+    }
+  ]
+}

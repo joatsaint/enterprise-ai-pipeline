@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "name": "Example Newsletter",
+      "sender": "newsletter@example.com",
+      "active": true,
+      "notes": "Optional free-text note (e.g. covers multiple editions, author name)"
+    },
+    {
+      "name": "Another Newsletter",
+      "sender": "hello@another-example.com",
+      "active": false,
+      "notes": "Set active=false to keep a source on file without including it in curation"
+    }
+  ]
+}

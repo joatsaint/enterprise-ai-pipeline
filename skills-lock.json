@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "skills": {
+    "analogy": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/analogy/SKILL.md",
+      "computedHash": "42e585abc7c85ea41270574f0e748d862e9fb90da3e747f2bedf8c037d8187d9"
+    },
+    "concept-fan": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/concept-fan/SKILL.md",
+      "computedHash": "7758d4e2d0de3417f4b13156342846db9e2e138169a558a51faf64747c1cbb05"
+    },
+    "inversion": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/inversion/SKILL.md",
+      "computedHash": "74db502b9d33be241748901d43d62e2165882a81ec9691e9eab5cef765dc1a8c"
+    },
+    "lateral": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/lateral/SKILL.md",
+      "computedHash": "2e74de09aafb0faea51fdd534dd2a60ee3ce1c0ef6e9310dc71ea50c434bd1c9"
+    },
+    "provocation": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/provocation/SKILL.md",
+      "computedHash": "05142d112ec84ca57de8513af12cbcd77d46957bdc7cba95b20b54d687557ac0"
+    },
+    "random-stimulus": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/random-stimulus/SKILL.md",
+      "computedHash": "99c67fdd450d0c00942697121717e1c243e50895cea5cc14995b06b45b8a3696"
+    },
+    "scamper": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/scamper/SKILL.md",
+      "computedHash": "97d86181c52e05c54721ee14a3add34775d183f598a9ab4732313178fbf1781f"
+    },
+    "six-hats": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/six-hats/SKILL.md",
+      "computedHash": "ee918ba09a83584107937e95ede10e654082b79e0339a39337fde3229e5b5f5f"
+    },
+    "worst-idea": {
+      "source": "danium/lateral-thinking",
+      "sourceType": "github",
+      "skillPath": "skills/worst-idea/SKILL.md",
+      "computedHash": "96adf4ce846beb23173ed259523b786d5952fd19462c548dc8fd9fbce2ea45b1"
+    }
+  }
+}

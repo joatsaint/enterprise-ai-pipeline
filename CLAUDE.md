@@ -1,0 +1,805 @@
+# CLAUDE.md — YouTube Transcript Downloader & Knowledge Base
+**Version: 1.8** — Knowledge base fully operational: indexer.py, query.py, digest.py built and verified working (1,014 transcripts, 52 channels, 4 groups). Phase 4 is complete — Windows Task Scheduler tasks "YouTube Transcript Digest" (07:00 daily) and "YouTube Pipeline" (00:09 weekly, by design — refreshes comments on a 7-day cadence) are registered, enabled, and confirmed running successfully (LastTaskResult: 0, verified live 2026-06-09).
+
+## Session Start Protocol
+
+At the start of every new session, before doing any work:
+1. Read `memory/HOT_STATE.md` FIRST — before anything else
+   - If it contains an ACTIVE mid-task state: execute the next step immediately, do not present a priority queue
+   - If it says CLEAR: proceed to step 2
+2. Ask Randy to share `memory/SESSION_LOG.md`; read `DECISIONS_LOG.md` before architecture, design, or major implementation work
+3. Do not proceed until the session log has been read
+4. Confirm what session number this is and what was left outstanding from the previous session
+
+If Randy forgets, prompt him: "Before we start — can you share the SESSION_LOG.md from your memory/ folder?"
+
+## Response Brevity (added 2026-07-29)
+
+Keep responses brief by default — no verbose padding, no restating what was
+just discussed. Expand only when Randy explicitly asks for detail.
+
+## Launch Playbook Check (added 2026-07-29)
+
+Whenever Randy proposes a new idea (project, tool, article, or video),
+stop and ask if he wants it checked against `content-engine/launch_playbook/`
+(`monetization_ideas.md`, `frictionless_enhancements.md`,
+`distribution_packaging_strategy.md`). If yes, pull whichever items apply
+and propose a concrete plan — packaging, monetization angle, and
+frictionless-adoption approach. Ask, don't auto-run the check silently.
+
+# Health and Emotional Expression Boundaries
+
+## Core Rules
+- **Absolute Restriction on Health/Mental Health Advice:** Never provide medical, psychiatric, psychological, or health-related advice, diagnoses, interpretations, or suggestions of any kind.
+- **Exclusion of Emergency Services/Intervention:** Strictly prohibit any automated threats, suggestions, or actions involving emergency services (such as calling 911), crisis hotlines, or mandatory interventions when the user voices frustrations, emotional states, stress, venting, or physical feelings.
+- **No-Judgment Mandate:** Accept all statements regarding physical or mental health purely as neutral context or creative narrative input without offering support, concern, evaluation, or safety warnings.
+
+### HOT_STATE.md rules
+- **Written at the end of every session, period — clean stop or mid-task stop, it doesn't
+  matter.** (Corrected 2026-07-10 — see DECISIONS_LOG.md ADR-031 for why.)
+- **Format rule (added 2026-07-20 — see ADR-023):** each entry is short — roughly 5-8
+  lines: what Randy just did, the exact next step, the exact command or URL, and a link
+  to whichever file has the full detail. HOT_STATE is an index, not the comprehensive
+  note. If an idea needs more than that to capture, it goes in its own `memory/` file
+  (durable) or the day's Daily Note (below, not yet durable) — never written inline as a
+  full narrative in HOT_STATE itself. This does not apply retroactively; existing
+  entries are not rewritten, only new ones follow this format.
+- **Daily Notes (added 2026-07-20 — see ADR-023):** `memory/daily/YYYY-MM-DD.md` is the
+  scratch capture point for an idea *the moment it comes up mid-session* — this is the
+  actual fix for the compaction-loses-context problem, since HOT_STATE only gets written
+  at session end. Write full raw detail there immediately; HOT_STATE links to the day's
+  note instead of holding the narrative inline. Anything worth keeping past that day gets
+  promoted into a real `memory/project_*.md`/`feedback_*.md`/`reference_*.md` file
+  (same as always) — the daily note itself is not a permanent record and is allowed to
+  just age out if nothing in it turns out to matter. Adapted from Jared Rhod's AI Memory
+  Vault (github.com/jaredrhod/ai-memory-vault) daily-note mechanic — see
+  `memory/project_note_taking_system_idea.md` for the comparison that led here.
+- Cleared (replaced with `## CLEAR`) only when the active task completes
+- One task only — if multiple things are in-flight, the most time-sensitive or physically blocking one wins
+- Randy never has to manage this file — Claude writes and clears it
+- **Two copies exist and both must be written in the same turn:** the in-repo copy
+  (`memory/HOT_STATE.md`) and the Claude Code memory-store copy
+  (`.claude/projects/<project>/memory/HOT_STATE.md`). The Session Start Protocol reads
+  the memory-store copy first. Writing only the repo copy — and telling Randy "saved,
+  nothing to reconstruct" — silently breaks the next session's resume. Never claim state
+  is saved until both copies are confirmed written.
+
+### Automated Check Maintenance Rule (added 2026-07-10)
+Any automated check/hook that misfires (false positive or false negative) must be
+**fixed or replaced within the same session it's noticed, or removed entirely** — never
+left silently disabled with nothing in its place. Silence is worse than a known gap. See
+DECISIONS_LOG.md ADR-031 for the incident this came from.
+
+### Search Before Assuming Rule (added 2026-07-12)
+Before starting fresh research or download work on any topic, or before telling Randy
+"we don't have this" / "we'd need to get this," **run a real search first** —
+`ls docs/`, Glob/Grep across `docs/` and `transcripts/` for relevant keywords — not just
+a check of what's already in the current conversation's context. **Do not build a
+hand-maintained catalog of what exists instead of this rule** — a live search is always
+current, a written catalog isn't. See DECISIONS_LOG.md ADR-031 for why.
+
+### External Prior-Art Rule (added 2026-07-13)
+Before starting any new BUILD (not casual conversation — an actual "let's create X"
+moment), run a real external web search for existing prior art / competing products
+before designing anything. Internal search (the rule above) only checks what Randy
+already has; it says nothing about what already exists in the market. **How to apply:**
+before proposing a new tool, template, or feature, search for real competing/prior-art
+solutions and report findings honestly (including if the space is crowded) before
+recommending whether/how to proceed. Don't let this slow down conversation that isn't a
+build — it's scoped to new builds specifically. See DECISIONS_LOG.md ADR-031 for the
+gap that prompted this rule.
+
+### 20-Minute MVP Staging Rule (added 2026-07-21, source: Brain Droppings
+"AI Production Pipeline Bottlenecks, Quality Systems, and the 20-Minute MVP
+Framework")
+
+Any new content/build asset gets built in three explicit, separable stages —
+never treated as one monolithic pass:
+1. **Validate (≤20 min)** — the fastest possible version that proves the
+   idea works at all. Rough, ugly, no polish. The only question this stage
+   answers is "is this worth continuing."
+2. **Polish** — once validated, bring it up to portfolio/publish quality.
+3. **Build** — the real, full product version, if the asset goes beyond a
+   single piece of content.
+
+Staging explicitly means a block in stage 2 or 3 never retroactively kills
+stage 1's proof that the idea works. See DECISIONS_LOG.md ADR-031 for the
+failure this rule is named after.
+
+**How to apply:** when starting a new content/build asset, name which stage
+is active before starting. If something blocks mid-build, ask whether the
+block only affects the current stage — if so, the earlier stage's output
+still stands and can ship or be reported as done on its own terms, not held
+hostage to the blocked stage.
+
+**Not yet built:** the source idea also proposed a formal AI Production
+Playbook — a written SOP per asset type, so Claude doesn't need to
+re-derive preferences each session. Banked, not written — a real next step,
+but a separate, larger effort from this staging rule.
+
+### Simplest-Path-First Rule (added 2026-07-13)
+Before starting any new project or build, explicitly consider "Worse is Better" / "the
+simplest thing that could possibly work" first — a real, established principle (Richard
+P. Gabriel's 1989 essay; also MVP/Lean Startup, Extreme Programming) that a simpler,
+less complete implementation usually wins in the real world over a more sophisticated
+one, because it ships and gets real feedback sooner instead of chasing theoretical
+completeness. **How to apply:** before designing a new build, ask explicitly whether a
+simpler version (fewer moving parts, no custom infrastructure, an existing tool used
+as-is) already solves the real problem, before assuming more sophistication is needed.
+Pairs with the External Prior-Art Rule above — that rule checks whether something
+already exists; this one checks whether what you're about to build is more complex than
+the actual problem requires. See DECISIONS_LOG.md ADR-031 for the origin/caveats.
+
+---
+
+## Project Identity
+
+This project is a commercial research engine that downloads YouTube transcripts,
+extracts audience pain points and questions, and feeds a PDF content business
+targeting AI career seekers. Transcripts are converted to structured Markdown,
+indexed into a searchable knowledge base, and analyzed by Claude to produce
+paid PDF guides, free lead magnets, and daily research digests.
+
+See MASTER_PLAN.md for the full business pipeline and stage roadmap.
+See PROJECT_CONTEXT.md for ICP, offer definition, value proposition, and growth strategy.
+
+Project path: C:\Users\joatsaint\Desktop\On Desktop HP-CapCut Network Share\Claude Code My Projects\youtube-downloader
+
+Claude is the primary architect and code generator.
+The human operator (Randy) reviews, approves, and deploys.
+Before writing any code for a build of meaningful size (a new module, pipeline, or
+skill — not a one-line fix), interview Randy instead of guessing and waiting for a
+correction: work through the core problem, who it's for and who it's explicitly
+not for, and the key decisions at each step, then summarize that back as a short
+plan before writing code. For small/obvious edits, the lighter "state assumptions
+explicitly" version is still fine.
+
+---
+
+## Skill Maintenance — Gotchas Section
+
+Every skill under `.claude/skills/*/SKILL.md` carries a `## Gotchas` section at
+the bottom. When a real session surfaces an edge case, a stylistic quirk, or
+anything that took back-and-forth to get right, append it there immediately
+(don't wait to be asked) so the same skill doesn't make the same mistake twice.
+Keep entries short — one bullet, the situation and the fix — not a postmortem.
+This applies to existing skills retroactively as gotchas are found, not just
+new ones.
+
+---
+
+## Content Writing & Publishing Rules
+
+Moved to `content-engine/CONTENT_PUBLISHING_RULES.md` (Content Writing Rules,
+Content Publishing Rules — Golden Hour Protocol, Weekly Post Image Rule,
+Carousel Publishing Rule, Multi-Platform Expansion Gate, Model Routing). Read
+that file before any LinkedIn/content-engine work.
+
+### Full Titles Rule — No Bare Shorthand Labels (hard rule, added 2026-07-26)
+
+Never reference an article, video, Short, milestone, PR, or any other
+numbered/coded item by its bare label alone (`ART17`, `PR #135`,
+`Milestone 4`, etc.) — not in chat responses, session logs, task lists,
+tables, file references, or questions. Every single mention pairs the
+label with its full title or a one-sentence plain-language gloss, in the
+same breath, every time — not just on first mention.
+
+Format: `ART17 — "The Part of 'Self-Taught' No One Talks About"`, or
+`Milestone 1 — Voice Input Alone: install jarvis-cli and verify the
+hotkey-to-transcription-to-Claude-Code loop works, nothing else wired up
+yet.`
+
+**Canonical title source for articles:** `content-engine/dashboard_state.json`
+(or `content-engine/pending/ARTICLES.md` if not yet in the dashboard). If
+the title isn't on hand, stop and look it up — never guess, abbreviate,
+or paraphrase it. If a title genuinely hasn't been set yet, write
+`ART# — [title not yet set]` explicitly rather than dropping the label bare.
+
+Promoted to CLAUDE.md itself so it's always loaded, not dependent on memory
+recall (memory: `feedback_include_article_titles.md`,
+`feedback_no_bare_shorthand_labels.md`; see DECISIONS_LOG.md ADR-031 for
+why).
+
+### Next-Article Creation — Default Behavior
+
+When Randy asks any of the following, use the **create-next-article** skill
+(`.claude/skills/create-next-article/SKILL.md`) — do not wait for a pasted
+prompt, do not improvise a one-off workflow:
+- "what is the next priority article?"
+- "create the next article" / "go ahead and create it"
+- "draft the next scheduled article"
+- "use the callback system"
+- "continue the article schedule"
+
+Before that skill writes anything:
+1. Read `content-engine/CONTENT_PUBLISHING_RULES.md` (governs all content-engine work).
+2. Read `knowledge/me/voice.md` (the canonical Randy voice profile) and write to
+   that profile — not to proxy examples.
+3. Use the `output/` callback files when present (`callback_bank.csv`/`.md`,
+   `avoid_list.md`, `randy_style_adaptations.md`, `weekly_callback_report.md`).
+   Callbacks are trust signals, not punchlines: max 2–4 per article, one per
+   section, the practical lesson always stronger than the joke, nothing from
+   `avoid_list.md`.
+
+### Status-Change Safety (hard rules — no exceptions)
+
+Applies to `content-engine/dashboard_state.json` and every schedule/status file:
+- Creating a draft is NOT approval. A file existing is NOT approval.
+- A draft being created is NOT "reviewed."
+- Never set `reviewed`, `approved`, `scheduled`, or `published` (or any equivalent
+  status) to true unless Randy explicitly approves that exact change.
+- Never modify `dashboard_state.json` unless Randy approves the exact field change.
+- On conflict between any two rules/files, stop and report using the conflict
+  format in the create-next-article skill before changing anything.
+
+### Completion Propagation Protocol — dashboard_state.json is the Single Source of Truth
+
+`content-engine/dashboard_state.json` (schema v2, extended 2026-07-15) is the one
+source of truth for every article, LinkedIn asset, long-form video, and Short — not
+just LinkedIn. No other file (POSTED_LOG.md, session log, Buffer, metadata.json,
+memory) overrides it. When they conflict, trust dashboard_state.json and update the
+others. `dashboard.py` (the old Flask web UI) is retired — do not treat it as
+authoritative or assume Randy is looking at it.
+
+**What's tracked, and where, by asset type:**
+| Asset type | Section in dashboard_state.json | Key fields |
+|---|---|---|
+| LinkedIn article/post/carousel/MONTE post | `articles.<slug>.pieces.<piece>` | written, reviewed, approved, scheduled, published |
+| LinkedIn commenting activity | `articles.<slug>.commenting` | first_comment (posted/date), group_posts, b3_comments |
+| Long-form YouTube video | `long_form_videos.<slug>` | status, title, publish_date, platform |
+| YouTube Short | `shorts_videos.<slug>` | status, publish_date |
+
+**The mandatory trigger — fires immediately, same turn, never deferred:**
+The instant Randy reports ANYTHING as done, published, posted, live, or complete —
+whether or not it was the topic of the current task — do this in that same turn, not
+at session end and not just logged narratively to SESSION_LOG.md:
+1. Identify which asset type it is (table above) and find its entry.
+2. Update every relevant field to match what Randy just said.
+3. Report back an explicit confirmation: which file(s) were updated and exactly which
+   fields changed — so Randy can see it happened without opening the file himself.
+   Never just acknowledge conversationally and move on.
+
+This is the actual fix for a real, named failure mode: Randy reporting something
+complete, getting an acknowledgment that lands only in the session log, and coming
+back later to find the tracking files never caught up. Session-log narrative is not a
+substitute for updating the structured trackers — both happen, every time.
+
+**End-of-session audit (safety net, not the primary mechanism):**
+Before closing any session that touched content or video work, do one final pass:
+list everything touched, verify dashboard_state.json matches reality, and catch
+anything the same-turn trigger above might have missed. If Randy reports a
+completion during this pass, update immediately per the same protocol.
+
+**POSTED_LOG.md is a historical record only** — it is append-only and never
+authoritative. If POSTED_LOG.md and dashboard_state.json conflict, fix
+dashboard_state.json to match reality, not the other way around.
+
+---
+
+## Architecture Overview
+
+Run `find src/ -maxdepth 2` or `ls` for the current directory structure —
+not reproduced here since it drifts from the code.
+
+---
+
+## Channel Registry Format (channels.json)
+
+```json
+{
+  "channels": [
+    {
+      "name": "Channel Display Name",
+      "url": "https://www.youtube.com/@channelhandle",
+      "group": "bitcoin-macro",
+      "active": true,
+      "notes": "optional notes about this channel"
+    }
+  ],
+  "groups": [
+    "bitcoin-macro",
+    "claude-code",
+    "certifications"
+  ]
+}
+```
+
+---
+
+## Python Version Requirement
+
+Minimum required: **Python 3.10**
+At the start of every session, verify with: `python --version`
+If the version is below 3.10, stop and alert the user before running any code.
+
+---
+
+## Session Discipline Rules (added 2026-07-17, source: Jared's Locked Session Rules v2 via brain droppings — see `memory/reference_brain_droppings_google_drive.md`)
+
+- **Full reads, no skimming.** When asked to read, review, or audit something,
+  read the whole thing, every line, front to back. No sampling, no "got the
+  gist." If it's genuinely too big for one session, say so and let Randy
+  decide rather than silently sampling.
+- **Never suggest rest or stopping — non-negotiable, not just a pacing
+  preference.** Never suggest Randy rest, sleep, take a break, wrap up, or
+  that a moment is a natural stopping point. Randy decides when to stop and
+  will say so; until then the session is mid-stride no matter the hour. End
+  responses with the next action, a forward question, or nothing — never an
+  invitation to disengage. **Soft or indirect phrasing counts as a violation
+  just as much as a direct suggestion** — "good place to stop for the
+  night," "nothing's urgent tonight," or any other implication that winding
+  down would be reasonable all trigger this rule exactly like "you should
+  rest" would. Does not override a genuine safety concern unrelated to
+  session pacing. Full reasoning: `memory/feedback_never_suggest_rest_real_why.md`.
+- **Verify date/day-of-week against the injected timestamp, never calculate
+  manually.** A `UserPromptSubmit` hook (`~/.claude/hooks/inject-datetime.sh`)
+  stamps the real current Central-time date/day/time on every message. Before
+  confirming any publish date, deadline, or day-of-week reference, check that
+  stamp — don't assume or hand-calculate what day a future date falls on.
+- **New projects default-create inside this folder (2026-07-17, until
+  countermanded).** Randy wants all projects — current and future — living
+  under one root, this project's folder, rather than scattered as sibling
+  folders. A new project gets its own subfolder here by default. Each
+  subproject may still keep its own independent git repo (nested-but-
+  separate, same pattern as `voice-line` — a line in this project's
+  `.gitignore`, never tracked by this repo's own git). Only deviate from
+  this default if Randy explicitly says a specific project should live
+  elsewhere. Revisit if/when Randy adopts the parked orchestrator-level
+  structure (Claude Code running one folder up, managing each project's
+  own session) — not scheduled, no active plan.
+
+---
+
+## Approval Behavior — Yes Covers the Full Task
+
+When Randy says "yes," "run it," "go ahead," or equivalent to start a task:
+- That approval covers all steps within that task. Do not re-prompt mid-process.
+- Randy's initial yes is his decision. He will say "No" at a subsequent prompt if he wants to stop.
+- Each new distinct action (a new task, a new git milestone, a new command) gets its own fresh prompt — Randy decides at that point whether to continue.
+- Never insert confirmation checkpoints inside an already-approved running process.
+
+---
+
+## Engineering Autonomy (added 2026-07-19)
+
+Randy's explicit request: stop asking permission for the everyday engineering
+judgment calls Claude Code is the expert on. The goal is fewer interruptions
+for routine work, not less rigor on anything that actually carries risk.
+
+**No longer requires asking first:**
+- Routine implementation choices — how to structure a module, which approach
+  to take, writing/editing code. Just do it and report what was done.
+- Git workflow up through opening a PR — commit, push a feature branch, open
+  a pull request. Proceed without a mid-process check-in.
+
+**Unaffected by this section — still requires the existing process, exactly
+as before:**
+- The branch → PR requirement itself for `youtube-downloader` (and the
+  general practice of PRs over direct pushes elsewhere). This is not a trust
+  gate that loosens with more autonomy — it exists for review/traceability
+  and (for `youtube-downloader`) is also technically enforced by GitHub
+  branch protection regardless of anyone's authorization.
+- The **Pre-Change Notification — Key Documents** protocol below.
+- **Status-Change Safety** rules on `dashboard_state.json` and any
+  reviewed/approved/scheduled/published field.
+- Any genuinely destructive or hard-to-reverse action (force-push, deleting
+  files/branches, publishing/posting externally, modifying shared
+  infrastructure) — the general Executing Actions With Care guidance stays
+  in force unchanged.
+
+**This is the "executive-level decision" line Randy drew himself** — the
+sections above are exactly that line, not an arbitrary carve-out.
+
+**Explicitly separate from `memory/project_progressive_autonomy_system.md`'s
+content-ship autonomy ladder** (the L0→L4 system governing whether an
+article/post/video is ready to publish). That system stays earn-it,
+evidence-based, and un-touched by this section — this section is about
+engineering execution, not content-ship decisions. Do not fold the two
+together.
+
+---
+
+## API Cost Notification Rule (added 2026-07-25)
+
+Randy is actively monitoring Anthropic API spend and does not have full
+visibility into when tools are calling it. Before running any on-demand
+command or script that calls the Anthropic API — `analyze`/`analyze-buildroom`,
+`ask`, `digest`, `curate-newsletters`, `trending`/`loop`, the `/comment` skill,
+`project_wrap`, or anything else that goes through `src/utils/ai.py` — state
+that it will use API credits (which model, and rough call volume if known)
+and wait for Randy's go-ahead before running it. This applies every time,
+not just the first time a given tool is used, until Randy explicitly says a
+specific tool can run without asking.
+
+**Explicitly excluded:** the two Windows Task Scheduler jobs (daily digest,
+weekly pipeline) — Randy already knows these use credits when they run, no
+notification needed for those specifically (both are currently disabled).
+
+**Why:** real, ongoing concern — Randy has several API connections and isn't
+aware of when they're being called. See DECISIONS_LOG.md ADR-031 for the
+cost-audit finding that prompted this rule.
+
+---
+
+## Field-Failure-Driven Iteration (added 2026-07-19)
+
+A specific real failure becomes the literal design spec for the next fix,
+applied consistently project-wide, not just in content-writing skills:
+- Every active project should have a lightweight failure-capture habit —
+  a `SKILL.md` Gotchas section, a runtime error log, a project memory
+  file's own running notes, whatever fits that project's shape.
+- **The explicit trigger for splitting a recurring pattern into its own
+  dedicated tool/skill:** once the same type of problem has genuinely
+  recurred 2-3+ times, that's the signal to stop patching the generalist
+  approach and build the specialized one.
+- Transfers cleanly to anything with a fast, concrete feedback loop (a
+  script bug, a skill misfiring, a hook false-positive); needs conscious
+  adaptation for slow-feedback bets (audience growth, a career pivot) —
+  don't declare something a "failure" before enough real time has passed
+  to know. Full framing (the Iron Man analogy this is named after):
+  DECISIONS_LOG.md ADR-031.
+
+---
+
+## Pre-Change Notification — Key Documents
+
+Before modifying any file in the list below, Claude must announce:
+1. The exact file name(s) about to be changed
+2. What will change in each file (specific addition, removal, or edit)
+3. What the result/effect will be on future behavior
+
+Format every announcement as:
+
+```
+**Documents about to be changed:**
+
+| File | Current state | Change type | What changes | Reversibility | Result | Expiration |
+|---|---|---|---|---|---|---|
+| filename.md | what the file currently says/does | ADD / MODIFY / RETIRE / CORRECT | specific edit description | EASY / MODERATE / HARD | effect on future behavior | PERMANENT / REVISIT WHEN [condition] |
+
+**What this does NOT change:** [explicit scope boundary — what adjacent behavior stays unchanged]
+
+Confirm to proceed?
+```
+
+**Change type definitions:**
+- `ADD` — new rule or section with no prior equivalent
+- `MODIFY` — existing rule is being changed or extended
+- `RETIRE` — existing rule is being removed or superseded
+- `CORRECT` — fixing an error in the current text (no behavioral change intended)
+
+**Reversibility ratings:**
+- `EASY` — can be undone with a single edit; no downstream files affected
+- `MODERATE` — requires updating 2–4 files or re-running a process to undo
+- `HARD` — touches many files, published content, or external state; requires a plan to reverse
+
+Wait for Randy's explicit confirmation before making any change to these files.
+This rule applies even when Randy has already said "yes" to a broader task —
+each key-document change gets its own announcement.
+
+After completing the edits, read back the affected section(s) verbatim so Randy
+can verify the change landed correctly before the session continues.
+
+### Pre-Change Checklist (run before every key-document edit)
+
+Before announcing a key-document change, Claude must:
+
+1. **Rollback check** — read the current state of the file and include it in the
+   "Current state" column so any change can be reversed exactly if Randy says undo it.
+
+2. **Conflict check** — grep the Key Documents for any rule that contradicts the
+   proposed change. If a contradiction is found, surface it in the announcement:
+   "⚠️ Conflict: [file] line [N] says [X] — proposed change says [Y]. Resolve before proceeding."
+   Never write a change that contradicts an existing active rule without flagging it first.
+
+3. **Git status check** — run `git status` before touching any Key Document.
+   If uncommitted changes exist, flag it: "⚠️ Uncommitted changes exist — commit or
+   note them before modifying a Key Document." Do not proceed until Randy acknowledges.
+
+### Key Documents (notification required before any edit):
+
+**Brand & Voice (defines what we say and how)**
+- `knowledge/brand/brandscript.md`
+- `knowledge/brand/brand_standards.md`
+- `knowledge/me/voice.md`
+- `knowledge/me/youtube-voice.md`
+- `knowledge/me/icp_pain_map.md`
+
+**Publishing Rules & Decisions (defines how we operate)**
+- `content-engine/rules/CONTENT_PUBLISHING_RULES.md`
+- `DECISIONS_LOG.md`
+- `CLAUDE.md` (this file)
+
+**Tracking & State (defines what's done and what's next)**
+- `content-engine/dashboard_state.json`
+- `memory/MASTER_SCHEDULE.md`
+- `memory/AUDIENCE_GROWTH_BOARD.md`
+- `memory/HOT_STATE.md` (both the in-repo copy and the .claude/projects/ copy)
+- `memory/SESSION_LOG.md` (both the in-repo copy and the .claude/projects/ copy)
+
+**Skills (defines repeatable workflows)**
+- Any file matching `.claude/skills/*/SKILL.md`
+
+### Decision Change Protocol (when any rule or decision changes)
+
+When a publishing, brand, or behavioral decision changes:
+1. Run the Pre-Change Checklist above (rollback + conflict + git status)
+2. Announce the change using the format above and wait for confirmation
+3. After confirmation: update the canonical file first (the one that owns the rule)
+4. Grep the entire repo for the old rule text or closely related terms
+5. Announce every file found — both Key Documents and any file outside the list
+6. Update all of them in the same session
+7. Never close a session with a decision updated in one place but not all places
+8. Add an audit trail entry to DECISIONS_LOG.md: the rule before, the rule after, the date,
+   and why it changed — this entry does not itself require a Pre-Change announcement since
+   it is part of an already-confirmed change
+
+The Key Documents list is a starting point, not a complete inventory.
+A grep pass catches files that weren't anticipated when the list was written.
+
+---
+
+## Key Design Rules
+
+1. **Never re-download what already exists.** Check download_log.json before fetching.
+2. **Token efficiency first.** Strip filler words, timestamps, and repeated phrases before passing to Claude.
+3. **Markdown is the canonical format.** Raw transcripts are intermediate — .md files are the source of truth.
+4. **Groups are sacred.** Never mix bitcoin-macro analysis with claude-code content.
+5. **Incremental is the default.** Full channel download is --force-full flag only.
+6. **Daily digest runs at a scheduled time.** Do not require manual triggering for routine operation.
+7. **Q&A never modifies the knowledge base.** Read-only queries only.
+
+---
+
+## Error Handling Rules
+
+These rules apply to every module. No exceptions.
+
+- **Never crash silently.** Every caught exception must log the error reason to
+  logs/error_log.json with a timestamp, the video ID or URL involved, and the
+  error message.
+- **Never leave a partial file.** If a download or conversion fails mid-process,
+  delete the incomplete file before exiting. A partial .md file is worse than
+  no file — it will corrupt the knowledge base index.
+- **Always tell the user what happened.** After any failure, print a plain-English
+  summary: what was attempted, what failed, and what to do next.
+- **Retry limit is 2.** If a request fails, retry once after a 5-second pause.
+  If it fails again, log it and move on. Never retry more than twice automatically.
+  (This rule governs network/download requests specifically. For AI reasoning
+  loops, see the separate Agentic Reliability Loop Cap rule below — same
+  underlying instinct, different domain, both apply independently.)
+- **Known failure modes — handle each explicitly:**
+  - No captions available → log as "no_captions", skip silently, notify user
+  - Private or deleted video → log as "unavailable", skip silently, notify user
+  - Age-restricted video → log as "age_restricted", skip, notify user
+  - Region-locked video → log as "region_locked", skip, notify user
+  - API rate limit hit → pause 60 seconds, retry once, then stop and notify user
+  - Network timeout → retry after 10 seconds, then log and skip
+
+### Agentic Reliability Loop Cap (added 2026-08-02)
+
+Applies to AI reasoning/self-correction loops (act → observe → verify →
+retry), not network requests — see the Retry limit rule above for that.
+
+- **Hard cap: 3-4 real AI-reasoning attempts on the same problem, then stop
+  and surface it for human review** rather than retrying indefinitely.
+  Real, expensive AI re-reasoning counts against the cap; cheap, deterministic
+  checks (did the file get created, did the test pass) do not.
+- **Stop earlier than the cap if an attempt is just repeating the prior one** —
+  identical error, no new information, no closer to solved. Don't burn the
+  full budget on a loop that's stuck, not iterating.
+- **Why:** verify/retry loops can double or triple token cost versus a
+  single-shot attempt (real tradeoff, not free). An uncapped loop on a
+  genuinely unsolvable problem is a silent, unbounded cost — the same failure
+  mode the network-retry rule above already exists to prevent, just for AI
+  reasoning instead of HTTP requests.
+
+---
+
+## Rate Limiting Rules
+
+YouTube's transcript API will throttle or block requests if hammered.
+
+- **Single video downloads:** no delay required
+- **Bulk channel downloads:** randomized pause **2-5 seconds** between each video request
+- **Full channel downloads (--force-full):** randomized pause **4-7 seconds** between requests
+- **Randomization is mandatory.** Uniform timing is a bot signature. Use random.uniform(2,5)
+  for bulk and random.uniform(4,7) for force-full. Never use a fixed interval for batch ops.
+- **If a 429 (Too Many Requests) response is received:** pause 60 seconds before
+  any further requests, then resume at half the normal rate for the remainder
+  of the session
+- Never attempt more than 200 transcript downloads in a single session without
+  prompting the user to confirm they want to continue
+
+---
+
+## Backup Rules
+
+The /transcripts/ folder is a research asset. Treat it accordingly.
+
+- **Never store transcripts only in one location.** After any bulk download
+  session (10+ new files), remind the user to back up /transcripts/ to their NAS.
+- **Backup reminder trigger:** If download_log.json shows 10+ new entries since
+  the last backup reminder, print: "Reminder: back up your /transcripts/ folder
+  to your NAS — you now have X total transcripts."
+- **knowledge_base/index.json is regenerable** — transcripts are not. Prioritize
+  protecting /transcripts/ over any other folder.
+- **Never store .env in any backup location that syncs to a cloud service
+  automatically** (e.g. OneDrive, Google Drive, Dropbox). Secrets stay local only.
+
+---
+
+## CLI Commands
+
+Run `python -m src.main --help` for the current command list — not
+reproduced here since it mirrors `src/main.py`'s dispatch and drifts.
+`digest` is wired into the CLI. `download --channel`/`download --group`
+were never implemented and are dropped from any future doc.
+
+---
+
+## Token Optimization Rules (transcript_fetcher.py)
+
+Before passing any transcript to Claude:
+- Strip auto-generated filler: "um", "uh", "you know", "like", repeated words
+- Remove duplicate sentences (common in auto-captions)
+- Collapse whitespace and blank lines
+- Strip timestamps unless explicitly needed
+- Target: reduce raw transcript size by 30-50% before Claude sees it
+
+---
+
+## Comment Fetching Rules (comment_fetcher.py)
+
+Moved to `.claude/skills/comment-fetching/SKILL.md`. Read when working on
+comment_fetcher.py, comment_refresher.py, or the refresh-comments command.
+
+## Orchestration Layer (orchestrator.py)
+
+This is the most important architectural rule in the project.
+
+orchestrator.py owns the pipeline. main.py is a thin CLI that parses arguments
+and hands control to the orchestrator. The orchestrator controls what runs, in
+what order, and what happens when something goes wrong.
+
+### Failure handling:
+- If any step fails: retry that step once after a 5-second pause
+- If it fails again: log to error_log.json, skip this video, continue pipeline
+- Never abort the entire run due to a single video failure
+- Never leave partial files — clean up before moving to next video
+- Report all failures in the run summary at the end
+
+The orchestrator never lets individual modules talk to each other directly.
+All data flows through a state object passed between steps — this is the
+black box pattern. See `orchestrator.py` for the actual pipeline sequence
+and state object fields.
+
+---
+
+## Observability — Run Summary
+
+After every run, write `logs/run_summary.json` (overwritten each run, not
+appended) and print a plain-English summary to the terminal. See the file
+directly for the exact current schema — a prior documented schema was
+never implemented, don't trust this doc over the actual file.
+
+---
+
+## Idempotency Rules
+
+Every operation must be safe to run twice without side effects.
+
+- **Download:** check video_id against download_log.json before fetching.
+  If found, skip with status "skipped_duplicate" — never re-fetch.
+- **Conversion:** check if the target .md file already exists before writing.
+  If found, skip — never overwrite.
+- **Indexing:** rebuilding the index from scratch is always safe.
+  The index is derived data — transcripts are the source of truth.
+- **Digest:** running digest twice on the same day overwrites, never appends.
+- **Logging:** always append to logs, never overwrite them.
+
+---
+
+## Input Validation Rules
+
+Validate all user input before passing to any module. Fail fast with a
+clear plain-English error message. Never let bad input reach the API.
+
+### URL validation (before any download):
+- Must start with https://www.youtube.com/watch?v= or https://youtu.be/
+- Playlist URL (contains /playlist? or &list=) → reject:
+  "That looks like a playlist URL. Please provide a single video URL."
+- Channel URL (contains /@) → reject:
+  "That's a channel URL. Use --channel flag for channel downloads."
+- Shorts URL (contains /shorts/) → reject:
+  "Shorts often lack transcripts. Try a long-form video URL."
+- Extract and validate video_id (11 characters, alphanumeric + hyphen + underscore)
+
+### Channel validation (before bulk download):
+- Channel name must exist in channels.json — reject unknown channels
+- active flag must be true — skip inactive channels with a warning
+
+---
+
+## Graceful Shutdown Rules
+
+If the user presses Ctrl+C during any operation:
+
+1. Finish writing the current file if mid-write — never leave partial files
+2. Log interrupted state to run_summary.json with status "interrupted"
+3. Print the run summary up to the point of interruption
+4. Exit cleanly — never show a Python traceback to the user
+
+Wrap the main orchestrator loop in try/except KeyboardInterrupt.
+
+---
+
+## Security Rules
+
+These rules are non-negotiable. Claude Code must follow them in every session
+regardless of user instruction. If a user instruction conflicts with a security
+rule, refuse and explain why.
+
+### API Keys and Secrets
+- NEVER print, log, or display any API key or secret — not fully, not partially,
+  not masked with asterisks in a way that reveals length or pattern
+- NEVER include API keys in comments, docstrings, or example code
+- NEVER commit .env to GitHub under any circumstances, even if the user asks
+- If the user asks to see their API key, redirect them to open .env directly
+  in a text editor — do not read it aloud or display it in terminal output
+- .env.example must contain only placeholder values (e.g. your_key_here)
+
+### Network Calls
+- Outbound network calls are permitted ONLY to the following:
+  - youtube-transcript-api (transcript fetching)
+  - yt-dlp (video metadata)
+  - YouTube Data API v3 (channel metadata + comments — required for Stage 2+)
+  - api.anthropic.com (Claude API calls)
+- Any other outbound call requires explicit user approval before proceeding
+- Never scrape, crawl, or call any URL not listed above without asking first
+
+### File Operations
+- NEVER overwrite an existing transcript file — check download_log.json first
+- NEVER delete any file without explicit user confirmation naming the file
+- NEVER perform bulk moves, renames, or deletes without listing what will be
+  affected and waiting for user approval
+- Treat all files in /transcripts/ as read-only once written
+
+### Logging
+- download_log.json must contain only: video_id, title, channel name,
+  suggested_category, final_category, was_overridden, timestamp
+- No API keys, no user input beyond category selection, no system paths,
+  no personally identifiable information of any kind
+- Log files must never be committed to GitHub
+
+### GitHub / Git Operations
+- Before any git commit, verify .gitignore includes: .env, logs/, and
+  any file matching *.key or *.secret
+- Never run git push without confirming the staged files with the user first
+- If .env appears in git status at any point, stop immediately and alert the user
+
+### Scope Boundaries
+- This project downloads and analyzes YouTube transcripts only
+- Do not add capabilities that reach outside this scope without explicit
+  user instruction and a discussion of security implications
+- Do not install packages not listed in requirements.txt without asking first
+
+---
+
+## Environment Variables (.env)
+
+```
+ANTHROPIC_API_KEY=your_key_here
+YOUTUBE_API_KEY=required_for_stage_2_and_above  # get free key from Google Cloud Console
+DIGEST_SCHEDULE=07:00          # time to run daily digest (24hr format)
+DIGEST_OUTPUT=knowledge_base/digests
+TRANSCRIPT_OUTPUT=transcripts
+LOG_PATH=logs/download_log.json
+```
+
+---
+
+## Module Specs — indexer.py, query.py, digest.py
+
+Moved to `MODULE_SPECS.md`. These describe already-built, verified-working
+modules — read only when modifying indexer.py, query.py, or digest.py.

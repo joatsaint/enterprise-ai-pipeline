@@ -1,0 +1,279 @@
+# Transcript data — keep repo lean
+transcripts/
+*.txt
+
+# Phigmund brand/persona planning + demo content — personal content-marketing
+# IP, not reusable engineering (repo privacy audit, 2026-07-24)
+phigmund/PHIGMUND_FACE_REMOTION_SKETCH.md
+phigmund/demo_emails.md
+phigmund/phigmund_lines.py
+
+# Claude skills bound to ICP psychology / audience strategy / marketing
+# playbooks / proprietary positioning — no separable generic technical
+# content (repo privacy audit, 2026-07-24)
+.claude/skills/comment/
+.claude/skills/kb-research/
+.claude/skills/newsletter/
+.claude/skills/shorts-script/
+.claude/skills/video-distribution-checklist/
+.claude/skills/oz/
+
+# Skool offline course archives — large video/binary content, local only
+courses/
+
+# Exported YouTube cookies for yt-dlp (secret — never commit)
+youtube_cookies.txt
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# AI response cache — local, regenerable
+.cache/
+
+# Environment / secrets
+.env
+pipeline_secrets.env
+.youtube_oauth_token.json
+*.key
+*.secret
+
+# Wrangler (Cloudflare Workers) local cache/auth state — never commit
+.wrangler/
+
+# Logs — runtime data, not source
+logs/
+
+# Canonical Backlog System data — local-only, private (FR9.1/FR9.2, ADR-026)
+data/backlog/
+
+# Knowledge base — generated data, not source
+knowledge_base/index.json
+knowledge_base/reports/*.md
+knowledge_base/digests/*.md
+knowledge_base/research_cards/
+knowledge_base/pain_point_history.json
+
+# Session logs and memory — internal working notes, never commit
+memory/
+
+# pytest cache
+.pytest_cache/
+
+# Pre-restructure backup snapshots — local only
+backups/
+
+# Video production — HeyGen outputs, rendered mp4s, cards, scripts, Remotion build artifacts
+# All local-only: binary assets, generated content, private scripts
+video-production/
+
+# Windows system files
+Thumbs.db
+**/Thumbs.db
+desktop.ini
+
+# Marketing skills library — external dependency, not project code
+marketing-skills/
+
+# Internal brand and personal knowledge assets — not for public repo
+knowledge/
+
+# === PRIVATE: content-production & publishing infrastructure (entire folder) ===
+content-engine/
+.claude/scheduled_tasks.lock
+**/nppBackup/
+
+# === PRIVATE: research, automation, business, registries & backups ===
+# callback bank, avoid list, pain research, style adaptations
+output/
+# private newsletter/curation pipeline
+automation/
+# commercial business plan / roadmap
+MASTER_PLAN.md
+# populated channel registry (ship channels.example.json instead)
+channels.json
+# populated curation sender list (ship newsletter_sources.example.json instead)
+newsletter_sources.json
+# brand/social asset
+images/IT_to_AI_Newsletter.png
+# local CLAUDE.md / doc backups
+Backup_*.md
+# Google Docs pointer files (personal/brand)
+*.gdoc
+# private content-creation workflow
+.claude/skills/create-next-article/
+
+# Personal and brand files
+Randy_Skiles_Voice_Profile_v2.gdoc
+
+# check-claude-code-updates.ps1's runtime cache — generated state, not source
+.claude/hooks/.claude_code_version_cache.json
+
+# docs/ — entire folder local-only; too easy for private research assets to
+# slip through if managed file-by-file. Articles are published on LinkedIn anyway.
+docs/
+
+# journal/ — private first-person journal entries, promoted to publish-ready
+# case by case, never repo-tracked by default (2026-07-19).
+journal/
+
+# Jarvis Project/ — consolidated 2026-07-17, same local-only rationale as
+# docs/ above (planning notes) plus voice-line's own independent nested git
+# repo (github.com/joatsaint/voice-line) which must never be tracked by
+# this repo's own git.
+Jarvis Project/
+
+# asset-anomaly-detector/ — its own independent nested git repo, same
+# nested-but-separate pattern as voice-line. Never tracked by this repo's
+# own git. Found during the 2026-08-21 local-pile sort.
+asset-anomaly-detector/
+
+# bitcoin-dashboard/ — its own independent nested git repo, contains a real
+# .env secret file. Same nested-but-separate pattern as voice-line. Found
+# during the 2026-08-21 local-pile sort.
+bitcoin-dashboard/
+
+# oz-vault/ — personal finance/life-tracking data (rentals, eBay, job
+# search, journal) for the Oz character skill. Kept private alongside the
+# oz skill itself (.claude/skills/oz/, also gitignored). Found during the
+# 2026-08-21 local-pile sort.
+oz-vault/
+
+# .impeccable/ — the impeccable design skill's own cache/config state, not
+# content. Found during the 2026-08-21 local-pile sort.
+.impeccable/
+
+# brain-droppings-vault/ — local-only personal ideas mirror, its own
+# independent nested git repo (no remote, never pushed), same rationale as
+# journal/ above. Banked 2026-07-20.
+brain-droppings-vault/
+
+# pain-point-miner/ — standalone giveaway spinout, its own independent
+# nested git repo (github.com/joatsaint/pain-point-miner), never tracked by
+# this repo's own git. Same nested-but-separate pattern as voice-line.
+# Banked 2026-07-28.
+pain-point-miner/
+
+# transcript-intelligence-pipeline/ — FDE-portfolio extraction of just the
+# clean Research stage (downloader/converter/classifier/knowledge_base),
+# its own independent nested git repo, never tracked by this repo's own
+# git. Same nested-but-separate pattern as voice-line. Built 2026-08-23.
+transcript-intelligence-pipeline/
+
+# Chrome extension reference files — used during development only
+docs/chrome_extensions/
+
+# obsidian-vault/ — personal Obsidian vault, kepano/obsidian-skills installed
+# into its own .claude/ (portable, self-contained, same nested-but-separate
+# pattern as journal/, brain-droppings-vault/). Purpose still undecided
+# (personal notes only vs. absorbing the daily-notes memory mechanic) —
+# banked 2026-07-31, see project_note_taking_system_idea.md.
+obsidian-vault/
+
+# Substack archiver + Google Drive fetcher — local-only personal research tools, not for public portfolio
+src/downloader/substack_archiver.py
+src/downloader/substack_link_fetcher.py
+src/downloader/gdrive_fetcher.py
+run_substack.py
+logs/substack_download_log.json
+logs/substack_links_log.json
+logs/gdrive_download_log.json
+
+# Quarterly pain point extractor — local scheduler, log contains business intelligence
+run_pain_extractor_quarterly.bat
+logs/pain_extractor_quarterly.log
+
+# Skool downloader debug artifacts
+skool_debug.py
+skool_debug_*.png
+skool_debug_*.html
+skool_lesson_*.png
+skool_*.json
+
+# docs/ — personal notes, marketing materials, session artifacts
+docs/Randys_Brain_Droppings.md
+docs/Randys Adventure Series/
+docs/Randy_AI_Questions_YouTube_Scripts.md
+docs/Randy_Skiles_All_LinkedIn_Articles_5_31_2026.md
+docs/Open_to_Work_MD_file.md
+docs/council-transcript-*.md
+docs/council-report-*.html
+docs/SESSION_CONTEXT_*.md
+docs/nppBackup/
+docs/Julia McCoy*
+docs/LinkedIN_Ready-to-Publish*
+docs/LinkedIn - *
+docs/LINKEDIN_CONTENT_SKILL.md
+docs/LINKEDIN_SERIES_FRAMEWORK.md
+docs/old_LINKEDIN_SERIES_FRAMEWORK.md
+docs/CONTENT_ATOMIZATION_RULES.md
+docs/CONTENT_MARKETING_SYSTEM.md
+docs/ARTICLES.md
+docs/from_no_to_safe_enough_yes_article.md
+docs/Steel_Server_Room_LinkedIn_Content_Scheduling_Briefing_CORRECTED.md
+docs/Claude.md Enterprise Level Standards*
+docs/Platform_Agnostic_Prep_Guide.docx
+docs/Deepseek Enterprise Hardenting Guidelines/
+docs/steel_server_room_lead_magnet_final/
+docs/steel_server_room_lead_magnet_final.pdf.pdf
+docs/AI_Career_Roadmap_IT_to_AI_Guide_Step_By_Step.pdf
+docs/AI_For_Leaders_Paid_Products_after_signing_up_for_newsletter.txt
+docs/3 Email Sequence*.pdf
+docs/The AI Skills That Wont Be Replaced - Lead Magnet.pdf
+docs/Project Reports and Progress/*.docx
+.claude/settings.local.json
+.claude/claude-security-guidance.md
+.claude/settings.json
+
+# Skills library — local-only per repo privacy rule
+.claude/skills/image-prompt/
+.claude/skills/title-generator/
+
+# Local agent config
+.agents/
+
+# Facebook Reel Transcriber — downloaded video files and raw transcript
+# output, local-only data artifacts, same as video-production/'s binaries
+facebook-reel-transcriber/downloads/
+facebook-reel-transcriber/transcripts.txt
+facebook-reel-transcriber/transcripts_*.txt
+facebook-reel-transcriber/run_log*.txt
+facebook-reel-transcriber/facebook_cookies.txt
+
+# n8n local launcher — personal path, not for public repo
+run_n8n.bat
+
+# Separate git repo — managed independently
+project-monte-swarmops-core/
+
+# SwarmOps audit log — written at repo root when scripts run from parent dir
+audit.log
+
+# Remotion build artifacts
+remotion/shorts/node_modules/
+remotion/shorts/out/
+
+# Phigmund planning + content docs — local only (audience-building specifics, personal stories)
+phigmund/LIVING_DOCUMENT_SESSION38.md
+phigmund/CHRONICLES_CONTENT_ANALYSIS.md
+phigmund/MONTE_1_POST_DRAFT.md
+phigmund/r_sysadmin_post.md
+phigmund/PILOT_SCRIPT_EP1.md
+phigmund/SHOW_CONCEPT.md
+phigmund/saved_responses/
+phigmund/CHRONICLES_MASTER_DOCUMENT.md
+phigmund/CHRONICLES_EPISODE_INDEX.md
+phigmund/CHRONICLES_CONTENT_ANALYSIS_14-44.md
+phigmund/SIGNAL_REPORT_SAMPLE.md
+
+# Public-repo-readiness audit, 2026-08-28 -- personal/proprietary content,
+# not needed for the product to run. See DECISIONS_LOG.md / memory for the
+# full audit trail.
+Manifestation-Gurus/
+rent-tracker-mvp/
+products/texas-landlord-guide/01_the_485_moreland_playbook.md
+products/texas-landlord-guide/02_the_faq_bank.md
+products/texas-landlord-guide/03_the_prompt.md
+products/texas-landlord-guide/DISCLAIMER.md
+products/texas-landlord-guide/README.md

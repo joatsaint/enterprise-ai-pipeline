@@ -1,0 +1,21 @@
+name = "texas-landlord-advisor"
+main = "src/worker.js"
+compatibility_date = "2026-08-01"
+
+# Workers AI binding — free-tier fallback model, no separate signup needed.
+[ai]
+binding = "AI"
+
+# KV namespace for daily per-IP rate limiting.
+# Create with: npx wrangler kv namespace create RATE_LIMIT
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "25dc93aa1bee406d9ddeb8d9a12ee82b"
+
+# Secrets, NOT set here — set via:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+#   npx wrangler secret put GEMINI_API_KEY
+# Both already exist as real keys in the project's own .env — reuse those
+# values when prompted, don't generate new ones. Never commit either key
+# to this file or to git.

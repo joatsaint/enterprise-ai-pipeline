@@ -1,0 +1,19 @@
+{
+  "name": "randy-shorts-top-half",
+  "version": "1.0.0",
+  "description": "Remotion compositions for the top-half of Randy Skiles YouTube Shorts",
+  "scripts": {
+    "start": "npx remotion studio",
+    "build": "npx remotion render TextCard out/top_a.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

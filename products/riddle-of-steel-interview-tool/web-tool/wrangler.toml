@@ -1,0 +1,23 @@
+name = "riddle-of-steel-interview"
+main = "src/worker.js"
+compatibility_date = "2026-08-01"
+
+# Workers AI binding — free-tier fallback model, no separate signup needed.
+[ai]
+binding = "AI"
+
+# KV namespace — doubles as daily per-IP rate limiting AND lead storage
+# (Stage 1 MVP only logs leads here, no ESP wired up yet).
+# Create with: npx wrangler kv namespace create RATE_LIMIT
+# then paste the returned id below.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "7b9d829bec1f4c7e91c2e88b5a1aacfe"
+
+# Secrets, NOT set here — set via:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+#   npx wrangler secret put GEMINI_API_KEY
+#   npx wrangler secret put ADMIN_BYPASS_KEY
+# Both API keys already exist as real keys in the project's own .env —
+# reuse those values when prompted, don't generate new ones. Never commit
+# any of these to this file or to git.
